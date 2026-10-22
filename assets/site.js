@@ -96,3 +96,72 @@
     setLang(saved === 'en' ? 'en' : 'mn');
   };
 })();
+
+/* Page transitions and painted heroes: every page shares the homepage's scenes.
+   Leaving: the next page's scene opens from the clicked link like the homepage portal.
+   Arriving: that same scene covers the screen, then settles into this page's hero. */
+(function(){
+  var S = window.PSPScenes, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var MAP = {'':0, 'index.html':0, 'projects.html':1, 'project.html':7, 'studio.html':9};
+  function sceneFor(u){ var f = u.pathname.split('/').pop(); return MAP.hasOwnProperty(f) ? MAP[f] : null; }
+  var EASE = 'cubic-bezier(.75,0,.2,1)';
+
+  function overlay(i){
+    var c = document.createElement('canvas'); c.className = 'psp-ov'; c.setAttribute('aria-hidden','true');
+    c.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;z-index:100;pointer-events:none;display:block';
+    S.blit(c, S.scene(i), innerWidth, innerHeight); document.body.appendChild(c); return c;
+  }
+
+  /* heroes */
+  var heroes = [].slice.call(document.querySelectorAll('canvas.hero-cv'));
+  function paintHeroes(){
+    if(!S) return;
+    heroes.forEach(function(cv){ var r = cv.getBoundingClientRect(); S.blit(cv, S.scene(+cv.dataset.scene), r.width, r.height, innerHeight); });
+  }
+  paintHeroes();
+  var rt; addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(function(){ S && S.clear(); paintHeroes(); }, 200); });
+
+  /* header turns solid once the hero has scrolled away */
+  var bar = document.querySelector('.top.over');
+  if(bar){ var hero = document.querySelector('.hero');
+    var onScroll = function(){ bar.classList.toggle('solid', !hero || hero.getBoundingClientRect().bottom < 80); };
+    addEventListener('scroll', onScroll, {passive:true}); onScroll(); }
+
+  /* arriving */
+  var flag = null; try{ flag = sessionStorage.getItem('psp-enter'); }catch(x){}
+  if(flag !== null && heroes.length && S && !reduce){
+    try{ sessionStorage.removeItem('psp-enter'); }catch(x){}
+    var i = +flag, ov = overlay(i), hero = document.querySelector('.hero');
+    requestAnimationFrame(function(){
+      var hb = hero.getBoundingClientRect().bottom, sameScene = +heroes[0].dataset.scene === i && !location.hash && hb > 0;
+      var to = sameScene ? 'inset(0px 0px '+Math.max(0, innerHeight - hb)+'px 0px round 0px)' : 'inset(0px 0px 0px 0px round 0px)';
+      var a = ov.animate([{clipPath:'inset(0px 0px 0px 0px round 0px)', opacity:1}, {clipPath:to, opacity: sameScene ? 1 : 0}],
+                         {duration: sameScene ? 700 : 500, easing: EASE, fill:'forwards'});
+      a.onfinish = function(){ ov.remove(); };
+    });
+  } else { try{ sessionStorage.removeItem('psp-enter'); }catch(x){} }
+
+  /* leaving */
+  var leaving = false;
+  function leave(href, rect){
+    var u = new URL(href, location.href), i = sceneFor(u);
+    if(i === null || reduce || !S || leaving){ location.href = href; return; }
+    leaving = true;
+    var ov = overlay(i), W = innerWidth, H = innerHeight,
+        r = rect && rect.width ? rect : {left:W/2-60, top:H/2-70, right:W/2+60, bottom:H/2+70};
+    var from = 'inset('+r.top+'px '+(W-r.right)+'px '+(H-r.bottom)+'px '+r.left+'px round 30px)';
+    var a = ov.animate([{clipPath:from, filter:'brightness(1.15)'}, {clipPath:'inset(0px 0px 0px 0px round 0px)', filter:'brightness(1)'}],
+                       {duration:900, easing:EASE, fill:'forwards'});
+    a.onfinish = function(){ try{ sessionStorage.setItem('psp-enter', String(i)); }catch(x){} location.href = href; };
+  }
+  window.PSP.leave = leave;
+  document.addEventListener('click', function(e){
+    var a = e.target.closest && e.target.closest('a[href]');
+    if(!a || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target === '_blank' || a.hasAttribute('download')) return;
+    var u = new URL(a.href, location.href);
+    if(u.origin !== location.origin) return;
+    if(u.pathname === location.pathname && u.search === location.search) return; /* same-page anchors scroll normally */
+    e.preventDefault(); leave(a.href, a.getBoundingClientRect());
+  });
+  addEventListener('pageshow', function(e){ if(e.persisted){ leaving = false; [].slice.call(document.querySelectorAll('.psp-ov')).forEach(function(o){ o.remove(); }); } });
+})();

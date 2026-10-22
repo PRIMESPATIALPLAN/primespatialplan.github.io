@@ -2,6 +2,7 @@
 <html lang="mn">
 <head>
 <meta charset="utf-8">
+<meta name="theme-color" content="#0b0b0f">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Prime Spatial Plan</title>
 <meta name="description" content="Prime Spatial Plan — амины орон сууц, таунхаус, орон сууцны барилгын зураг төсөл, интерьер дизайн, төлөвлөлт. Улаанбаатар, Монгол.">
@@ -11,37 +12,35 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 713 824'%3E%3Cpath fill='%23F7991E' fill-rule='evenodd' d='M357 0 713 207V618L357 824 0 618V207Z M357 160 138 285V695L274 773V617L357 662 575 537V285Z'/%3E%3Cpath d='M357 318 439 365V459L357 506 276 459V365Z'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap">
-<link rel="stylesheet" href="assets/style.css?v=4">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Onest:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap">
+<link rel="stylesheet" href="assets/style.css?v=6">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <symbol id="psp-logo" viewBox="0 0 713 824">
     <path fill="#F7991E" fill-rule="evenodd" d="M357 0 713 207V618L357 824 0 618V207Z M357 160 138 285V695L274 773V617L357 662 575 537V285Z"/>
-    <path fill="none" stroke="#FFFFFF" stroke-width="1" vector-effect="non-scaling-stroke" d="M0 207 138 285M713 207 575 285M357 662V824"/>
-    <path fill="none" stroke="#F7991E" stroke-width="1" vector-effect="non-scaling-stroke" d="M357 160V318M138 537 276 459M439 459 575 537M138 695 274 773"/>
-    <path fill="#111111" d="M357 318 439 365V459L357 506 276 459V365Z"/>
-    <path fill="none" stroke="#FFFFFF" stroke-width="1" vector-effect="non-scaling-stroke" d="M276 365 357 412 439 365M357 412V506"/>
+    <path fill="#F4F1EC" d="M357 318 439 365V459L357 506 276 459V365Z"/>
   </symbol>
 </svg>
-<header class="top">
-  <div class="wrap bar">
-    <a class="brand" href="./"><svg class="logo" viewBox="0 0 713 824" aria-hidden="true"><use href="#psp-logo"/></svg><span>Prime Spatial Plan</span></a>
-    <nav class="nav" aria-label="Menu">
-      <a href="projects.html" aria-current="page" data-en="Projects">Төслүүд</a>
-      <a href="studio.html" data-en="Studio">Студи</a>
-      <a class="opt" href="studio.html#contact" data-en="Contact">Холбоо барих</a>
-      <div class="lang" role="group" aria-label="Хэл / Language">
+<header class="top over">
+  <div class="bar">
+    <a class="mark" href="./"><svg viewBox="0 0 713 824" aria-hidden="true"><use href="#psp-logo"/></svg><span>Prime Spatial Plan</span></a>
+    <nav class="pills" aria-label="Menu">
+      <a class="pill opt" href="studio.html" data-en="Studio">Студи</a>
+      <a class="pill opt" href="projects.html" aria-current="page" data-en="Projects">Төслүүд</a>
+      <span class="pill lang" role="group" aria-label="Хэл / Language">
         <button type="button" data-lang="mn" aria-pressed="true">МН</button>
         <button type="button" data-lang="en" aria-pressed="false">EN</button>
-      </div>
+      </span>
+      <a class="pill solid" href="studio.html#contact" data-en="Contact">Холбоо барих</a>
     </nav>
   </div>
 </header>
 <main id="top">
-  <div class="wrap home-head">
-    <p class="statement"><span data-en="We plan space precisely">Орон зайг нарийн төлөвлөж,</span> <span data-en="and shape it around your life.">амьдралд тань тааруулна.</span></p>
-  </div>
+  <section class="hero">
+    <canvas class="hero-cv" data-scene="1" aria-hidden="true"></canvas>
+    <div class="wrap hero-text"><h1 data-en="Projects">Төслүүд</h1><p ><span data-en="We plan space precisely">Орон зайг нарийн төлөвлөж,</span> <span data-en="and shape it around your life.">амьдралд тань тааруулна.</span></p></div>
+  </section>
   <div class="wrap">
     <div class="cats" id="cats" role="group" aria-label="Ангилал" data-en-aria="Categories"></div>
     <div class="grid" id="grid"></div>
@@ -61,8 +60,9 @@
     </div>
   </div>
 </footer>
-<script src="assets/projects.js?v=4"></script>
-<script src="assets/site.js?v=4"></script>
+<script src="assets/projects.js?v=6"></script>
+<script src="assets/scenes.js?v=6"></script>
+<script src="assets/site.js?v=6"></script>
 <script>
 (function(){
   var P = PSP, cur = 'all', cats = document.getElementById('cats'), grid = document.getElementById('grid');
