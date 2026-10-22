@@ -184,7 +184,7 @@ canvas.full{position:fixed;inset:0;width:100%;height:100%;display:block}
 
 <p class="sr">Prime Spatial Plan — амины орон сууц, таунхаус, орон сууцны барилгын зураг төсөл. Хүсэлт хүлээн авахаас бэлэн зураг хүлээлгэн өгөх хүртэл 10 алхам.</p>
 
-<script src="assets/scenes.js?v=7"></script>
+<script src="assets/scenes.js?v=9"></script>
 <script src="assets/site.js?v=6"></script>
 <script>
 (function(){
@@ -242,7 +242,7 @@ canvas.full{position:fixed;inset:0;width:100%;height:100%;display:block}
   }
   function drawBg(){ blit(bg,scene(cur),innerWidth,innerHeight); }
   /* the portal shows a close crop of the next sheet's drawing, slightly lifted, so it reads against the board */
-  var RENDERS={6:1,9:1}; /* clay model and night render keep their own colours; drawing sheets preview as printed paper */
+  var RENDERS={6:1}; /* clay model and night render keep their own colours; drawing sheets preview as printed paper */
   function portalBlit(src,idx){
     var r=pv.getBoundingClientRect(); if(!r.width) return;
     var d=Math.min(window.devicePixelRatio||1,1.5); pv.width=Math.round(r.width*d); pv.height=Math.round(r.height*d);
