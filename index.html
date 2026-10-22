@@ -3,247 +3,250 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Prime Spatial Plan — амины орон сууц, таунхаус, орон сууцны барилгын зураг төсөл, интерьер дизайн.">
-<style>:root{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Prime Spatial Plan</title>
+<meta name="description" content="Prime Spatial Plan — амины орон сууц, таунхаус, орон сууцны барилгын зураг төсөл, интерьер дизайн, төлөвлөлт. Улаанбаатар, Монгол.">
+<meta property="og:title" content="Prime Spatial Plan">
+<meta property="og:description" content="Архитектур · Зураг төсөл · Төлөвлөлт. Улаанбаатар, Монгол.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://primespatialplan.github.io/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 713 824'%3E%3Cpath fill='%23F7991E' fill-rule='evenodd' d='M357 0 713 207V618L357 824 0 618V207Z M357 160 138 285V695L274 773V617L357 662 575 537V285Z'/%3E%3Cpath d='M357 318 439 365V459L357 506 276 459V365Z'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;700&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap">
 <style>
-/* Layout: a drawing sheet. Hero = floor plan + title block; sections read like sheets in a drawing set, ruled by drafting lines. */
+/* Layout: gallery-led studio page. White ground, black type, one huge title, image first, then label/value metadata and plain stacked lists. Orange only in the logo and drawing dimensions. Single light theme by choice. */
 :root{
-  --paper:#F2F1EE; --sheet:#FAF9F7; --ink:#171614; --muted:#625E58; --line:#D2CDC5; --grid:rgba(23,22,20,.055);
-  --brand:#F7991E; --accent:#B35E00; --accent-ink:#171614;
-  --f-display:"Unbounded","Golos Text",system-ui,sans-serif;
-  --f-body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --f-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
-  --maxw:1180px;
+  color-scheme:light;
+  --bg:#FFFFFF; --ink:#111111; --muted:#7A7A7A; --rule:#111111; --hair:#E2E2E2; --plate:#EFEFEF;
+  --brand:#F7991E; --brand-ink:#B86200;
+  --f:"Onest","Golos Text",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --maxw:1440px;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --paper:#0E0D0C; --sheet:#181614; --ink:#EEEBE6; --muted:#9E988F; --line:#302C28; --grid:rgba(238,235,230,.045);
-  --brand:#F7991E; --accent:#F7A33A; --accent-ink:#141210; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --paper:#0E0D0C; --sheet:#181614; --ink:#EEEBE6; --muted:#9E988F; --line:#302C28; --grid:rgba(238,235,230,.045);
-  --brand:#F7991E; --accent:#F7A33A; --accent-ink:#141210; color-scheme:dark}
-
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
-@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
-body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{transition:none!important}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:20;background:var(--bg)}
+[hidden]{display:none!important}
+img,svg{max-width:100%}
 a{color:inherit}
-:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-.wrap{max-width:var(--maxw);margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-@media (min-width:720px){.wrap{padding-left:max(32px,env(safe-area-inset-left,0px));padding-right:max(32px,env(safe-area-inset-right,0px))}}
-h1,h2,h3{font-family:var(--f-display);font-weight:500;letter-spacing:-.01em;text-wrap:balance;margin:0}
-p{margin:0}
-.mono{font-family:var(--f-mono);font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+h1,h2,h3,p{margin:0}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.wrap{max-width:var(--maxw);margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+@media (min-width:900px){.wrap{padding-left:max(40px,env(safe-area-inset-left,0px));padding-right:max(40px,env(safe-area-inset-right,0px))}}
+.label{font-size:.75rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 
-/* Header */
-header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px}
-.brand{display:flex;align-items:center;gap:12px;text-decoration:none;min-width:0}
-.logo{flex:none;width:36px;height:42px;display:block;overflow:visible}
-.brand b{font-family:var(--f-display);font-weight:500;font-size:.95rem;letter-spacing:.01em;display:block;line-height:1.2}
-.brand small{font-family:var(--f-mono);font-size:.62rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
-.links{display:flex;gap:24px;align-items:center}
-.links a{text-decoration:none;font-size:.92rem;color:var(--muted)}
-.links a:hover{color:var(--ink)}
-.btn{display:inline-flex;align-items:center;gap:10px;padding:12px 20px;font-family:var(--f-body);font-weight:600;font-size:.95rem;text-decoration:none;border:1.5px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer;transition:background .2s,color .2s}
-.btn:hover{background:var(--ink);color:var(--paper)}
-.btn.primary{background:var(--brand);border-color:var(--brand);color:var(--accent-ink)}
-.btn.primary:hover{filter:brightness(1.06);background:var(--brand);color:var(--accent-ink)}
-.links .btn{padding:9px 16px;font-size:.88rem;color:var(--ink)}
-.links .btn:hover{color:var(--paper)}
-.lang{display:flex;border:1.5px solid var(--ink);flex:none}
-.lang button{font-family:var(--f-mono);font-size:.72rem;font-weight:500;letter-spacing:.06em;padding:7px 10px;border:0;background:transparent;color:var(--muted);cursor:pointer}
-.lang button + button{border-left:1px solid var(--line)}
-.lang button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
-@media (max-width:860px){.links a:not(.btn){display:none}}
-@media (max-width:520px){.links .btn{display:none}.brand small{display:none}}
+/* Top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-block:18px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.logo{width:28px;height:32px;flex:none;display:block;overflow:visible}
+.brand span{font-weight:700;font-size:.95rem;letter-spacing:.02em;text-transform:uppercase}
+.nav{display:flex;align-items:center;gap:28px}
+.nav a{text-decoration:none;font-size:.95rem;font-weight:500}
+.nav a:hover{text-decoration:underline;text-underline-offset:4px}
+.lang{display:flex;gap:2px}
+.lang button{font:inherit;font-size:.8rem;font-weight:600;border:0;background:none;color:var(--muted);padding:4px 6px;cursor:pointer}
+.lang button[aria-pressed="true"]{color:var(--ink);text-decoration:underline;text-underline-offset:4px}
+@media (max-width:860px){.nav a.opt{display:none}}
 
-/* Hero */
-.hero{border-bottom:1px solid var(--line);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px}
-.hero-grid{display:grid;grid-template-columns:1fr;gap:40px;padding-block:56px 64px}
-@media (min-width:960px){.hero-grid{grid-template-columns:1.05fr 1fr;gap:56px;align-items:center;padding-block:80px 88px}}
-.hero-copy{display:flex;flex-direction:column;gap:24px;min-width:0}
-.hero h1{font-size:clamp(2rem,5.2vw,3.6rem);line-height:1.08}
-.hero h1 em{font-style:normal;color:var(--accent)}
-.lede{font-size:1.1rem;color:var(--muted);max-width:52ch}
-.cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:4px}
+/* Title */
+.title{padding-block:48px 28px}
+.title h1{font-size:clamp(3rem,11.5vw,10.5rem);font-weight:700;letter-spacing:-.045em;line-height:.9;text-wrap:balance}
+.title p{margin-top:18px;font-size:clamp(1rem,1.6vw,1.25rem);font-weight:500}
 
-.sheet{background:var(--sheet);border:1.5px solid var(--ink);min-width:0;box-shadow:8px 8px 0 var(--line);margin:0}
-.sheet svg{display:block;width:100%;height:auto}
-.titleblock{display:grid;grid-template-columns:repeat(4,1fr);border-top:1.5px solid var(--ink)}
-.titleblock div{padding:8px 10px;border-right:1px solid var(--line);min-width:0}
-.titleblock div:last-child{border-right:0}
-.titleblock span{display:block;font-family:var(--f-mono);font-size:.6rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
-.titleblock strong{display:block;font-family:var(--f-mono);font-size:.78rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-@media (max-width:480px){.titleblock{grid-template-columns:repeat(2,1fr)}.titleblock div:nth-child(2){border-right:0}.titleblock div:nth-child(-n+2){border-bottom:1px solid var(--line)}}
+/* Gallery */
+.gallery{position:relative}
+.track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none}
+.track::-webkit-scrollbar{display:none}
+.slide{flex:0 0 100%;scroll-snap-align:start;margin:0;min-width:0}
+.plate{background:var(--plate);aspect-ratio:16/8;display:flex;align-items:center;justify-content:center;padding:3% 6%;max-width:100%;position:relative}
+@media (max-width:700px){.plate{aspect-ratio:4/3.4;padding:4%}}
+.plate svg{width:100%;height:100%;display:block}
+.plate .tag{position:absolute;left:16px;top:14px;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.gal-foot{display:grid;grid-template-columns:auto 1fr auto;gap:24px;align-items:start;padding-block:16px 0}
+.count{font-variant-numeric:tabular-nums;font-weight:600;font-size:.95rem;min-width:52px}
+.caption{font-size:.95rem;max-width:70ch;min-width:0}
+.caption b{font-weight:700;text-transform:uppercase;letter-spacing:.02em}
+.arrows{display:flex;gap:4px}
+.arrows button{width:44px;height:44px;border:1px solid var(--ink);background:var(--bg);color:var(--ink);font:inherit;font-size:1.1rem;cursor:pointer;display:grid;place-items:center}
+.arrows button:hover{background:var(--ink);color:var(--bg)}
+@media (max-width:600px){.gal-foot{grid-template-columns:1fr auto}.caption{grid-column:1/-1;grid-row:2}}
 
-.plan .wall{stroke:var(--ink);stroke-width:6;fill:none;stroke-linecap:square}
-.plan .iwall{stroke:var(--ink);stroke-width:3.5;fill:none}
-.plan .axis{stroke:var(--muted);stroke-width:.8;stroke-dasharray:10 4 2 4;opacity:.7}
-.plan .bubble{fill:var(--sheet);stroke:var(--muted);stroke-width:1}
-.plan .bt{font-family:var(--f-mono);font-size:10px;fill:var(--muted);text-anchor:middle;dominant-baseline:central}
-.plan .dim{stroke:var(--accent);stroke-width:.9}
-.plan .dt{font-family:var(--f-mono);font-size:10px;fill:var(--accent);text-anchor:middle}
-.plan .room{font-family:var(--f-body);font-size:11px;fill:var(--ink);text-anchor:middle;font-weight:500}
-.plan .area{font-family:var(--f-mono);font-size:9.5px;fill:var(--muted);text-anchor:middle}
-.plan .door{stroke:var(--muted);stroke-width:.9;fill:none}
-.plan .hatch{stroke:var(--muted);stroke-width:.8;fill:none}
-.plan .win{stroke:var(--sheet);stroke-width:4}
-.plan .winl{stroke:var(--ink);stroke-width:.9}
-.plan .cursor{stroke:var(--accent);stroke-width:.8;animation:scan 7s ease-in-out infinite alternate}
-@keyframes scan{from{transform:translateX(0)}to{transform:translateX(400px)}}
+/* Drawings */
+.dw .w{fill:none;stroke:var(--ink);stroke-width:6;stroke-linecap:square}
+.dw .iw{fill:none;stroke:var(--ink);stroke-width:3.5}
+.dw .t{fill:none;stroke:var(--ink);stroke-width:2}
+.dw .th{fill:none;stroke:var(--ink);stroke-width:1}
+.dw .fill{fill:var(--ink)}
+.dw .ax{stroke:#9A9A9A;stroke-width:.8;stroke-dasharray:10 4 2 4;fill:none}
+.dw .bub{fill:var(--plate);stroke:#9A9A9A;stroke-width:1}
+.dw .bt{font:10px var(--f-mono);fill:#7A7A7A;text-anchor:middle;dominant-baseline:central}
+.dw .dim{stroke:var(--brand);stroke-width:1;fill:none}
+.dw .dt{font:10px var(--f-mono);fill:var(--brand-ink);text-anchor:middle}
+.dw .lb{font:500 11px var(--f);fill:var(--ink);text-anchor:middle}
+.dw .sm{font:9.5px var(--f-mono);fill:#7A7A7A;text-anchor:middle}
+.dw .mt{stroke:#8A8A8A;stroke-width:.9;fill:none}
+.dw .pave{fill:#E0E0E0}
+.dw .win{stroke:var(--plate);stroke-width:4}
 
 /* Sections */
-section{padding-block:80px;border-bottom:1px solid var(--line)}
-@media (max-width:640px){section{padding-block:56px}}
-.sec-head{display:grid;grid-template-columns:1fr;gap:16px;margin-bottom:44px}
-@media (min-width:900px){.sec-head{grid-template-columns:280px 1fr;gap:48px;align-items:end}}
-.sec-head > div{display:flex;flex-direction:column;gap:14px}
-.h2{font-size:clamp(1.6rem,3.4vw,2.4rem);line-height:1.15}
-.sec-head p{color:var(--muted);max-width:60ch}
+.sec{display:grid;grid-template-columns:1fr;gap:20px;padding-block:64px;border-top:1px solid var(--rule)}
+@media (min-width:900px){.sec{grid-template-columns:minmax(180px,1fr) 3fr;gap:40px;padding-block:88px}}
+.sec > .label{padding-top:6px}
+.sec-body{min-width:0}
+.statement{font-size:clamp(1.35rem,2.6vw,2.1rem);font-weight:500;line-height:1.25;letter-spacing:-.015em;max-width:30ch;text-wrap:balance}
 
-/* Services */
-.services{display:grid;grid-template-columns:1fr;border-top:1.5px solid var(--ink)}
-@media (min-width:720px){.services{grid-template-columns:1fr 1fr}}
-@media (min-width:1040px){.services{grid-template-columns:repeat(3,1fr)}}
-.svc{padding:28px 24px 32px 0;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:12px;min-width:0}
-@media (min-width:720px){.svc{padding:28px 28px 32px;border-right:1px solid var(--line)}}
-@media (min-width:720px) and (max-width:1039px){.svc:nth-child(2n){border-right:0}}
-@media (min-width:1040px){.svc:nth-child(3n){border-right:0}}
-.svc .tag{font-family:var(--f-mono);font-size:.7rem;color:var(--accent);letter-spacing:.08em;text-transform:uppercase}
-.svc h3{font-size:1.12rem;line-height:1.3}
-.svc p{color:var(--muted);font-size:.96rem}
-.svc ul{margin:4px 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px}
-.svc li{font-family:var(--f-mono);font-size:.68rem;padding:3px 8px;border:1px solid var(--line);color:var(--muted)}
+/* Intro: description + metadata */
+.intro{display:grid;grid-template-columns:1fr;gap:48px;padding-block:56px 72px}
+@media (min-width:900px){.intro{grid-template-columns:minmax(180px,1fr) 3fr;gap:40px}}
+.meta{display:flex;flex-direction:column;gap:18px}
+.meta div{display:flex;flex-direction:column;gap:2px}
+.meta dt{font-size:.75rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.meta dd{margin:0;font-weight:500}
+.intro .text{display:flex;flex-direction:column;gap:22px;min-width:0}
+.intro .text p:not(.statement){font-size:1.05rem;max-width:62ch;color:#333}
+.cta{display:inline-flex;align-self:flex-start;align-items:center;gap:10px;font-weight:600;text-decoration:none;border-bottom:2px solid var(--ink);padding-bottom:3px}
+.cta:hover{border-color:var(--brand)}
+@media (min-width:900px){.intro .meta{order:0}}
+
+/* Services as + rows */
+.rows{border-bottom:1px solid var(--hair)}
+details{border-top:1px solid var(--hair)}
+summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:baseline;padding-block:20px}
+summary::-webkit-details-marker{display:none}
+summary h3{font-size:clamp(1.25rem,2.4vw,1.9rem);font-weight:500;letter-spacing:-.015em;line-height:1.2}
+summary .plus{font-size:1.6rem;font-weight:400;line-height:1;transition:transform .25s}
+details[open] summary .plus{transform:rotate(45deg)}
+summary:hover h3{text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:1px}
+.dbody{display:grid;grid-template-columns:1fr;gap:16px;padding-bottom:28px}
+@media (min-width:700px){.dbody{grid-template-columns:2fr 1fr;gap:40px}}
+.dbody p{color:#333;max-width:60ch}
+.dbody ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px;font-size:.9rem;color:var(--muted)}
 
 /* Process */
-.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr;counter-reset:s}
-@media (min-width:860px){.steps{grid-template-columns:repeat(3,1fr)}}
-.steps li{padding:28px 24px 28px 0;border-top:1.5px solid var(--ink);display:flex;flex-direction:column;gap:10px;min-width:0}
-@media (min-width:860px){.steps li{padding-right:32px}}
-.steps li::before{counter-increment:s;content:counter(s,decimal-leading-zero);font-family:var(--f-display);font-size:2rem;font-weight:400;color:var(--accent);line-height:1}
-.steps h3{font-size:1.02rem;line-height:1.3}
-.steps p{color:var(--muted);font-size:.95rem}
-.steps .who{font-family:var(--f-mono);font-size:.68rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-top:auto;padding-top:6px}
+.steps{list-style:none;margin:0;padding:0;counter-reset:s}
+.steps li{display:grid;grid-template-columns:56px 1fr;gap:4px 16px;padding-block:22px;border-top:1px solid var(--hair)}
+.steps li:last-child{border-bottom:1px solid var(--hair)}
+.steps li::before{counter-increment:s;content:counter(s,decimal-leading-zero);font-weight:600;font-variant-numeric:tabular-nums;grid-row:1/3}
+.steps h3{font-size:1.15rem;font-weight:600}
+.steps p{color:#444;max-width:60ch}
+.steps .who{color:var(--muted);font-size:.85rem}
+@media (min-width:900px){
+  .steps li{grid-template-columns:56px minmax(200px,1.1fr) 2fr minmax(140px,.8fr);gap:24px;align-items:baseline}
+  .steps li::before{grid-row:auto}
+  .steps .who{text-align:right}
+}
 
-/* Approach */
-.approach{display:grid;grid-template-columns:1fr;gap:48px}
-@media (min-width:960px){.approach{grid-template-columns:1fr 1fr;gap:72px}}
-.ap-head{display:flex;flex-direction:column;gap:14px;margin-bottom:36px}
-.principles{display:flex;flex-direction:column}
-.pr{display:grid;grid-template-columns:130px 1fr;gap:20px;padding-block:22px;border-top:1px solid var(--line)}
-.pr:last-child{border-bottom:1px solid var(--line)}
-@media (max-width:520px){.pr{grid-template-columns:1fr;gap:6px}}
-.pr h3{font-size:1rem;margin-bottom:6px}
-.pr p{color:var(--muted);font-size:.95rem}
-.team{background:var(--sheet);border:1.5px solid var(--ink);padding:28px;display:flex;flex-direction:column;gap:20px;align-self:start}
-.team h3{font-size:1.2rem}
-.team > p{color:var(--muted)}
-.roles{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line)}
-.roles div{background:var(--sheet);padding:14px;display:flex;flex-direction:column;gap:4px;min-width:0}
-.roles b{font-weight:600;font-size:.94rem}
-.roles span{font-size:.82rem;color:var(--muted)}
-.roles .core{grid-column:1/-1;background:var(--ink);color:var(--paper)}
-.roles .core span{color:color-mix(in srgb,var(--paper) 70%,transparent)}
+/* Principles */
+.pairs{display:flex;flex-direction:column}
+.pair{display:grid;grid-template-columns:1fr;gap:6px;padding-block:22px;border-top:1px solid var(--hair)}
+.pair:last-child{border-bottom:1px solid var(--hair)}
+@media (min-width:700px){.pair{grid-template-columns:minmax(200px,1fr) 2fr;gap:24px}}
+.pair h3{font-size:1.15rem;font-weight:600}
+.pair p{color:#444;max-width:60ch}
 
-/* Types strip */
-.types{display:flex;flex-wrap:wrap;border-top:1.5px solid var(--ink);border-bottom:1px solid var(--line)}
-.types div{flex:1 1 220px;padding:22px 20px 22px 0;display:flex;flex-direction:column;gap:4px}
-.types b{font-family:var(--f-display);font-weight:500;font-size:1.02rem}
-.types span{font-size:.88rem;color:var(--muted)}
+/* Plain lists */
+.cols{display:grid;grid-template-columns:1fr;gap:40px}
+@media (min-width:700px){.cols{grid-template-columns:1fr 1fr}}
+.list h3{font-size:.75rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.list ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+.list li{font-size:1.05rem}
+.list li span{color:var(--muted)}
+.list > p{color:#444;max-width:52ch;margin-bottom:16px}
 
 /* Contact */
-.contact{display:grid;grid-template-columns:1fr;gap:48px}
-@media (min-width:960px){.contact{grid-template-columns:.9fr 1.1fr;gap:72px}}
-.info{display:flex;flex-direction:column;gap:22px;min-width:0}
-.info > p{color:var(--muted);max-width:46ch}
-.info dl{margin:0;display:flex;flex-direction:column}
-.info dl div{display:grid;grid-template-columns:120px 1fr;gap:12px;padding-block:14px;border-top:1px solid var(--line)}
-.info dl div:last-child{border-bottom:1px solid var(--line)}
-.info dt{font-family:var(--f-mono);font-size:.7rem;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;padding-top:3px}
-.info dd{margin:0;user-select:all;min-width:0;overflow-wrap:anywhere}
-.ph{color:var(--muted);font-style:italic}
-form{display:grid;grid-template-columns:1fr 1fr;gap:16px;background:var(--sheet);border:1.5px solid var(--ink);padding:28px;min-width:0}
-@media (max-width:560px){form{grid-template-columns:1fr;padding:20px}}
-.f{display:flex;flex-direction:column;gap:6px;min-width:0}
+form{display:grid;grid-template-columns:1fr 1fr;gap:28px 32px;max-width:900px}
+@media (max-width:640px){form{grid-template-columns:1fr}}
+.f{display:flex;flex-direction:column;gap:4px;min-width:0}
 .f.full{grid-column:1/-1}
-label{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-input,select,textarea{font:inherit;font-size:.96rem;color:var(--ink);background:var(--paper);border:1px solid var(--line);padding:11px 12px;border-radius:0;width:100%}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
-textarea{min-height:110px;resize:vertical}
-.form-foot{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
-.form-foot small{color:var(--muted);font-size:.82rem;max-width:40ch}
-.err{color:var(--accent);font-size:.84rem;grid-column:1/-1}
-.result{grid-column:1/-1;border:1px dashed var(--accent);padding:16px;display:flex;flex-direction:column;gap:10px}
-.result pre{margin:0;font-family:var(--f-mono);font-size:.8rem;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--ink)}
-.result p{font-size:.9rem}
+label{font-size:.75rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+input,select,textarea{font:inherit;font-size:1.05rem;color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--ink);border-radius:0;padding:8px 0;width:100%;-webkit-appearance:none;appearance:none}
+select{background-image:linear-gradient(45deg,transparent 50%,var(--ink) 50%),linear-gradient(135deg,var(--ink) 50%,transparent 50%);background-position:calc(100% - 10px) 55%,calc(100% - 5px) 55%;background-size:5px 5px;background-repeat:no-repeat}
+textarea{min-height:96px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:none;border-bottom:2px solid var(--brand)}
+input::placeholder,textarea::placeholder{color:#AAAAAA}
+.form-foot{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between}
+.form-foot small{color:var(--muted);font-size:.85rem}
+.btn{font:inherit;font-weight:600;font-size:1rem;padding:14px 26px;border:1px solid var(--ink);background:var(--ink);color:var(--bg);cursor:pointer}
+.btn:hover{background:var(--bg);color:var(--ink)}
+.btn.ghost{background:var(--bg);color:var(--ink)}
+.btn.ghost:hover{background:var(--ink);color:var(--bg)}
+.err{grid-column:1/-1;color:var(--brand-ink);font-size:.9rem}
+.result{grid-column:1/-1;border-top:2px solid var(--brand);padding-top:16px;display:flex;flex-direction:column;gap:12px}
+.result pre{margin:0;font-family:var(--f-mono);font-size:.82rem;white-space:pre-wrap;overflow-wrap:anywhere;background:var(--plate);padding:14px}
 
-footer{padding-block:36px}
-.foot{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center}
-.foot p{font-size:.85rem;color:var(--muted)}
+/* Footer */
+footer{border-top:1px solid var(--rule);padding-block:48px 32px}
+.fgrid{display:grid;grid-template-columns:1fr;gap:32px}
+@media (min-width:700px){.fgrid{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1040px){.fgrid{grid-template-columns:1.4fr 1fr 1fr 1fr}}
+.fgrid h4{margin:0 0 8px;font-size:.75rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.fgrid p{font-size:.95rem}
+.ph{color:var(--muted)}
+.fbig{display:flex;align-items:center;gap:14px}
+.fbig .logo{width:44px;height:51px}
+.fbig b{font-weight:700;font-size:1.2rem;letter-spacing:.01em;text-transform:uppercase;line-height:1.1}
+.legal{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;margin-top:48px;font-size:.85rem;color:var(--muted)}
+.legal a{text-decoration:none;color:var(--ink);font-weight:500}
 </style>
 </head>
 <body>
 
-
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <symbol id="psp-logo" viewBox="0 0 713 824">
-    <path fill="var(--brand)" fill-rule="evenodd" d="M357 0 713 207V618L357 824 0 618V207Z M357 160 138 285V695L274 773V617L357 662 575 537V285Z"/>
-    <path fill="none" stroke="var(--paper)" stroke-width="1" vector-effect="non-scaling-stroke" d="M0 207 138 285M713 207 575 285M357 662V824"/>
-    <path fill="none" stroke="var(--brand)" stroke-width="1" vector-effect="non-scaling-stroke" d="M357 160V318M138 537 276 459M439 459 575 537M138 695 274 773"/>
-    <path fill="var(--ink)" d="M357 318 439 365V459L357 506 276 459V365Z"/>
-    <path fill="none" stroke="var(--paper)" stroke-width="1" vector-effect="non-scaling-stroke" d="M276 365 357 412 439 365M357 412V506"/>
+    <path fill="#F7991E" fill-rule="evenodd" d="M357 0 713 207V618L357 824 0 618V207Z M357 160 138 285V695L274 773V617L357 662 575 537V285Z"/>
+    <path fill="none" stroke="#FFFFFF" stroke-width="1" vector-effect="non-scaling-stroke" d="M0 207 138 285M713 207 575 285M357 662V824"/>
+    <path fill="none" stroke="#F7991E" stroke-width="1" vector-effect="non-scaling-stroke" d="M357 160V318M138 537 276 459M439 459 575 537M138 695 274 773"/>
+    <path fill="#111111" d="M357 318 439 365V459L357 506 276 459V365Z"/>
+    <path fill="none" stroke="#FFFFFF" stroke-width="1" vector-effect="non-scaling-stroke" d="M276 365 357 412 439 365M357 412V506"/>
   </symbol>
+  <defs>
+    <pattern id="earth" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="10" stroke="#8A8A8A" stroke-width="1"/></pattern>
+    <pattern id="ins" width="12" height="10" patternUnits="userSpaceOnUse"><path d="M0 8 L6 2 L12 8" fill="none" stroke="#B86200" stroke-width="1"/></pattern>
+  </defs>
 </svg>
+
 <header class="top">
-  <div class="wrap nav">
-    <a class="brand" href="#top" aria-label="Prime Spatial Plan">
-      <svg class="logo" viewBox="0 0 713 824" aria-hidden="true"><use href="#psp-logo"/></svg>
-      <span><b>Prime Spatial Plan</b><small data-en="Architecture & design studio">Зураг төслийн компани</small></span>
-    </a>
-    <nav class="links" aria-label="Menu">
-      <a href="#services" data-en="Services">Үйлчилгээ</a>
-      <a href="#process" data-en="Process">Ажлын явц</a>
-      <a href="#approach" data-en="Approach">Бидний зарчим</a>
-      <a class="btn" href="#contact" data-en="Contact">Холбогдох</a>
+  <div class="wrap bar">
+    <a class="brand" href="#top"><svg class="logo" viewBox="0 0 713 824" aria-hidden="true"><use href="#psp-logo"/></svg><span>Prime Spatial Plan</span></a>
+    <nav class="nav" aria-label="Menu">
+      <a class="opt" href="#services" data-en="Services">Үйлчилгээ</a>
+      <a class="opt" href="#process" data-en="Process">Ажлын явц</a>
+      <a class="opt" href="#approach" data-en="Approach">Зарчим</a>
+      <a href="#contact" data-en="Contact">Холбоо барих</a>
       <div class="lang" role="group" aria-label="Хэл / Language">
-        <button type="button" id="lang-mn" data-lang="mn" aria-pressed="true">МН</button>
-        <button type="button" id="lang-en" data-lang="en" aria-pressed="false">EN</button>
+        <button type="button" data-lang="mn" aria-pressed="true">МН</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
       </div>
     </nav>
   </div>
 </header>
 
 <main id="top">
-  <div class="hero">
-    <div class="wrap hero-grid">
-      <div class="hero-copy">
-        <span class="mono" data-en="Architecture · Design · Planning">Архитектур · Зураг төсөл · Төлөвлөлт</span>
-        <h1><span data-en="We plan space">Орон зайг</span> <em data-en="precisely">нарийн</em> <span data-en="and shape it around your life.">төлөвлөж, амьдралд тань тааруулна.</span></h1>
-        <p class="lede" data-en="Prime Spatial Plan is a Mongolian design studio delivering private houses, townhouses and residential buildings, from the first sketch to construction drawings.">Prime Spatial Plan нь амины орон сууц, таунхаус, орон сууцны барилгын зураг төслийг анхны эскизээс ажлын зураг хүртэл гүйцэтгэдэг Монголын зураг төслийн компани.</p>
-        <div class="cta-row">
-          <a class="btn primary" href="#contact" data-en="Discuss your project →">Төслөө ярилцах →</a>
-          <a class="btn" href="#services" data-en="View services">Үйлчилгээ үзэх</a>
-        </div>
-      </div>
+  <div class="wrap title">
+    <h1>Prime Spatial Plan</h1>
+    <p data-en="Ulaanbaatar, Mongolia">Улаанбаатар, Монгол</p>
+  </div>
 
-      <figure class="sheet">
-        <svg class="plan" viewBox="0 0 540 420" role="img" aria-label="Хоёр давхар амины орон сууцны 1-р давхрын төлөвлөлтийн жишээ зураг" data-en-aria="Sample ground floor plan of a two-storey private house">
+  <div class="wrap gallery" aria-roledescription="carousel" aria-label="Жишээ зургууд" data-en-aria="Sample drawings">
+    <div class="track" id="track" tabindex="0">
+      <!-- 01 PLAN -->
+      <figure class="slide" data-cap-b="План —" data-cap-b-en="Plan —" data-cap="Функциональ төлөвлөлт: өрөө бүрийн талбай, хэмжээс, тэнхлэгийг нэг дор тодорхой тусгана." data-cap-en="Functional layout showing the area, dimensions and grid axes of every room.">
+        <div class="plate"><span class="tag" data-en="Sample drawing · 1:100">Жишээ зураг · 1:100</span>
+        <svg class="dw" viewBox="0 0 540 420" role="img" aria-label="Давхрын төлөвлөлт" data-en-aria="Floor plan">
           <g>
-            <line class="axis" x1="80" y1="40" x2="80" y2="380"/><line class="axis" x1="220" y1="40" x2="220" y2="380"/>
-            <line class="axis" x1="360" y1="40" x2="360" y2="380"/><line class="axis" x1="480" y1="40" x2="480" y2="380"/>
-            <line class="axis" x1="44" y1="80" x2="510" y2="80"/><line class="axis" x1="44" y1="220" x2="510" y2="220"/><line class="axis" x1="44" y1="360" x2="510" y2="360"/>
-            <circle class="bubble" cx="80" cy="398" r="11"/><text class="bt" x="80" y="398">1</text>
-            <circle class="bubble" cx="220" cy="398" r="11"/><text class="bt" x="220" y="398">2</text>
-            <circle class="bubble" cx="360" cy="398" r="11"/><text class="bt" x="360" y="398">3</text>
-            <circle class="bubble" cx="480" cy="398" r="11"/><text class="bt" x="480" y="398">4</text>
-            <circle class="bubble" cx="26" cy="80" r="11"/><text class="bt" x="26" y="80">А</text>
-            <circle class="bubble" cx="26" cy="220" r="11"/><text class="bt" x="26" y="220">Б</text>
-            <circle class="bubble" cx="26" cy="360" r="11"/><text class="bt" x="26" y="360">В</text>
+            <line class="ax" x1="80" y1="40" x2="80" y2="380"/><line class="ax" x1="220" y1="40" x2="220" y2="380"/>
+            <line class="ax" x1="360" y1="40" x2="360" y2="380"/><line class="ax" x1="480" y1="40" x2="480" y2="380"/>
+            <line class="ax" x1="44" y1="80" x2="510" y2="80"/><line class="ax" x1="44" y1="220" x2="510" y2="220"/><line class="ax" x1="44" y1="360" x2="510" y2="360"/>
+            <circle class="bub" cx="80" cy="398" r="11"/><text class="bt" x="80" y="398">1</text>
+            <circle class="bub" cx="220" cy="398" r="11"/><text class="bt" x="220" y="398">2</text>
+            <circle class="bub" cx="360" cy="398" r="11"/><text class="bt" x="360" y="398">3</text>
+            <circle class="bub" cx="480" cy="398" r="11"/><text class="bt" x="480" y="398">4</text>
+            <circle class="bub" cx="26" cy="80" r="11"/><text class="bt" x="26" y="80">А</text>
+            <circle class="bub" cx="26" cy="220" r="11"/><text class="bt" x="26" y="220">Б</text>
+            <circle class="bub" cx="26" cy="360" r="11"/><text class="bt" x="26" y="360">В</text>
           </g>
           <g>
             <line class="dim" x1="80" y1="52" x2="480" y2="52"/>
@@ -254,200 +257,285 @@ footer{padding-block:36px}
             <line class="dim" x1="75" y1="35" x2="85" y2="25"/><line class="dim" x1="475" y1="35" x2="485" y2="25"/>
             <text class="dt" x="280" y="24">12 000</text>
           </g>
-          <g>
-            <line class="hatch" x1="150" y1="232" x2="210" y2="232"/><line class="hatch" x1="150" y1="248" x2="210" y2="248"/>
-            <line class="hatch" x1="150" y1="264" x2="210" y2="264"/><line class="hatch" x1="150" y1="280" x2="210" y2="280"/>
-            <line class="hatch" x1="150" y1="296" x2="210" y2="296"/><line class="hatch" x1="150" y1="312" x2="210" y2="312"/>
-            <line class="hatch" x1="150" y1="328" x2="210" y2="328"/>
-            <path class="hatch" d="M180 340 L180 236 M176 244 L180 236 L184 244"/>
+          <g class="mt">
+            <path d="M150 232H210M150 248H210M150 264H210M150 280H210M150 296H210M150 312H210M150 328H210"/>
+            <path d="M180 340V236M176 244 180 236 184 244"/>
           </g>
-          <rect class="wall" x="80" y="80" width="400" height="280"/>
-          <path class="iwall" d="M220 80 V150 M220 186 V300 M220 336 V360"/>
-          <path class="iwall" d="M80 220 H110 M140 220 H290 M326 220 H480"/>
-          <path class="iwall" d="M360 220 V290 M360 326 V360"/>
-          <path class="iwall" d="M150 220 V360"/>
-          <g><line class="win" x1="290" y1="80" x2="380" y2="80"/><line class="winl" x1="290" y1="78" x2="380" y2="78"/><line class="winl" x1="290" y1="82" x2="380" y2="82"/>
-             <line class="win" x1="120" y1="80" x2="180" y2="80"/><line class="winl" x1="120" y1="78" x2="180" y2="78"/><line class="winl" x1="120" y1="82" x2="180" y2="82"/>
-             <line class="win" x1="250" y1="360" x2="320" y2="360"/><line class="winl" x1="250" y1="358" x2="320" y2="358"/><line class="winl" x1="250" y1="362" x2="320" y2="362"/>
-             <line class="win" x1="390" y1="360" x2="450" y2="360"/><line class="winl" x1="390" y1="358" x2="450" y2="358"/><line class="winl" x1="390" y1="362" x2="450" y2="362"/>
-             <line class="win" x1="480" y1="110" x2="480" y2="180"/><line class="winl" x1="478" y1="110" x2="478" y2="180"/><line class="winl" x1="482" y1="110" x2="482" y2="180"/></g>
-          <path class="door" d="M220 150 L256 150 M220 150 A36 36 0 0 1 256 186"/>
-          <path class="door" d="M290 220 L290 256 M290 220 A36 36 0 0 0 326 256"/>
-          <path class="door" d="M360 290 L396 290 M360 290 A36 36 0 0 1 396 326"/>
-          <path class="door" d="M110 220 L110 248 M110 220 A30 30 0 0 0 140 248"/>
-          <text class="room" x="150" y="148" data-en="Kitchen">Гал тогоо</text><text class="area" x="150" y="163">17.6 м²</text>
-          <text class="room" x="350" y="148" data-en="Living room">Зочны өрөө</text><text class="area" x="350" y="163">32.8 м²</text>
-          <text class="room" x="290" y="300" data-en="Bedroom">Унтлагын өрөө</text><text class="area" x="290" y="315">17.6 м²</text>
-          <text class="room" x="420" y="257" data-en="Study">Ажлын өрөө</text><text class="area" x="420" y="272">15.1 м²</text>
-          <text class="room" x="115" y="294" data-en="WC">АЦӨ</text><text class="area" x="115" y="309">8.8 м²</text>
-          <line class="cursor" x1="80" y1="70" x2="80" y2="370"/>
-        </svg>
-        <div class="titleblock">
-          <div><span data-en="Sheet">Хуудас</span><strong>АР-01</strong></div>
-          <div><span data-en="Scale">Масштаб</span><strong>1:100</strong></div>
-          <div><span data-en="Level">Давхар</span><strong data-en="Ground floor">1-р давхар</strong></div>
-          <div><span data-en="Type">Төрөл</span><strong data-en="Sample drawing">Жишээ зураг</strong></div>
-        </div>
+          <rect class="w" x="80" y="80" width="400" height="280"/>
+          <path class="iw" d="M220 80V150M220 186V300M220 336V360"/>
+          <path class="iw" d="M80 220H110M140 220H290M326 220H480"/>
+          <path class="iw" d="M360 220V290M360 326V360"/>
+          <path class="iw" d="M150 220V360"/>
+          <g>
+            <line class="win" x1="290" y1="80" x2="380" y2="80"/><path class="th" d="M290 78H380M290 82H380"/>
+            <line class="win" x1="120" y1="80" x2="180" y2="80"/><path class="th" d="M120 78H180M120 82H180"/>
+            <line class="win" x1="250" y1="360" x2="320" y2="360"/><path class="th" d="M250 358H320M250 362H320"/>
+            <line class="win" x1="390" y1="360" x2="450" y2="360"/><path class="th" d="M390 358H450M390 362H450"/>
+            <line class="win" x1="480" y1="110" x2="480" y2="180"/><path class="th" d="M478 110V180M482 110V180"/>
+          </g>
+          <g class="mt">
+            <path d="M220 150 256 150M220 150A36 36 0 0 1 256 186"/>
+            <path d="M290 220 290 256M290 220A36 36 0 0 0 326 256"/>
+            <path d="M360 290 396 290M360 290A36 36 0 0 1 396 326"/>
+            <path d="M110 220 110 248M110 220A30 30 0 0 0 140 248"/>
+          </g>
+          <text class="lb" x="150" y="148" data-en="Kitchen">Гал тогоо</text><text class="sm" x="150" y="163">17.6 м²</text>
+          <text class="lb" x="350" y="148" data-en="Living room">Зочны өрөө</text><text class="sm" x="350" y="163">32.8 м²</text>
+          <text class="lb" x="290" y="300" data-en="Bedroom">Унтлагын өрөө</text><text class="sm" x="290" y="315">17.6 м²</text>
+          <text class="lb" x="420" y="257" data-en="Study">Ажлын өрөө</text><text class="sm" x="420" y="272">15.1 м²</text>
+          <text class="lb" x="115" y="294" data-en="WC">АЦӨ</text><text class="sm" x="115" y="309">8.8 м²</text>
+        </svg></div>
       </figure>
+
+      <!-- 02 ELEVATION -->
+      <figure class="slide" data-cap-b="Фасад —" data-cap-b-en="Façade —" data-cap="Барилгын гадаад төрх, цонхны хэмнэл, давхрын түвшний тэмдэглэгээ." data-cap-en="The building's exterior, window rhythm and floor level marks.">
+        <div class="plate"><span class="tag" data-en="Sample drawing · 1:100">Жишээ зураг · 1:100</span>
+        <svg class="dw" viewBox="0 0 640 400" role="img" aria-label="Фасадын зураг" data-en-aria="Elevation drawing">
+          <rect x="40" y="330" width="560" height="14" fill="url(#earth)"/>
+          <line class="t" x1="40" y1="330" x2="600" y2="330" style="stroke-width:3"/>
+          <rect class="t" x="112" y="88" width="416" height="12"/>
+          <rect class="t" x="120" y="100" width="400" height="230"/>
+          <line class="th" x1="120" y1="220" x2="520" y2="220" style="stroke-dasharray:6 4"/>
+          <rect class="t" x="300" y="240" width="160" height="90"/><path class="th" d="M340 240V330M380 240V330M420 240V330"/>
+          <rect class="t" x="170" y="245" width="44" height="85"/><line class="th" x1="206" y1="290" x2="206" y2="298"/>
+          <line class="t" x1="156" y1="240" x2="232" y2="240" style="stroke-width:4"/>
+          <rect class="t" x="240" y="252" width="36" height="40"/>
+          <rect class="t" x="160" y="130" width="80" height="62"/><line class="th" x1="200" y1="130" x2="200" y2="192"/>
+          <rect class="t" x="300" y="130" width="80" height="62"/><line class="th" x1="340" y1="130" x2="340" y2="192"/>
+          <rect class="t" x="420" y="130" width="60" height="62"/>
+          <g>
+            <path class="dim" d="M520 330H556M520 220H556M520 100H556M528 88H556"/>
+            <path class="dim" d="M556 330l-6-8h12zM556 220l-6-8h12zM556 100l-6-8h12zM556 88l-6-8h12z" style="fill:var(--plate)"/>
+            <text class="dt" x="590" y="334">±0.000</text><text class="dt" x="590" y="224">+3.300</text>
+            <text class="dt" x="590" y="104">+6.600</text><text class="dt" x="590" y="82">+7.200</text>
+          </g>
+          <g>
+            <line class="dim" x1="80" y1="330" x2="80" y2="100"/>
+            <path class="dim" d="M74 330H86M74 220H86M74 100H86M75 335 85 325M75 225 85 215M75 105 85 95"/>
+            <text class="dt" transform="translate(70 275) rotate(-90)">3 300</text>
+            <text class="dt" transform="translate(70 160) rotate(-90)">3 300</text>
+          </g>
+          <text class="sm" x="320" y="372" data-en="South elevation">Өмнөд фасад</text>
+        </svg></div>
+      </figure>
+
+      <!-- 03 SECTION -->
+      <figure class="slide" data-cap-b="Зүсэлт —" data-cap-b-en="Section —" data-cap="Давхар хоорондын өндөр, хучилт, суурь, дээврийн дулаалгын шийдэл." data-cap-en="Floor heights, slabs, foundations and roof insulation.">
+        <div class="plate"><span class="tag" data-en="Sample drawing · 1:100">Жишээ зураг · 1:100</span>
+        <svg class="dw" viewBox="0 0 640 400" role="img" aria-label="Зүсэлтийн зураг" data-en-aria="Section drawing">
+          <rect x="40" y="330" width="560" height="50" fill="url(#earth)" opacity=".55"/>
+          <line class="t" x1="40" y1="330" x2="600" y2="330" style="stroke-width:3"/>
+          <rect class="fill" x="104" y="330" width="40" height="44"/><rect class="fill" x="496" y="330" width="40" height="44"/>
+          <rect class="fill" x="116" y="100" width="16" height="230"/><rect class="fill" x="508" y="100" width="16" height="230"/>
+          <rect class="fill" x="116" y="322" width="408" height="10"/>
+          <rect class="fill" x="116" y="212" width="408" height="10"/>
+          <rect class="fill" x="116" y="100" width="408" height="10"/>
+          <rect x="132" y="90" width="376" height="10" fill="url(#ins)"/>
+          <rect class="fill" x="116" y="84" width="12" height="16"/><rect class="fill" x="512" y="84" width="12" height="16"/>
+          <path class="t" d="M300 322h17v-12.5h17v-12.5h17v-12.5h17v-12.5h17v-12.5h17v-12.5h17v-12.5h17v-12.5"/>
+          <text class="lb" x="210" y="280" data-en="Living room">Зочны өрөө</text>
+          <text class="lb" x="210" y="170" data-en="Bedroom">Унтлагын өрөө</text>
+          <text class="lb" x="430" y="170" data-en="Study">Ажлын өрөө</text>
+          <g>
+            <line class="dim" x1="80" y1="322" x2="80" y2="110"/>
+            <path class="dim" d="M74 322H86M74 212H86M74 110H86M75 327 85 317M75 217 85 207M75 115 85 105"/>
+            <text class="dt" transform="translate(70 267) rotate(-90)">3 300</text>
+            <text class="dt" transform="translate(70 161) rotate(-90)">3 300</text>
+          </g>
+          <text class="sm" x="566" y="96" style="text-anchor:start" data-en="insul.">дулаалга</text>
+          <line class="dim" x1="512" y1="95" x2="562" y2="95"/>
+          <text class="sm" x="320" y="394" data-en="Section A–A">А–А зүсэлт</text>
+        </svg></div>
+      </figure>
+
+      <!-- 04 SITE -->
+      <figure class="slide" data-cap-b="Байршил —" data-cap-b-en="Site —" data-cap="Газрын нэгж талбар дээрх барилгын байрлал, орц гарц, машины зам, ногоон байгууламж." data-cap-en="Building placement on the plot, entrances, driveway and landscaping.">
+        <div class="plate"><span class="tag" data-en="Sample drawing · 1:500">Жишээ зураг · 1:500</span>
+        <svg class="dw" viewBox="0 0 640 400" role="img" aria-label="Байршлын зураг" data-en-aria="Site plan">
+          <rect class="pave" x="0" y="344" width="640" height="56"/>
+          <text class="sm" x="320" y="378" data-en="Street">Гудамж</text>
+          <rect class="th" x="90" y="40" width="460" height="280" style="stroke-dasharray:12 5;stroke-width:1.4"/>
+          <rect class="pave" x="430" y="230" width="52" height="114"/>
+          <rect class="pave" x="300" y="230" width="18" height="90"/>
+          <rect x="220" y="90" width="200" height="140" fill="url(#earth)" opacity=".5"/>
+          <rect class="t" x="220" y="90" width="200" height="140" style="stroke-width:3"/>
+          <rect class="t" x="420" y="150" width="72" height="80"/>
+          <text class="lb" x="320" y="164" data-en="House">Орон сууц</text><text class="sm" x="320" y="179">2 давхар</text>
+          <text class="lb" x="456" y="194" data-en="Garage">Гараж</text>
+          <g class="mt">
+            <circle cx="135" cy="85" r="20"/><circle cx="135" cy="85" r="2"/>
+            <circle cx="150" cy="270" r="24"/><circle cx="150" cy="270" r="2"/>
+            <circle cx="515" cy="80" r="17"/><circle cx="515" cy="80" r="2"/>
+            <circle cx="180" cy="180" r="14"/><circle cx="180" cy="180" r="2"/>
+            <circle cx="520" cy="282" r="15"/><circle cx="520" cy="282" r="2"/>
+          </g>
+          <text class="sm" x="96" y="34" style="text-anchor:start" data-en="Plot boundary">Газрын хил</text>
+          <g transform="translate(596 70)">
+            <circle class="mt" r="16"/><path class="fill" d="M0 -13 6 8 0 3 -6 8Z"/><text class="sm" y="-22">N</text>
+          </g>
+        </svg></div>
+      </figure>
+    </div>
+
+    <div class="gal-foot">
+      <span class="count" id="count">01/04</span>
+      <p class="caption" id="caption"><b>План —</b> Функциональ төлөвлөлт: өрөө бүрийн талбай, хэмжээс, тэнхлэгийг нэг дор тодорхой тусгана.</p>
+      <div class="arrows">
+        <button type="button" id="prev" aria-label="Өмнөх">←</button>
+        <button type="button" id="next" aria-label="Дараах">→</button>
+      </div>
     </div>
   </div>
 
-  <section id="services">
-    <div class="wrap">
-      <div class="sec-head">
-        <span class="mono" data-en="Services">Үйлчилгээ</span>
-        <div>
-          <h2 class="h2" data-en="From an idea to drawings you can build from">Санаанаас эхлээд барих боломжтой зураг хүртэл</h2>
-          <p data-en="Work with us at any stage of your project. Every drawing is prepared in line with the applicable building codes, regulations and Mongolian national standards (MNS).">Төслийн аль ч үе шатнаас бидэнтэй хамтарч болно. Зураг бүрийг холбогдох барилгын норм, дүрэм, МНС стандартын шаардлагад нийцүүлэн боловсруулна.</p>
-        </div>
-      </div>
-      <div class="services">
-        <article class="svc">
-          <span class="tag" data-en="Architecture">Архитектур</span>
-          <h3 data-en="Concept design and architectural solutions">Эскиз зураг, архитектурын шийдэл</h3>
-          <p data-en="Functional layouts, façade design and 3D visuals let you see the building and make decisions before construction starts.">Функциональ төлөвлөлт, фасадын шийдэл, 3D дүрслэлээр барилгаа баригдахаас өмнө харж, шийдвэрээ гаргана.</p>
-          <ul><li data-en="Layout">Төлөвлөлт</li><li data-en="Façade">Фасад</li><li>3D</li></ul>
-        </article>
-        <article class="svc">
-          <span class="tag" data-en="Working drawings">Ажлын зураг</span>
-          <h3 data-en="Complete design package">Зураг төслийн бүрэн багц</h3>
-          <p data-en="Architectural working drawings coordinated with structural, plumbing, heating and electrical engineers in one package.">Архитектурын ажлын зургийг хийц, ус хангамж, дулаан, цахилгааны инженерүүдтэй уялдуулан нэг багц болгоно.</p>
-          <ul><li data-en="Architecture">Архитектур</li><li data-en="Structure">Хийц</li><li data-en="MEP">Инженерийн шугам</li></ul>
-        </article>
-        <article class="svc">
-          <span class="tag" data-en="Residential">Орон сууц</span>
-          <h3 data-en="Private houses and townhouses">Амины орон сууц, таунхаус</h3>
-          <p data-en="One- and two-storey houses and townhouses designed for the Mongolian climate and your family's needs.">Нэг, хоёр давхар амины сууц, таунхаусыг Монголын уур амьсгал, гэр бүлийн хэрэгцээнд тохируулан зураглана.</p>
-          <ul><li data-en="Private house">Амины сууц</li><li data-en="Townhouse">Таунхаус</li></ul>
-        </article>
-        <article class="svc">
-          <span class="tag" data-en="Interior">Интерьер</span>
-          <h3 data-en="Interior design">Интерьер дизайн</h3>
-          <p data-en="Room layouts, materials, lighting and furniture planning resolved as one coherent concept.">Өрөө тасалгааны зохион байгуулалт, материал, гэрэлтүүлэг, тавилгын төлөвлөлтийг нэг ойлголтоор шийднэ.</p>
-          <ul><li data-en="Materials">Материал</li><li data-en="Lighting">Гэрэлтүүлэг</li><li data-en="Furniture">Тавилга</li></ul>
-        </article>
-        <article class="svc">
-          <span class="tag" data-en="Planning">Төлөвлөлт</span>
-          <h3 data-en="Site planning">Газрын байршлын төлөвлөгөө</h3>
-          <p data-en="We place the building on your plot and plan access, driveways, parking and landscaping.">Газрын нэгж талбар дээрх барилгын байршил, орц гарц, зам талбай, ногоон байгууламжийг оновчтой төлөвлөнө.</p>
-          <ul><li data-en="Master plan">Ерөнхий төлөвлөгөө</li><li data-en="Site plan">Талбайн зураг</li></ul>
-        </article>
-        <article class="svc">
-          <span class="tag" data-en="Advisory">Зөвлөх</span>
-          <h3 data-en="Design consulting">Зураг төслийн зөвлөгөө</h3>
-          <p data-en="We review existing drawings and design briefs against codes and help prepare them for expert review and permits.">Бэлэн зураг, төслийн даалгаврыг норм дүрмийн дагуу хянаж, экспертиз болон зөвшөөрөлд бэлтгэхэд туслана.</p>
-          <ul><li data-en="Code review">Норм хяналт</li><li data-en="Expert review">Экспертиз</li></ul>
-        </article>
-      </div>
+  <div class="wrap intro">
+    <dl class="meta">
+      <div><dt data-en="Disciplines">Чиглэл</dt><dd data-en="Architecture, interiors, planning">Архитектур, интерьер, төлөвлөлт</dd></div>
+      <div><dt data-en="Typology">Барилгын төрөл</dt><dd data-en="Private houses, townhouses, apartment buildings">Амины орон сууц, таунхаус, орон сууцны барилга</dd></div>
+      <div><dt data-en="Scope">Ажлын хүрээ</dt><dd data-en="From concept sketch to designer supervision">Эскизээс зохиогчийн хяналт хүртэл</dd></div>
+      <div><dt data-en="Location">Байршил</dt><dd data-en="Ulaanbaatar, Mongolia">Улаанбаатар, Монгол</dd></div>
+      <div><dt data-en="First meeting">Эхний уулзалт</dt><dd data-en="Free of charge">Үнэ төлбөргүй</dd></div>
+    </dl>
+    <div class="text">
+      <p class="statement"><span data-en="We plan space precisely">Орон зайг нарийн төлөвлөж,</span> <span data-en="and shape it around your life.">амьдралд тань тааруулна.</span></p>
+      <p data-en="Prime Spatial Plan is a Mongolian design studio delivering private houses, townhouses and residential buildings, from the first sketch to construction drawings. Every drawing is prepared in line with the applicable building codes, regulations and Mongolian national standards (MNS).">Prime Spatial Plan нь амины орон сууц, таунхаус, орон сууцны барилгын зураг төслийг анхны эскизээс ажлын зураг хүртэл гүйцэтгэдэг Монголын зураг төслийн компани. Зураг бүрийг холбогдох барилгын норм, дүрэм, МНС стандартын шаардлагад нийцүүлэн боловсруулна.</p>
+      <a class="cta" href="#contact" data-en="Discuss your project →">Төслөө ярилцах →</a>
     </div>
-  </section>
+  </div>
 
-  <section id="process">
-    <div class="wrap">
-      <div class="sec-head">
-        <span class="mono" data-en="Process">Ажлын явц</span>
-        <div>
-          <h2 class="h2" data-en="A clear process in six steps">Зургаан алхамтай, ил тод үйл явц</h2>
-          <p data-en="We move to the next stage only with your approval, so time and cost stay predictable.">Алхам бүрийн төгсгөлд таны зөвшөөрлөөр дараагийн шат руу шилжинэ. Ингэснээр хугацаа, зардал урьдчилан тодорхой байна.</p>
+  <div class="wrap">
+    <section class="sec" id="services">
+      <span class="label" data-en="Services">Үйлчилгээ</span>
+      <div class="sec-body rows">
+        <details open>
+          <summary><h3 data-en="Concept design and architectural solutions">Эскиз зураг, архитектурын шийдэл</h3><span class="plus" aria-hidden="true">+</span></summary>
+          <div class="dbody"><p data-en="Functional layouts, façade design and 3D visuals let you see the building and make decisions before construction starts.">Функциональ төлөвлөлт, фасадын шийдэл, 3D дүрслэлээр барилгаа баригдахаас өмнө харж, шийдвэрээ гаргана.</p>
+          <ul><li data-en="Layout">Төлөвлөлт</li><li data-en="Façade">Фасад</li><li>3D</li></ul></div>
+        </details>
+        <details>
+          <summary><h3 data-en="Complete design package">Зураг төслийн бүрэн багц</h3><span class="plus" aria-hidden="true">+</span></summary>
+          <div class="dbody"><p data-en="Architectural working drawings coordinated with structural, plumbing, heating and electrical engineers in one package.">Архитектурын ажлын зургийг хийц, ус хангамж, дулаан, цахилгааны инженерүүдтэй уялдуулан нэг багц болгоно.</p>
+          <ul><li data-en="Architecture">Архитектур</li><li data-en="Structure">Хийц</li><li data-en="MEP">Инженерийн шугам</li></ul></div>
+        </details>
+        <details>
+          <summary><h3 data-en="Private houses and townhouses">Амины орон сууц, таунхаус</h3><span class="plus" aria-hidden="true">+</span></summary>
+          <div class="dbody"><p data-en="One- and two-storey houses and townhouses designed for the Mongolian climate and your family's needs.">Нэг, хоёр давхар амины сууц, таунхаусыг Монголын уур амьсгал, гэр бүлийн хэрэгцээнд тохируулан зураглана.</p>
+          <ul><li data-en="Private house">Амины сууц</li><li data-en="Townhouse">Таунхаус</li></ul></div>
+        </details>
+        <details>
+          <summary><h3 data-en="Interior design">Интерьер дизайн</h3><span class="plus" aria-hidden="true">+</span></summary>
+          <div class="dbody"><p data-en="Room layouts, materials, lighting and furniture planning resolved as one coherent concept.">Өрөө тасалгааны зохион байгуулалт, материал, гэрэлтүүлэг, тавилгын төлөвлөлтийг нэг ойлголтоор шийднэ.</p>
+          <ul><li data-en="Materials">Материал</li><li data-en="Lighting">Гэрэлтүүлэг</li><li data-en="Furniture">Тавилга</li></ul></div>
+        </details>
+        <details>
+          <summary><h3 data-en="Site planning">Газрын байршлын төлөвлөгөө</h3><span class="plus" aria-hidden="true">+</span></summary>
+          <div class="dbody"><p data-en="We place the building on your plot and plan access, driveways, parking and landscaping.">Газрын нэгж талбар дээрх барилгын байршил, орц гарц, зам талбай, ногоон байгууламжийг оновчтой төлөвлөнө.</p>
+          <ul><li data-en="Master plan">Ерөнхий төлөвлөгөө</li><li data-en="Site plan">Талбайн зураг</li></ul></div>
+        </details>
+        <details>
+          <summary><h3 data-en="Design consulting">Зураг төслийн зөвлөгөө</h3><span class="plus" aria-hidden="true">+</span></summary>
+          <div class="dbody"><p data-en="We review existing drawings and design briefs against codes and help prepare them for expert review and permits.">Бэлэн зураг, төслийн даалгаврыг норм дүрмийн дагуу хянаж, экспертиз болон зөвшөөрөлд бэлтгэхэд туслана.</p>
+          <ul><li data-en="Code review">Норм хяналт</li><li data-en="Expert review">Экспертиз</li></ul></div>
+        </details>
+      </div>
+    </section>
+
+    <section class="sec" id="process">
+      <span class="label" data-en="Process">Ажлын явц</span>
+      <div class="sec-body">
+        <p class="statement" style="margin-bottom:36px" data-en="Six steps. We move on only with your approval, so time and cost stay predictable.">Зургаан алхам. Таны зөвшөөрлөөр л дараагийн шат руу шилжих тул хугацаа, зардал урьдчилан тодорхой.</p>
+        <ol class="steps">
+          <li><h3 data-en="First meeting">Танилцах уулзалт</h3><p data-en="We discuss your needs, site conditions, budget and timeline, and agree on the scope of work.">Таны хэрэгцээ, газрын нөхцөл, төсөв, хугацааг ярилцаж, ажлын хүрээг тохирно.</p><span class="who" data-en="Client + architect">Захиалагч + архитектор</span></li>
+          <li><h3 data-en="Brief and sketches">Даалгавар ба эскиз</h3><p data-en="We prepare the design brief and propose 2–3 layout options.">Зураг төслийн даалгаврыг боловсруулж, төлөвлөлтийн 2–3 хувилбар санал болгоно.</p><span class="who" data-en="Architect">Архитектор</span></li>
+          <li><h3 data-en="Design approval">Шийдэл батлах</h3><p data-en="The chosen option is developed with façades, 3D visuals and material selections, then approved.">Сонгосон хувилбарыг фасад, 3D дүрслэл, материалын сонголтоор баяжуулж батална.</p><span class="who" data-en="Client + architect">Захиалагч + архитектор</span></li>
+          <li><h3 data-en="Working drawings">Ажлын зураг</h3><p data-en="We issue a buildable drawing set coordinating architecture, structure and engineering.">Архитектур, хийц, инженерийн хэсгүүдийг уялдуулсан барих боломжтой зургийн багц гаргана.</p><span class="who" data-en="Project team">Төслийн баг</span></li>
+          <li><h3 data-en="Expert review and permits">Экспертиз, зөвшөөрөл</h3><p data-en="We support submission to the relevant authorities and handle revisions and responses.">Зургийг холбогдох байгууллагад хүргүүлэх, засвар тайлбар хийх ажлыг дэмжинэ.</p><span class="who" data-en="Project team">Төслийн баг</span></li>
+          <li><h3 data-en="Designer supervision">Зохиогчийн хяналт</h3><p data-en="During construction we check on site that the work follows the design.">Барилгын ажлын явцад зураг төсөлтэй нийцэж байгаа эсэхийг газар дээр нь хянана.</p><span class="who" data-en="Architect">Архитектор</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="sec" id="approach">
+      <span class="label" data-en="Approach">Бидний зарчим</span>
+      <div class="sec-body">
+        <p class="statement" style="margin-bottom:36px" data-en="Good design is easy to build and comfortable to live in.">Сайн зураг төсөл бол барихад хялбар, амьдрахад тухтай зураг.</p>
+        <div class="pairs">
+          <div class="pair"><h3 data-en="Built for Mongolian winters">Монгол өвөлд зориулсан</h3><p data-en="Insulation, thermal-bridge prevention and use of sunlight are considered from the first sketch.">Дулаалга, хүйтний гүүрээс сэргийлэх, нарны гэрлийг ашиглах шийдлийг эхний эскизээс тооцно.</p></div>
+          <div class="pair"><h3 data-en="Code compliant">Дүрэм журамд нийцсэн</h3><p data-en="We follow building codes, regulations and standards to reduce revisions at the expert review stage.">Барилгын норм, дүрэм, стандартыг мөрдөж, экспертизийн шатанд гарах засварыг багасгана.</p></div>
+          <div class="pair"><h3 data-en="Clear price and timeline">Тодорхой үнэ, хугацаа</h3><p data-en="Scope, stages and payment terms are set out in the contract up front.">Ажлын хүрээ, үе шат, төлбөрийн нөхцөлийг гэрээнд урьдчилан тусгана.</p></div>
+          <div class="pair"><h3 data-en="Direct with your architect">Шууд архитектортай</h3><p data-en="Throughout the project you work directly with the architect responsible for your drawings.">Та төслийн туршид зургаа хариуцсан архитектортайгаа шууд харилцана.</p></div>
         </div>
       </div>
-      <ol class="steps">
-        <li><h3 data-en="First meeting">Танилцах уулзалт</h3><p data-en="We discuss your needs, site conditions, budget and timeline, and agree on the scope of work.">Таны хэрэгцээ, газрын нөхцөл, төсөв, хугацааг ярилцаж, ажлын хүрээг тохирно.</p><span class="who" data-en="Client + architect">Захиалагч + архитектор</span></li>
-        <li><h3 data-en="Brief and sketches">Даалгавар ба эскиз</h3><p data-en="We prepare the design brief and propose 2–3 layout options.">Зураг төслийн даалгаврыг боловсруулж, төлөвлөлтийн 2–3 хувилбар санал болгоно.</p><span class="who" data-en="Architect">Архитектор</span></li>
-        <li><h3 data-en="Design approval">Шийдэл батлах</h3><p data-en="The chosen option is developed with façades, 3D visuals and material selections, then approved.">Сонгосон хувилбарыг фасад, 3D дүрслэл, материалын сонголтоор баяжуулж батална.</p><span class="who" data-en="Client + architect">Захиалагч + архитектор</span></li>
-        <li><h3 data-en="Working drawings">Ажлын зураг</h3><p data-en="We issue a buildable drawing set coordinating architecture, structure and engineering.">Архитектур, хийц, инженерийн хэсгүүдийг уялдуулсан барих боломжтой зургийн багц гаргана.</p><span class="who" data-en="Project team">Төслийн баг</span></li>
-        <li><h3 data-en="Expert review and permits">Экспертиз, зөвшөөрөл</h3><p data-en="We support submission to the relevant authorities and handle revisions and responses.">Зургийг холбогдох байгууллагад хүргүүлэх, засвар тайлбар хийх ажлыг дэмжинэ.</p><span class="who" data-en="Project team">Төслийн баг</span></li>
-        <li><h3 data-en="Designer supervision">Зохиогчийн хяналт</h3><p data-en="During construction we check on site that the work follows the design.">Барилгын ажлын явцад зураг төсөлтэй нийцэж байгаа эсэхийг газар дээр нь хянана.</p><span class="who" data-en="Architect">Архитектор</span></li>
-      </ol>
-    </div>
-  </section>
+    </section>
 
-  <section id="approach">
-    <div class="wrap approach">
-      <div>
-        <div class="ap-head">
-          <span class="mono" data-en="Our approach">Бидний зарчим</span>
-          <h2 class="h2" data-en="Good design is easy to build and comfortable to live in">Сайн зураг төсөл бол барихад хялбар, амьдрахад тухтай зураг</h2>
+    <section class="sec" id="team">
+      <span class="label" data-en="Team">Баг</span>
+      <div class="sec-body cols">
+        <div class="list">
+          <h3 data-en="A team matched to each project">Төсөл бүрт тохирсон баг</h3>
+          <p data-en="We lead project management and architecture, and deliver the engineering disciplines with experienced specialists under contract.">Төслийн удирдлага, архитектурын шийдлийг бид хариуцаж, инженерийн хэсгүүдийг туршлагатай мэргэжилтнүүдтэй гэрээгээр хамтран гүйцэтгэнэ.</p>
+          <ul>
+            <li><span data-en="Prime Spatial Plan — ">Prime Spatial Plan — </span><span data-en="project management, architecture, supervision" style="color:var(--ink)">төслийн удирдлага, архитектур, хяналт</span></li>
+            <li data-en="Structural engineer">Хийцийн инженер</li>
+            <li data-en="Plumbing and heating engineer">Ус, дулааны инженер</li>
+            <li data-en="Electrical engineer">Цахилгааны инженер</li>
+            <li data-en="Interior and 3D designer">Интерьер, 3D дизайнер</li>
+          </ul>
         </div>
-        <div class="principles">
-          <div class="pr"><span class="mono" data-en="Climate">Уур амьсгал</span><div><h3 data-en="Built for Mongolian winters">Монгол өвөлд зориулсан</h3><p data-en="Insulation, thermal-bridge prevention and use of sunlight are considered from the first sketch.">Дулаалга, хүйтний гүүрээс сэргийлэх, нарны гэрлийг ашиглах шийдлийг эхний эскизээс тооцно.</p></div></div>
-          <div class="pr"><span class="mono" data-en="Codes">Норм</span><div><h3 data-en="Code compliant">Дүрэм журамд нийцсэн</h3><p data-en="We follow building codes, regulations and standards to reduce revisions at the expert review stage.">Барилгын норм, дүрэм, стандартыг мөрдөж, экспертизийн шатанд гарах засварыг багасгана.</p></div></div>
-          <div class="pr"><span class="mono" data-en="Budget">Төсөв</span><div><h3 data-en="Clear price and timeline">Тодорхой үнэ, хугацаа</h3><p data-en="Scope, stages and payment terms are set out in the contract up front.">Ажлын хүрээ, үе шат, төлбөрийн нөхцөлийг гэрээнд урьдчилан тусгана.</p></div></div>
-          <div class="pr"><span class="mono" data-en="Contact">Харилцаа</span><div><h3 data-en="Direct with your architect">Шууд архитектортай</h3><p data-en="Throughout the project you work directly with the architect responsible for your drawings.">Та төслийн туршид зургаа хариуцсан архитектортайгаа шууд харилцана.</p></div></div>
+        <div class="list">
+          <h3 data-en="What we design">Бидний зураглах барилгууд</h3>
+          <ul>
+            <li><span data-en="Private houses" style="color:var(--ink)">Амины орон сууц</span> <span data-en="— one and two storeys">— нэг, хоёр давхар</span></li>
+            <li><span data-en="Townhouses" style="color:var(--ink)">Таунхаус</span> <span data-en="— semi-detached and terraced">— хосолсон, эгнээ байшин</span></li>
+            <li><span data-en="Apartment buildings" style="color:var(--ink)">Орон сууцны барилга</span> <span data-en="— multi-family">— олон айлын</span></li>
+            <li><span data-en="Renovation & extension" style="color:var(--ink)">Засвар, өргөтгөл</span> <span data-en="— existing buildings">— одоо байгаа барилга</span></li>
+          </ul>
         </div>
       </div>
+    </section>
 
-      <aside class="team">
-        <span class="mono" data-en="How we work">Хамтын ажиллагааны загвар</span>
-        <h3 data-en="A team matched to each project">Төсөл бүрт тохирсон баг</h3>
-        <p data-en="We lead project management and architecture, and deliver the engineering disciplines with experienced specialists under contract. Each project gets a team sized exactly to its needs.">Төслийн удирдлага, архитектурын шийдлийг бид хариуцаж, шаардлагатай инженерийн хэсгүүдийг туршлагатай мэргэжилтнүүдтэй гэрээгээр хамтран гүйцэтгэнэ. Ингэснээр төслийн хэмжээнд яг тохирсон баг бүрдэнэ.</p>
-        <div class="roles">
-          <div class="core"><b>Prime Spatial Plan</b><span data-en="Project management · Architecture · Designer supervision">Төслийн удирдлага · Архитектур · Зохиогчийн хяналт</span></div>
-          <div><b data-en="Structural engineer">Хийцийн инженер</b><span data-en="Load-bearing, foundations, structure">Даац, суурь, хийц</span></div>
-          <div><b data-en="Plumbing & heating">Ус, дулаан</b><span data-en="Water supply, drainage, heating">Ус хангамж, ариутгах, халаалт</span></div>
-          <div><b data-en="Electrical">Цахилгаан</b><span data-en="Power, lighting, low-voltage">Хүчдэл, гэрэлтүүлэг, сул гүйдэл</span></div>
-          <div><b data-en="Interior & 3D">Интерьер, 3D</b><span data-en="Visuals, materials">Дүрслэл, материал</span></div>
-        </div>
-      </aside>
-    </div>
-  </section>
-
-  <section id="types" style="padding-block:56px">
-    <div class="wrap">
-      <span class="mono" style="display:block;margin-bottom:20px" data-en="What we design">Бидний зураглах барилгууд</span>
-      <div class="types">
-        <div><b data-en="Private houses">Амины орон сууц</b><span data-en="One and two storeys, urban and suburban">Нэг, хоёр давхар, хотын болон хотын захын</span></div>
-        <div><b data-en="Townhouses">Таунхаус</b><span data-en="Semi-detached and terraced">Хосолсон болон эгнээ байшин</span></div>
-        <div><b data-en="Apartment buildings">Орон сууцны барилга</b><span data-en="Multi-family housing">Олон айлын орон сууц</span></div>
-        <div><b data-en="Renovation & extension">Засвар, өргөтгөл</b><span data-en="Upgrading existing buildings">Одоо байгаа барилгын шинэчлэл</span></div>
+    <section class="sec" id="contact">
+      <span class="label" data-en="Contact">Холбоо барих</span>
+      <div class="sec-body">
+        <p class="statement" style="margin-bottom:40px" data-en="Tell us about your plot and your ideas. We will propose a scope and timeline.">Газар, хүсэл санаагаа хуваалцаарай. Бид ажлын хүрээ, хугацааны санал гаргаж өгнө.</p>
+        <form id="inq" novalidate>
+          <div class="f"><label for="name" data-en="Name">Нэр</label><input id="name" name="name" autocomplete="name" placeholder="Бат-Эрдэнэ" data-en-ph="Bat-Erdene"></div>
+          <div class="f"><label for="phone" data-en="Phone">Утас</label><input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="9911 2233"></div>
+          <div class="f"><label for="type" data-en="Project type">Төслийн төрөл</label>
+            <select id="type" name="type">
+              <option data-en="Private house">Амины орон сууц</option><option data-en="Townhouse">Таунхаус</option><option data-en="Apartment building">Орон сууцны барилга</option>
+              <option data-en="Interior design">Интерьер дизайн</option><option data-en="Renovation & extension">Засвар, өргөтгөл</option><option data-en="Consulting">Зөвлөгөө</option>
+            </select></div>
+          <div class="f"><label for="area" data-en="Building area, m²">Барилгын талбай, м²</label><input id="area" name="area" inputmode="decimal" placeholder="180"></div>
+          <div class="f full"><label for="loc" data-en="Site location">Газрын байршил</label><input id="loc" name="loc" placeholder="Жишээ: Хан-Уул дүүрэг, 19-р хороо" data-en-ph="e.g. Khan-Uul district, 19th khoroo"></div>
+          <div class="f full"><label for="msg" data-en="Your ideas">Хүсэл санаа</label><textarea id="msg" name="msg" placeholder="Жишээ: 2 давхар, 4 унтлагын өрөөтэй, гаражтай байшин." data-en-ph="e.g. A two-storey house with 4 bedrooms and a garage."></textarea></div>
+          <p class="err" id="err" hidden></p>
+          <div class="form-foot">
+            <small data-en="We use your details only to prepare a project proposal.">Таны мэдээллийг зөвхөн төслийн саналд ашиглана.</small>
+            <button class="btn" type="submit" data-en="Prepare request">Хүсэлт бэлтгэх</button>
+          </div>
+          <div class="result" id="result" hidden>
+            <p><b data-en="Your request is ready.">Хүсэлт бэлэн боллоо.</b> <span data-en="Copy the details below and send them to us by email or phone.">Доорх мэдээллийг хуулж, манай и-мэйл эсвэл утсаар илгээнэ үү.</span></p>
+            <pre id="out"></pre>
+            <div><button class="btn ghost" type="button" id="copy" data-en="Copy">Хуулах</button></div>
+          </div>
+        </form>
       </div>
-    </div>
-  </section>
-
-  <section id="contact" style="border-bottom:0">
-    <div class="wrap contact">
-      <div class="info">
-        <span class="mono" data-en="Contact">Холбоо барих</span>
-        <h2 class="h2" data-en="Let's talk about your project">Төслөө бидэнтэй ярилцаарай</h2>
-        <p data-en="The first meeting is free. Share your site location, size and ideas, and we will propose a scope and timeline.">Эхний уулзалт үнэ төлбөргүй. Газрын байршил, хэмжээ, хүсэл санаагаа хуваалцвал бид ажлын хүрээ, хугацааны санал гаргаж өгнө.</p>
-        <dl>
-          <div><dt data-en="Phone">Утас</dt><dd class="ph">+976 •••• ••••</dd></div>
-          <div><dt data-en="Email">И-мэйл</dt><dd class="ph" data-en="email address">и-мэйл хаяг</dd></div>
-          <div><dt data-en="Address">Хаяг</dt><dd class="ph" data-en="Ulaanbaatar, office address">Улаанбаатар хот, оффисын хаяг</dd></div>
-          <div><dt data-en="Hours">Цагийн хуваарь</dt><dd data-en="Monday – Friday, 09:00 – 18:00">Даваа – Баасан, 09:00 – 18:00</dd></div>
-        </dl>
-      </div>
-
-      <form id="inq" novalidate>
-        <div class="f"><label for="name" data-en="Name">Нэр</label><input id="name" name="name" autocomplete="name" placeholder="Бат-Эрдэнэ" data-en-ph="Bat-Erdene"></div>
-        <div class="f"><label for="phone" data-en="Phone">Утас</label><input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="9911 2233"></div>
-        <div class="f"><label for="type" data-en="Project type">Төслийн төрөл</label>
-          <select id="type" name="type">
-            <option data-en="Private house">Амины орон сууц</option><option data-en="Townhouse">Таунхаус</option><option data-en="Apartment building">Орон сууцны барилга</option>
-            <option data-en="Interior design">Интерьер дизайн</option><option data-en="Renovation & extension">Засвар, өргөтгөл</option><option data-en="Consulting">Зөвлөгөө</option>
-          </select></div>
-        <div class="f"><label for="area" data-en="Building area, m²">Барилгын талбай, м²</label><input id="area" name="area" inputmode="decimal" placeholder="180"></div>
-        <div class="f full"><label for="loc" data-en="Site location">Газрын байршил</label><input id="loc" name="loc" placeholder="Жишээ: Хан-Уул дүүрэг, 19-р хороо" data-en-ph="e.g. Khan-Uul district, 19th khoroo"></div>
-        <div class="f full"><label for="msg" data-en="Your ideas">Хүсэл санаа</label><textarea id="msg" name="msg" placeholder="Жишээ: 2 давхар, 4 унтлагын өрөөтэй, гаражтай байшин хүсч байна." data-en-ph="e.g. A two-storey house with 4 bedrooms and a garage."></textarea></div>
-        <p class="err" id="err" hidden></p>
-        <div class="form-foot">
-          <small data-en="We use your details only to prepare a project proposal.">Таны мэдээллийг зөвхөн төслийн саналд ашиглана.</small>
-          <button class="btn primary" type="submit" data-en="Prepare request">Хүсэлт бэлтгэх</button>
-        </div>
-        <div class="result" id="result" hidden>
-          <p><strong data-en="Your request is ready.">Хүсэлт бэлэн боллоо.</strong> <span data-en="Copy the details below and send them to us by email or phone.">Доорх мэдээллийг хуулж, манай и-мэйл эсвэл утсаар илгээнэ үү.</span></p>
-          <pre id="out"></pre>
-          <div><button class="btn" type="button" id="copy" data-en="Copy">Хуулах</button></div>
-        </div>
-      </form>
-    </div>
-  </section>
+    </section>
+  </div>
 </main>
 
 <footer>
-  <div class="wrap foot">
-    <a class="brand" href="#top"><svg class="logo" viewBox="0 0 713 824" aria-hidden="true"><use href="#psp-logo"/></svg><span><b>Prime Spatial Plan</b><small data-en="Architecture · Design">Архитектур · Зураг төсөл</small></span></a>
-    <p data-en="© 2026 Prime Spatial Plan. All rights reserved.">© 2026 Prime Spatial Plan. Бүх эрх хуулиар хамгаалагдсан.</p>
+  <div class="wrap">
+    <div class="fgrid">
+      <div class="fbig"><svg class="logo" viewBox="0 0 713 824" aria-hidden="true"><use href="#psp-logo"/></svg><b>Prime<br>Spatial Plan</b></div>
+      <div><h4 data-en="Contact">Холбоо барих</h4><p class="ph">+976 •••• ••••</p><p class="ph" data-en="email address">и-мэйл хаяг</p></div>
+      <div><h4 data-en="Office">Оффис</h4><p data-en="Ulaanbaatar, Mongolia">Улаанбаатар, Монгол</p><p class="ph" data-en="office address">оффисын хаяг</p></div>
+      <div><h4 data-en="Hours">Цагийн хуваарь</h4><p data-en="Monday – Friday">Даваа – Баасан</p><p>09:00 – 18:00</p></div>
+    </div>
+    <div class="legal">
+      <span data-en="© 2026 Prime Spatial Plan. All rights reserved.">© 2026 Prime Spatial Plan. Бүх эрх хуулиар хамгаалагдсан.</span>
+      <a href="#top" data-en="Back to top ↑">Дээш буцах ↑</a>
+    </div>
   </div>
 </footer>
 
@@ -455,12 +543,34 @@ footer{padding-block:36px}
 (function(){
   var lang='mn';
   var T={
-    mn:{err:'Нэр болон утасны дугаараа оруулна уу.',head:'Зураг төслийн хүсэлт — Prime Spatial Plan',name:'Нэр',phone:'Утас',type:'Төрөл',area:'Талбай',loc:'Байршил',copied:'Хуулсан',copy:'Хуулах',sel:'Текст сонгогдлоо, хуулна уу'},
-    en:{err:'Please enter your name and phone number.',head:'Design request — Prime Spatial Plan',name:'Name',phone:'Phone',type:'Type',area:'Area',loc:'Location',copied:'Copied',copy:'Copy',sel:'Text selected, copy it now'}
+    mn:{err:'Нэр болон утасны дугаараа оруулна уу.',head:'Зураг төслийн хүсэлт — Prime Spatial Plan',name:'Нэр',phone:'Утас',type:'Төрөл',area:'Талбай',loc:'Байршил',copied:'Хуулсан',copy:'Хуулах',sel:'Текст сонгогдлоо, хуулна уу',prev:'Өмнөх',next:'Дараах'},
+    en:{err:'Please enter your name and phone number.',head:'Design request — Prime Spatial Plan',name:'Name',phone:'Phone',type:'Type',area:'Area',loc:'Location',copied:'Copied',copy:'Copy',sel:'Text selected, copy it now',prev:'Previous',next:'Next'}
   };
+
+  /* Gallery */
+  var track=document.getElementById('track'),slides=[].slice.call(track.querySelectorAll('.slide')),
+      count=document.getElementById('count'),cap=document.getElementById('caption'),cur=0;
+  function pad(n){return (n<10?'0':'')+n;}
+  function caption(){
+    var s=slides[cur],en=lang==='en';
+    cap.innerHTML='';
+    var b=document.createElement('b');b.textContent=en?s.dataset.capBEn:s.dataset.capB;
+    cap.appendChild(b);cap.appendChild(document.createTextNode(' '+(en?s.dataset.capEn:s.dataset.cap)));
+    count.textContent=pad(cur+1)+'/'+pad(slides.length);
+  }
+  function go(i){
+    i=(i+slides.length)%slides.length;
+    track.scrollTo({left:slides[i].offsetLeft-track.offsetLeft,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+  }
+  var t;track.addEventListener('scroll',function(){clearTimeout(t);t=setTimeout(function(){
+    var i=Math.round(track.scrollLeft/track.clientWidth);if(i!==cur){cur=i;caption();}},60);});
+  document.getElementById('prev').addEventListener('click',function(){go(cur-1);});
+  document.getElementById('next').addEventListener('click',function(){go(cur+1);});
+  track.addEventListener('keydown',function(e){if(e.key==='ArrowRight'){e.preventDefault();go(cur+1);}if(e.key==='ArrowLeft'){e.preventDefault();go(cur-1);}});
+
+  /* Language */
   function setLang(l){
-    lang=l;
-    document.documentElement.lang=l;
+    lang=l;document.documentElement.lang=l;
     document.querySelectorAll('[data-en]').forEach(function(el){
       if(el.dataset.mn===undefined) el.dataset.mn=el.textContent;
       el.textContent=l==='en'?el.dataset.en:el.dataset.mn;
@@ -473,13 +583,17 @@ footer{padding-block:36px}
       if(el.dataset.mnAria===undefined) el.dataset.mnAria=el.getAttribute('aria-label');
       el.setAttribute('aria-label',l==='en'?el.dataset.enAria:el.dataset.mnAria);
     });
+    document.getElementById('prev').setAttribute('aria-label',T[l].prev);
+    document.getElementById('next').setAttribute('aria-label',T[l].next);
     document.querySelectorAll('.lang button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.lang===l?'true':'false');});
-    if(!document.getElementById('result').hidden) build();
-    var e=document.getElementById('err'); if(!e.hidden) e.textContent=T[l].err;
+    caption();
+    if(!res.hidden) build();
+    if(!err.hidden) err.textContent=T[l].err;
     try{localStorage.setItem('psp-lang',l);}catch(x){}
   }
   document.querySelectorAll('.lang button').forEach(function(b){b.addEventListener('click',function(){setLang(b.dataset.lang);});});
 
+  /* Form */
   var f=document.getElementById('inq'),err=document.getElementById('err'),res=document.getElementById('result'),out=document.getElementById('out');
   function v(id){return document.getElementById(id).value.trim();}
   function build(){
@@ -493,16 +607,15 @@ footer{padding-block:36px}
     err.hidden=true;build();res.hidden=false;
   });
   document.getElementById('copy').addEventListener('click',function(){
-    var b=this,t=out.textContent;
+    var b=this,txt=out.textContent;
     var sel=function(){var r=document.createRange();r.selectNodeContents(out);var s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent=T[lang].sel;};
     var done=function(){b.textContent=T[lang].copied;setTimeout(function(){b.textContent=T[lang].copy;},1800);};
-    try{navigator.clipboard.writeText(t).then(done,sel);}catch(x){sel();}
+    try{navigator.clipboard.writeText(txt).then(done,sel);}catch(x){sel();}
   });
 
-  var saved=null; try{saved=localStorage.getItem('psp-lang');}catch(x){}
-  if(saved==='en') setLang('en');
+  var saved=null;try{saved=localStorage.getItem('psp-lang');}catch(x){}
+  if(saved==='en') setLang('en'); else caption();
 })();
 </script>
-
 </body>
 </html>
