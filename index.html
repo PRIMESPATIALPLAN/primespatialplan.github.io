@@ -21,7 +21,7 @@
 :root{
   color-scheme:dark;
   --ink:#F4F1EC; --dim:rgba(244,241,236,.62); --line:rgba(244,241,236,.22); --glass:rgba(20,20,26,.32);
-  --brand:#F7991E; --bg:#0B0B0F; --on-ink:#111;
+  --brand:#F7991E; --bg:#0B0B0F; --on-ink:#111; --cube:#F4F1EC; --cube-edge:#0B0B0F;
   --pill-line:rgba(255,255,255,.12); --pill-hover:rgba(255,255,255,.22); --halo:rgba(0,0,0,.45); --portal-line:rgba(236,232,225,.55);
   --enter-bg:rgba(255,255,255,.18); --enter-line:rgba(255,255,255,.4);
   --shade:linear-gradient(180deg,rgba(0,0,0,.35) 0%,rgba(0,0,0,0) 22%,rgba(0,0,0,0) 55%,rgba(0,0,0,.55) 100%);
@@ -32,7 +32,7 @@
 :root[data-theme="light"]{
   color-scheme:light;
   --ink:#16171B; --dim:rgba(22,23,27,.62); --line:rgba(22,23,27,.2); --glass:rgba(255,255,255,.6);
-  --bg:#EEECE8; --on-ink:#F4F2EE;
+  --bg:#EEECE8; --on-ink:#F4F2EE; --cube:#111111; --cube-edge:#FFFFFF;
   --pill-line:rgba(22,23,27,.14); --pill-hover:rgba(255,255,255,.9); --halo:rgba(255,255,255,.7); --portal-line:rgba(22,23,27,.5);
   --enter-bg:rgba(255,255,255,.6); --enter-line:rgba(22,23,27,.3);
   --shade:linear-gradient(180deg,rgba(238,236,232,.6) 0%,rgba(238,236,232,0) 22%,rgba(238,236,232,0) 55%,rgba(238,236,232,.8) 100%);
@@ -152,11 +152,10 @@ canvas.full{position:fixed;inset:0;width:100%;height:100%;display:block}
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <symbol id="psp-logo" viewBox="0 0 713 824">
     <path fill="#F7991E" fill-rule="evenodd" d="M357 0 713 207V618L357 824 0 618V207Z M357 160 138 285V695L274 773V617L357 662 575 537V285Z"/>
-    <path fill="#FFFFFF" d="M357 160 138 285V695L274 773V617L357 662 575 537V285Z"/>
     <path fill="none" stroke="#FFFFFF" stroke-width="1" vector-effect="non-scaling-stroke" d="M0 207 138 285M713 207 575 285M357 662V824"/>
     <path fill="none" stroke="#F7991E" stroke-width="1" vector-effect="non-scaling-stroke" d="M357 160V318M138 537 276 459M439 459 575 537M138 695 274 773"/>
-    <path fill="#111111" d="M357 318 439 365V459L357 506 276 459V365Z"/>
-    <path fill="none" stroke="#FFFFFF" stroke-width="1" vector-effect="non-scaling-stroke" d="M276 365 357 412 439 365M357 412V506"/>
+    <path fill="var(--cube,#111111)" d="M357 318 439 365V459L357 506 276 459V365Z"/>
+    <path fill="none" stroke="var(--cube-edge,#FFFFFF)" stroke-width="1" vector-effect="non-scaling-stroke" d="M276 365 357 412 439 365M357 412V506"/>
   </symbol>
 </svg>
 

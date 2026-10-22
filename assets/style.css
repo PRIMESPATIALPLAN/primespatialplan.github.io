@@ -11,6 +11,7 @@
   --f-title:"Oswald","Arial Narrow","Roboto Condensed",Impact,sans-serif;
   --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
   --maxw:1440px;
+  --cube:#F4F1EC; --cube-edge:#0B0B0F;
   --on-ink:#111; --bar:rgba(11,11,15,.82); --pill-line:rgba(255,255,255,.12); --pill-hover:rgba(255,255,255,.22);
   --hero-ink:#F4F1EC; --hero-soft:rgba(244,241,236,.75); --hero-fade:rgba(11,11,15,.85); --hero-top:rgba(0,0,0,.35);
 }
@@ -18,6 +19,7 @@
   color-scheme:light;
   --bg:#F4F2EE; --ink:#16171B; --soft:rgba(22,23,27,.74); --muted:rgba(22,23,27,.52); --rule:rgba(22,23,27,.35); --hair:rgba(22,23,27,.12);
   --plate:#FFFFFF; --glass:rgba(255,255,255,.6); --brand-ink:#B25E00;
+  --cube:#111111; --cube-edge:#FFFFFF;
   --on-ink:#F4F2EE; --bar:rgba(244,242,238,.86); --pill-line:rgba(22,23,27,.14); --pill-hover:rgba(255,255,255,.9);
   --hero-ink:#16171B; --hero-soft:rgba(22,23,27,.7); --hero-fade:rgba(244,242,238,.9); --hero-top:rgba(244,242,238,.5);
 }
