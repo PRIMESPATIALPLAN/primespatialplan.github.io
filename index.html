@@ -47,7 +47,7 @@ canvas.full{position:fixed;inset:0;width:100%;height:100%;display:block}
   padding:calc(18px + env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) 0 max(20px,env(safe-area-inset-left,0px));pointer-events:none}
 .top > *{pointer-events:auto}
 .mark{display:flex;align-items:center;gap:10px;text-decoration:none}
-.mark svg{width:26px;height:30px;display:block}
+.mark svg{width:32px;height:37px;display:block}
 .mark span{font-weight:600;font-size:.82rem;letter-spacing:.06em;text-transform:uppercase}
 .pills{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
 .pill{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;background:var(--glass);
@@ -134,7 +134,11 @@ canvas.full{position:fixed;inset:0;width:100%;height:100%;display:block}
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <symbol id="psp-logo" viewBox="0 0 713 824">
     <path fill="#F7991E" fill-rule="evenodd" d="M357 0 713 207V618L357 824 0 618V207Z M357 160 138 285V695L274 773V617L357 662 575 537V285Z"/>
-    <path fill="#F4F1EC" d="M357 318 439 365V459L357 506 276 459V365Z"/>
+    <path fill="none" stroke="#F7991E" stroke-width="1" vector-effect="non-scaling-stroke" d="M357 160V318M138 537 276 459M439 459 575 537M138 695 274 773"/>
+    <path fill="#FFFFFF" d="M357 318 439 365 357 412 276 365Z"/>
+    <path fill="#CFC9BF" d="M276 365 357 412V506L276 459Z"/>
+    <path fill="#9E978C" d="M357 412 439 365V459L357 506Z"/>
+    <path fill="none" stroke="#0B0B0F" stroke-width="1.6" stroke-linejoin="round" vector-effect="non-scaling-stroke" d="M276 365 357 412 439 365M357 412V506M357 318 439 365V459L357 506 276 459V365Z"/>
   </symbol>
 </svg>
 
