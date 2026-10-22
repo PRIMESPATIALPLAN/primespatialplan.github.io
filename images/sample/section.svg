@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400">
+<style>
+.t{fill:none;stroke:#111;stroke-width:2}.fill{fill:#111}
+.dim{stroke:#F7991E;stroke-width:1;fill:none}.dt{font:10px Menlo,Consolas,monospace;fill:#B86200;text-anchor:middle}
+.lb{font:500 11px Arial,Helvetica,sans-serif;fill:#111;text-anchor:middle}.sm{font:9.5px Menlo,Consolas,monospace;fill:#7A7A7A;text-anchor:middle}
+</style>
+<defs>
+<pattern id="earth" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="10" stroke="#8A8A8A" stroke-width="1"/></pattern>
+<pattern id="ins" width="12" height="10" patternUnits="userSpaceOnUse"><path d="M0 8 L6 2 L12 8" fill="none" stroke="#B86200" stroke-width="1"/></pattern>
+</defs>
+<rect x="40" y="330" width="560" height="50" fill="url(#earth)" opacity=".55"/>
+<line class="t" x1="40" y1="330" x2="600" y2="330" style="stroke-width:3"/>
+<rect class="fill" x="104" y="330" width="40" height="44"/><rect class="fill" x="496" y="330" width="40" height="44"/>
+<rect class="fill" x="116" y="100" width="16" height="230"/><rect class="fill" x="508" y="100" width="16" height="230"/>
+<rect class="fill" x="116" y="322" width="408" height="10"/>
+<rect class="fill" x="116" y="212" width="408" height="10"/>
+<rect class="fill" x="116" y="100" width="408" height="10"/>
+<rect x="132" y="90" width="376" height="10" fill="url(#ins)"/>
+<rect class="fill" x="116" y="84" width="12" height="16"/><rect class="fill" x="512" y="84" width="12" height="16"/>
+<path class="t" d="M300 322h17v-12.5h17v-12.5h17v-12.5h17v-12.5h17v-12.5h17v-12.5h17v-12.5h17v-12.5"/>
+<text class="lb" x="210" y="280">Зочны өрөө</text>
+<text class="lb" x="210" y="170">Унтлагын өрөө</text>
+<text class="lb" x="430" y="170">Ажлын өрөө</text>
+<line class="dim" x1="80" y1="322" x2="80" y2="110"/>
+<path class="dim" d="M74 322H86M74 212H86M74 110H86M75 327 85 317M75 217 85 207M75 115 85 105"/>
+<text class="dt" transform="translate(70 267) rotate(-90)">3 300</text>
+<text class="dt" transform="translate(70 161) rotate(-90)">3 300</text>
+<line class="dim" x1="512" y1="95" x2="562" y2="95"/>
+<text class="sm" x="566" y="98" style="text-anchor:start">дулаалга</text>
+<text class="sm" x="320" y="394">А–А зүсэлт</text>
+</svg>
