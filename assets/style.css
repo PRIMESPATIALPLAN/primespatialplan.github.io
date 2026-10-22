@@ -123,7 +123,7 @@ summary:hover h3{text-decoration:underline;text-underline-offset:6px;text-decora
 .steps p{color:#444;max-width:60ch}
 .steps .who{color:var(--muted);font-size:.85rem}
 @media (min-width:900px){
-  .steps li{grid-template-columns:56px minmax(200px,1.1fr) 2fr minmax(140px,.8fr);gap:24px;align-items:baseline}
+  .steps li{grid-template-columns:56px minmax(240px,1.1fr) 2fr;gap:24px;align-items:baseline}
   .steps li::before{grid-row:auto}
   .steps .who{text-align:right}
 }
