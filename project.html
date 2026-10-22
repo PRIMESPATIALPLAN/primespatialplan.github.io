@@ -2,6 +2,7 @@
 <html lang="mn">
 <head>
 <meta charset="utf-8">
+<script>try{if(localStorage.getItem('psp-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}</script>
 <meta name="theme-color" content="#0b0b0f">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Prime Spatial Plan — төсөл</title>
@@ -13,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Onest:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap">
-<link rel="stylesheet" href="assets/style.css?v=7">
+<link rel="stylesheet" href="assets/style.css?v=10">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -32,6 +33,7 @@
     <nav class="pills" aria-label="Menu">
       <a class="pill opt" href="studio.html" data-en="Studio">Студи</a>
       <a class="pill opt" href="projects.html" aria-current="page" data-en="Projects">Төслүүд</a>
+      <button class="pill theme-btn" type="button" id="themeBtn" aria-label="Цайвар / бараан горим" data-en-aria="Light / dark mode"><svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></button>
       <span class="pill lang" role="group" aria-label="Хэл / Language">
         <button type="button" data-lang="mn" aria-pressed="true">МН</button>
         <button type="button" data-lang="en" aria-pressed="false">EN</button>
@@ -74,8 +76,8 @@
   </div>
 </footer>
 <script src="assets/projects.js?v=6"></script>
-<script src="assets/scenes.js?v=9"></script>
-<script src="assets/site.js?v=6"></script>
+<script src="assets/scenes.js?v=10"></script>
+<script src="assets/site.js?v=10"></script>
 <script>
 (function(){
   var P = PSP, slug = new URLSearchParams(location.search).get('p'), i = 0;

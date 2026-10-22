@@ -119,6 +119,15 @@
     heroes.forEach(function(cv){ var r = cv.getBoundingClientRect(); S.blit(cv, S.scene(+cv.dataset.scene), r.width, r.height, innerHeight); });
   }
   paintHeroes();
+  /* theme switch: dark drawing board <-> light printed paper; scenes repaint in the new theme */
+  var tb=document.getElementById('themeBtn');
+  if(tb) tb.addEventListener('click',function(){
+    var toLight=document.documentElement.getAttribute('data-theme')!=='light';
+    if(toLight) document.documentElement.setAttribute('data-theme','light'); else document.documentElement.removeAttribute('data-theme');
+    try{ localStorage.setItem('psp-theme', toLight?'light':'dark'); }catch(x){}
+    var m=document.querySelector('meta[name="theme-color"]'); if(m) m.setAttribute('content', toLight?'#eeece8':'#0b0b0f');
+    paintHeroes(); dispatchEvent(new Event('psp-theme'));
+  });
   var rt; addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(function(){ S && S.clear(); paintHeroes(); }, 200); });
 
   /* header turns solid once the hero has scrolled away */

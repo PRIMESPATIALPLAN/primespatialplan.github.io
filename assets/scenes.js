@@ -545,9 +545,21 @@
   function dims(){ var d=Math.min(window.devicePixelRatio||1,1.5), w=innerWidth*d, h=innerHeight*d, cap=Math.sqrt(1800000/(w*h));
     if(cap<1){ w*=cap; h*=cap; } return {w:Math.round(w), h:Math.round(h)}; }
   /* full-viewport scene i, painted once per viewport size */
-  function scene(i){ var s=dims(), k=i+':'+s.w+'x'+s.h;
+  function raw(i){ var s=dims(), k=i+':'+s.w+'x'+s.h;
     if(!cache[k]){ var c=document.createElement('canvas'); c.width=s.w; c.height=s.h; var ctx=c.getContext('2d'); S=1; PAINT[i](ctx,s.w,s.h); S=1; cache[k]=c; }
     return cache[k]; }
+  /* light theme: drawing sheets become printed paper (lightness inverted, hues kept); the clay render (07) stays as is */
+  var KEEP={6:1};
+  function light(){ return document.documentElement.getAttribute('data-theme')==='light'; }
+  function paper(src){
+    var c=document.createElement('canvas'); c.width=src.width; c.height=src.height; var x=c.getContext('2d');
+    x.filter='invert(1) hue-rotate(180deg)';
+    if(x.filter==='invert(1) hue-rotate(180deg)'){ x.drawImage(src,0,0); x.filter='none'; return c; }
+    x.drawImage(src,0,0); var d=x.getImageData(0,0,c.width,c.height), a=d.data; /* fallback where canvas filters are unsupported */
+    for(var i=0;i<a.length;i+=4){ var r=255-a[i], g=255-a[i+1], b=255-a[i+2];
+      a[i]=Math.max(0,Math.min(255,-.574*r+1.43*g+.144*b)); a[i+1]=Math.max(0,Math.min(255,.426*r+.43*g+.144*b)); a[i+2]=Math.max(0,Math.min(255,.426*r+1.43*g-.856*b)); }
+    x.putImageData(d,0,0); return c; }
+  function scene(i){ if(!light()||KEEP[i]) return raw(i); var s=dims(), k='L'+i+':'+s.w+'x'+s.h; if(!cache[k]) cache[k]=paper(raw(i)); return cache[k]; }
   /* draw src covering a viewport-sized box; canvas may be shorter than the viewport (a hero), showing its top part */
   function blit(canvas,src,cssW,cssH,viewH){
     var d=Math.min(window.devicePixelRatio||1,1.5); viewH=viewH||cssH;
@@ -555,5 +567,5 @@
     var vw=canvas.width, vh=Math.round(viewH*d), ctx=canvas.getContext('2d'), sc=Math.max(vw/src.width,vh/src.height),
         w=src.width*sc, h=src.height*sc; ctx.drawImage(src,(vw-w)/2,(vh-h)*.55,w,h);
   }
-  window.PSPScenes={PAINT:PAINT, N:PAINT.length, scene:scene, blit:blit, clear:function(){ cache={}; }};
+  window.PSPScenes={PAINT:PAINT, N:PAINT.length, scene:scene, raw:raw, blit:blit, clear:function(){ cache={}; }};
 })();
