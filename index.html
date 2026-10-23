@@ -89,11 +89,15 @@ canvas.full{position:fixed;inset:0;width:100%;height:100%;display:block}
 .stages button[aria-current="step"]{color:var(--ink);font-weight:600}
 .stages button[aria-current="step"]::before{background:var(--brand);border-color:var(--brand)}
 
+.play{position:absolute;left:max(24px,env(safe-area-inset-left,0px));top:calc(50% + 150px);display:flex;align-items:center;gap:8px;border:1px solid var(--pill-line);
+  background:var(--glass);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-radius:999px;padding:6px 12px 6px 8px;font-size:.72rem;font-weight:500;cursor:pointer}
+.play i{font-style:normal;width:18px;height:18px;border-radius:50%;background:var(--brand);color:#111;display:grid;place-items:center;font-size:.55rem}
+.play:hover{background:var(--pill-hover)}
 /* portal */
-.portal-wrap{position:absolute;left:50%;top:47%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:10px}
+.portal-wrap{position:absolute;right:max(32px,env(safe-area-inset-right,0px));top:44%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:10px}
 .portal-head{display:flex;justify-content:space-between;width:100%;font-size:.72rem;color:var(--dim);letter-spacing:.04em}
 .portal-head b{color:var(--ink);font-weight:600}
-.portal{position:relative;width:clamp(150px,17vw,230px);aspect-ratio:.86;border-radius:30px;overflow:hidden;padding:0;cursor:pointer;
+.portal{position:relative;width:clamp(140px,13vw,200px);aspect-ratio:.86;border-radius:30px;overflow:hidden;padding:0;cursor:pointer;
   background:#1a1d23;border:1.5px solid var(--portal-line);
   box-shadow:0 0 0 7px var(--halo),0 0 0 8px var(--line),0 30px 70px rgba(0,0,0,.6),0 0 60px rgba(247,153,30,.14);
   transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .3s,box-shadow .3s}
@@ -132,10 +136,15 @@ canvas.full{position:fixed;inset:0;width:100%;height:100%;display:block}
   .stages button::before{width:8px;height:8px}
   .panel{display:none}
   .title{max-width:none;right:20px}
-  .portal-wrap{top:40%}
+  .portal-wrap{top:calc(150px + env(safe-area-inset-top,0px));right:16px;transform:none;gap:6px}
+  .portal{width:92px;border-radius:20px}
+  .portal-head{font-size:.62rem;flex-direction:column;align-items:center;gap:2px}
+  .portal-wrap .gap{height:14px}
+  .enter i{width:38px;height:38px}
   .shade{background:var(--shade-m)}
   .title .mdesc{display:block}
   .stages{gap:10px}
+  .play{left:50%;transform:translateX(-50%);top:calc(96px + env(safe-area-inset-top,0px))}
 }
 
 /* loader */
@@ -184,6 +193,7 @@ canvas.full{position:fixed;inset:0;width:100%;height:100%;display:block}
   </header>
 
   <ol class="stages" id="stages" aria-label="Төслийн шатууд" data-en-aria="Project stages"></ol>
+  <button class="play" id="play" type="button" aria-pressed="true"><i aria-hidden="true">❚❚</i><span>Зогсоох</span></button>
 
   <div class="portal-wrap">
     <div class="portal-head"><span data-en="Next">Дараах</span><b id="nextName"></b></div>
@@ -206,7 +216,7 @@ canvas.full{position:fixed;inset:0;width:100%;height:100%;display:block}
 
 <p class="sr">Prime Spatial Plan — амины орон сууц, таунхаус, орон сууцны барилгын зураг төсөл. Хүсэлт хүлээн авахаас бэлэн зураг хүлээлгэн өгөх хүртэл 10 алхам.</p>
 
-<script src="assets/scenes.js?v=10"></script>
+<script src="assets/scenes.js?v=12"></script>
 <script src="assets/site.js?v=10"></script>
 <script>
 (function(){
@@ -277,7 +287,7 @@ canvas.full{position:fixed;inset:0;width:100%;height:100%;display:block}
   }
   function drawPortal(){ portalBlit(scene((cur+1)%N),(cur+1)%N); }
   function warm(){ var i=0; (function step(){ if(i<N){ scene(i++); setTimeout(step,60); } })(); }
-  addEventListener('psp-theme',function(){ drawBg(); drawPortal(); warm(); });
+  addEventListener('psp-theme',function(){ if(!busy) drawBg(); drawPortal(); warm(); });
 
   /* ---------- UI text ---------- */
   var stagesEl=document.getElementById('stages'), titleEl=document.getElementById('title'), tagEl=document.getElementById('tagline'),
@@ -308,23 +318,38 @@ canvas.full{position:fixed;inset:0;width:100%;height:100%;display:block}
     fitTitle();
   }
 
-  /* ---------- transition through the portal ---------- */
-  function go(target){
+  /* ---------- transitions: the model itself moves, like a recording — the land turns into a building floor by floor ---------- */
+  var SS=PSPScenes.STATES, shownSt=SS[0], playing=!reduce, timer=null;
+  function ease(t){ return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2; }
+  function live(st){ var s=PSPScenes.dims(); if(bg.width!==s.w||bg.height!==s.h){ bg.width=s.w; bg.height=s.h; }
+    PSPScenes.render(bg.getContext('2d'),s.w,s.h,st,s.w/innerWidth); }
+  function go(target,auto){
     target=(target+N)%N;
+    if(!auto) stopPlay();
     if(busy||target===cur) return;
-    var src=scene(target);
-    if(reduce){ cur=target; drawBg(); drawPortal(); renderText(false); return; }
+    if(reduce){ cur=target; shownSt=SS[cur]; drawBg(); drawPortal(); renderText(false); return; }
     busy=true;
-    if(target!==(cur+1)%N) portalBlit(src,target);
-    blit(fx,src,innerWidth,innerHeight); fx.hidden=false;
-    var pr=document.getElementById('portal').getBoundingClientRect(), W=innerWidth, H=innerHeight;
-    var from='inset('+pr.top+'px '+(W-pr.right)+'px '+(H-pr.bottom)+'px '+pr.left+'px round 30px)';
-    var anim=fx.animate([{clipPath:from,filter:'brightness(1.15)'},{clipPath:'inset(0px 0px 0px 0px round 0px)',filter:'brightness(1)'}],
-      {duration:1100,easing:'cubic-bezier(.75,0,.2,1)',fill:'forwards'});
-    bg.animate([{filter:'brightness(1) blur(0px)'},{filter:'brightness(.5) blur(6px)'}],{duration:1100,easing:'ease-in'});
-    if(titleEl.firstChild) titleEl.firstChild.animate([{opacity:1},{opacity:0,transform:'translateY(-20%)',filter:'blur(10px)'}],{duration:500,fill:'forwards'});
-    anim.onfinish=function(){ cur=target; drawBg(); fx.hidden=true; anim.cancel(); drawPortal(); renderText(true); busy=false; };
+    var from=shownSt, to=SS[target], grow=Math.abs(to.build-from.build)>.5||Math.abs(to.explode-from.explode)>.5,
+        dur=grow?3400:1700, t0=performance.now();
+    if(titleEl.firstChild) titleEl.firstChild.animate([{opacity:1},{opacity:0,transform:'translateY(-20%)',filter:'blur(10px)'}],{duration:450,fill:'forwards'});
+    var swapped=false;
+    (function frame(now){
+      var t=Math.min(1,(now-t0)/dur), e=ease(t), st=PSPScenes.lerp(from,to,e);
+      st.build=from.build+(to.build-from.build)*(grow?Math.min(1,t*1.08):e);   /* floors appear one after another */
+      live(st);
+      if(!swapped&&t>.45){ swapped=true; cur=target; renderText(true); }
+      if(t<1){ requestAnimationFrame(frame); return; }
+      shownSt=to; drawBg(); drawPortal(); busy=false; schedule();
+    })(t0);
   }
+  /* autoplay through the steps until the visitor takes over */
+  var playBtn=document.getElementById('play');
+  function schedule(){ clearTimeout(timer); if(playing) timer=setTimeout(function(){ go(cur+1,true); },4200); }
+  function setPlayUI(){ if(!playBtn) return; playBtn.setAttribute('aria-pressed',playing?'true':'false');
+    playBtn.querySelector('span').textContent=P.lang==='en'?(playing?'Pause':'Play'):(playing?'Зогсоох':'Тоглуулах'); playBtn.querySelector('i').textContent=playing?'❚❚':'▶'; }
+  function stopPlay(){ if(!playing) return; playing=false; clearTimeout(timer); setPlayUI(); }
+  if(playBtn) playBtn.onclick=function(e){ e.stopPropagation(); playing=!playing; setPlayUI(); if(playing) go(cur+1,true); else clearTimeout(timer); };
+  P.on(setPlayUI);
   document.getElementById('portal').onclick=function(){ go(cur+1); };
   document.getElementById('enter').onclick=function(){ go(cur+1); };
   addEventListener('keydown',function(e){ if(e.key==='ArrowRight'||e.key==='ArrowDown') go(cur+1); if(e.key==='ArrowLeft'||e.key==='ArrowUp') go(cur-1); });
@@ -348,7 +373,7 @@ canvas.full{position:fixed;inset:0;width:100%;height:100%;display:block}
     if(t>=1){
       document.getElementById('loader').classList.add('done');
       document.getElementById('ui').classList.add('on');
-      P.init(); renderText(true); drawPortal(); warm();
+      P.init(); renderText(true); drawPortal(); warm(); setPlayUI(); schedule();
       if(document.fonts&&document.fonts.ready) document.fonts.ready.then(fitTitle);
       return;
     }
