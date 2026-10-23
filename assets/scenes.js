@@ -154,7 +154,7 @@
   function S(o){ var s={}; for(var k in BASE) s[k]=BASE[k]; for(k in o) s[k]=o[k]; return s; }
   var STATES=[
     S({az:24,el:58,span:250,tz:0, plotHi:1,land:0,build:0,fac:0, label:['01','ГАЗРЫН БАЙРШИЛ','Хоосон газар · 1 : 2 000']}),
-    S({az:24,el:60,span:112,tz:0, land:1,foot:1,build:0,fac:0,dims:1, label:['02','ГАЗРЫН ЗУРАГ','Зогсоол, тоглоомын талбай · 1 : 500']}),
+    S({az:24,el:60,span:112,tz:0, land:1,foot:1,build:0,fac:0,dims:1, label:['02','ЕРӨНХИЙ ТӨЛӨВЛӨГӨӨ','Зогсоол, тоглоомын талбай · 1 : 500']}),
     S({az:0,el:90,span:96,tz:0, ctx:.35,land:.45,foot:.25,plan:1,build:0,fac:0,nor:1, label:['03','ТИПИЙН ДАВХРЫН ПЛАН','Өрөөний зохион байгуулалт · 1 : 200']}),
     S({az:0,el:90,span:88,tz:0, ctx:.25,land:.35,foot:.25,plan:1,clouds:1,build:0,fac:0,nor:1, label:['04','ЗАСВАРЫН ТЭМДЭГЛЭЛ','Захиалагчтай хэлэлцсэн · 1 : 200']}),
     S({az:22,el:24,span:118,tz:16, ctx:.5,land:.6,build:1,fac:1,levels:1, label:['05','БАРИЛГА БОСОХ','Давхар давхраар · фасад']}),
