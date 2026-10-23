@@ -18,7 +18,8 @@ window.STATUS = {
   sample:   {mn:'Жишээ зураг',      en:'Sample drawing'},
   design:   {mn:'Зураг төсөл',      en:'In design'},
   building: {mn:'Баригдаж байна',   en:'Under construction'},
-  done:     {mn:'Ашиглалтад орсон', en:'Completed'}
+  done:     {mn:'Ашиглалтад орсон', en:'Completed'},
+  concept:  {mn:'Концепц',          en:'Concept'}
 };
 
 (function(){
@@ -31,6 +32,23 @@ window.STATUS = {
   var UB = {mn:'Улаанбаатар, Монгол', en:'Ulaanbaatar, Mongolia'};
 
   window.PROJECTS = [
+    {
+      slug:'house-district', type:'planning', status:'concept', year:'2026',
+      title:{mn:'Амины сууцны хороолол, 20 га', en:'Residential district, 20 ha'},
+      location:{mn:'Монгол', en:'Mongolia'},
+      text:{mn:'20 га талбайд амины орон сууцны хороолол төлөвлөсөн. Төвд нь хөшөө, усан оргилуур, тоглоомын болон спортын талбай бүхий цэцэрлэгт хүрээлэн, сургууль байрлана. Гудамж бүр явган зам, дугуйн зам, ногоон зурвастай.',
+            en:'A 20-hectare residential district of detached houses around a central park with a sculpture, fountain, play and sports courts, and a school. Every street has a footpath, cycle lane and green verge.'},
+      credit:{mn:'Архитектор: Г.Мөнх-Алдар', en:'Architect: G. Munkh-Aldar'},
+      meta:[{label:{mn:'Талбай',en:'Site area'}, value:{mn:'20 га',en:'20 ha'}},
+            {label:{mn:'Бүрэлдэхүүн',en:'Programme'}, value:{mn:'Амины сууц, сургууль, цэцэрлэгт хүрээлэн, спорт талбай',en:'Houses, school, park, sports courts'}},
+            {label:{mn:'Шат',en:'Stage'}, value:{mn:'Концепц, 3D дүрслэл',en:'Concept, 3D visuals'}}],
+      images:[{src:'images/house-district/aerial.jpg',b:{mn:'Ерөнхий төлөвлөгөө —',en:'Master plan —'},cap:{mn:'Хороололын төв цэцэрлэгт хүрээлэн, гудамжны сүлжээ, амины сууцны хэсгүүд',en:'Central park, street network and house plots'}},{src:'images/house-district/square.jpg',b:{mn:'Төв талбай —',en:'Central square —'},cap:{mn:'Хөшөө, усан оргилуур, сүүдрэвч бүхий төв талбай, цаана нь сургууль',en:'Square with sculpture, fountain and pavilions, school behind'}},{src:'images/house-district/school.jpg',b:{mn:'Сургууль —',en:'School —'},cap:{mn:'Хороололын сургууль, хүүхдийн тоглоомын талбай',en:'Neighbourhood school and playground'}},{src:'images/house-district/street.jpg',b:{mn:'Гудамж —',en:'Street —'},cap:{mn:'Явган зам, дугуйн зам, ногоон зурвас бүхий орон сууцны гудамж',en:'Residential street with footpath, cycle lane and green verge'}},{src:'images/house-district/house-garage.jpg',b:{mn:'Амины сууц —',en:'House —'},cap:{mn:'Хонгилын давхарт гарааштай хоёр давхар сууц',en:'Two-storey house with a garage in the lower level'}},{src:'images/house-district/house.jpg',b:{mn:'Амины сууц —',en:'House —'},cap:{mn:'Хоёр давхар амины сууцны загвар',en:'Two-storey house type'}}],
+      tabs:[
+        {id:'visuals', t:{mn:'3D дүрслэл',en:'3D visuals'},
+         p:{mn:'Хороололын концепцийн дүрслэл. Баригдаагүй.',en:'Concept visuals of the district. Not built.'},
+         imgs:[{src:'images/house-district/aerial.jpg',b:{mn:'Ерөнхий төлөвлөгөө —',en:'Master plan —'},cap:{mn:'Хороололын төв цэцэрлэгт хүрээлэн, гудамжны сүлжээ, амины сууцны хэсгүүд',en:'Central park, street network and house plots'}},{src:'images/house-district/square.jpg',b:{mn:'Төв талбай —',en:'Central square —'},cap:{mn:'Хөшөө, усан оргилуур, сүүдрэвч бүхий төв талбай, цаана нь сургууль',en:'Square with sculpture, fountain and pavilions, school behind'}},{src:'images/house-district/school.jpg',b:{mn:'Сургууль —',en:'School —'},cap:{mn:'Хороололын сургууль, хүүхдийн тоглоомын талбай',en:'Neighbourhood school and playground'}},{src:'images/house-district/street.jpg',b:{mn:'Гудамж —',en:'Street —'},cap:{mn:'Явган зам, дугуйн зам, ногоон зурвас бүхий орон сууцны гудамж',en:'Residential street with footpath, cycle lane and green verge'}},{src:'images/house-district/house-garage.jpg',b:{mn:'Амины сууц —',en:'House —'},cap:{mn:'Хонгилын давхарт гарааштай хоёр давхар сууц',en:'Two-storey house with a garage in the lower level'}},{src:'images/house-district/house.jpg',b:{mn:'Амины сууц —',en:'House —'},cap:{mn:'Хоёр давхар амины сууцны загвар',en:'Two-storey house type'}}]}
+      ]
+    },
     {
       slug:'arvaikheer-residence', type:'apartment', status:'design', year:'2026',
       title:{mn:'Үйлчилгээтэй орон сууцны хотхон', en:'Residential complex with services'},
