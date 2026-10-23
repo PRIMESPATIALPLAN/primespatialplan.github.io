@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Onest:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap">
-<link rel="stylesheet" href="assets/style.css?v=11">
+<link rel="stylesheet" href="assets/style.css?v=12">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -56,7 +56,18 @@
   </div>
   <div class="wrap intro">
     <dl class="meta" id="pmeta"></dl>
-    <div class="text"><p class="statement" id="ptext"></p><a class="cta" href="studio.html#contact" data-en="Discuss a similar project →">Ийм төсөл ярилцах →</a></div>
+    <div class="text"><p class="statement" id="ptext"></p><p class="credit" id="pcredit" hidden></p><a class="cta" href="studio.html#contact" data-en="Discuss a similar project →">Ийм төсөл ярилцах →</a></div>
+  </div>
+  <section class="wrap sheets" id="psheets" hidden>
+    <div class="tabbar" id="ptabbar" role="tablist" aria-label="Төслийн хэсгүүд" data-en-aria="Project sections"></div>
+    <div class="tabpanel" id="ptabpanel" role="tabpanel">
+      <div class="tp-text"><h2 id="tpTitle"></h2><p id="tpText"></p><ul id="tpList"></ul></div>
+      <div class="tp-imgs" id="tpImgs"></div>
+    </div>
+  </section>
+  <div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Зураг" data-en-aria="Image">
+    <div class="lb-bar"><span id="lbCap"></span><span class="lb-tools"><button type="button" id="lbZoom" data-en="Zoom">Томруулах</button><button type="button" id="lbClose" aria-label="Хаах" data-en-aria="Close">✕</button></span></div>
+    <div class="lb-scroll" id="lbScroll"><img id="lbImg" alt=""></div>
   </div>
   <div class="wrap"><div class="next"><span class="label" data-en="Next project">Дараагийн төсөл</span><a id="pnext" href="./"></a></div></div>
 </main>
@@ -74,7 +85,7 @@
     </div>
   </div>
 </footer>
-<script src="assets/projects.js?v=6"></script>
+<script src="assets/projects.js?v=12"></script>
 <script src="assets/scenes.js?v=12"></script>
 <script src="assets/site.js?v=10"></script>
 <script>
@@ -99,8 +110,52 @@
       dt.textContent = P.t(r.label); dd.textContent = P.t(r.value); d.appendChild(dt); d.appendChild(dd); dl.appendChild(d);
     });
     var a = document.getElementById('pnext'); a.href = 'project.html?p=' + encodeURIComponent(nx.slug); a.textContent = P.t(nx.title) + ' →';
+    a.parentNode.parentNode.hidden = PROJECTS.length < 2;
+    var cr = document.getElementById('pcredit'); cr.hidden = !p.credit; if(p.credit) cr.textContent = P.t(p.credit);
+    if(p.tabs) renderTabs();
     var b = document.querySelector('#gallery .badge'); document.querySelectorAll('#gallery .badge').forEach(function(el){ el.textContent = P.t(STATUS.sample); });
   }
+  /* sheet-by-sheet sections: tabs, deep-linkable with #id */
+  var curTab = null;
+  function renderTabs(){
+    var sec = document.getElementById('psheets'), bar = document.getElementById('ptabbar'); sec.hidden = false;
+    if(curTab === null){ var h = location.hash.slice(1); curTab = Math.max(0, p.tabs.findIndex(function(t){ return t.id === h; })); }
+    bar.innerHTML = '';
+    p.tabs.forEach(function(t, k){
+      var b = document.createElement('button'); b.type = 'button'; b.setAttribute('role','tab'); b.id = 'tab-' + t.id;
+      b.setAttribute('aria-selected', k === curTab ? 'true' : 'false'); b.tabIndex = k === curTab ? 0 : -1;
+      var n = document.createElement('span'); n.className = 'tn'; n.textContent = (k < 9 ? '0' : '') + (k + 1); b.appendChild(n);
+      b.appendChild(document.createTextNode(P.t(t.t)));
+      b.onclick = function(){ select(k, true); };
+      b.onkeydown = function(e){ if(e.key === 'ArrowRight' || e.key === 'ArrowLeft'){ e.preventDefault(); select((k + (e.key === 'ArrowRight' ? 1 : -1) + p.tabs.length) % p.tabs.length, true); bar.children[curTab].focus(); } };
+      bar.appendChild(b);
+    });
+    var t = p.tabs[curTab];
+    document.getElementById('ptabpanel').setAttribute('aria-labelledby', 'tab-' + t.id);
+    document.getElementById('tpTitle').textContent = P.t(t.t);
+    document.getElementById('tpText').textContent = P.t(t.p);
+    var ul = document.getElementById('tpList'); ul.innerHTML = ''; ul.hidden = !t.list;
+    (t.list || []).forEach(function(x){ var li = document.createElement('li'); li.textContent = P.t(x); ul.appendChild(li); });
+    var box = document.getElementById('tpImgs'); box.innerHTML = ''; box.classList.toggle('multi', t.imgs.length > 1);
+    t.imgs.forEach(function(im){
+      var f = document.createElement('figure'), b = document.createElement('button'), img = document.createElement('img');
+      b.type = 'button'; b.className = 'sheet-btn'; img.src = im.src; img.alt = P.t(im.b).replace(' —','') + ' ' + P.t(im.cap); img.loading = 'lazy';
+      b.appendChild(img); b.onclick = function(){ openLb(im); }; f.appendChild(b);
+      var c = document.createElement('figcaption'), s = document.createElement('b'); s.textContent = P.t(im.b); c.appendChild(s); c.appendChild(document.createTextNode(' ' + P.t(im.cap)));
+      f.appendChild(c); box.appendChild(f);
+    });
+  }
+  function select(k, push){ curTab = k; renderTabs(); if(push){ try{ history.replaceState(null, '', '#' + p.tabs[k].id); }catch(x){} } }
+  /* lightbox for reading sheets at full size */
+  var lb = document.getElementById('lightbox'), lbImg = document.getElementById('lbImg'), lbScroll = document.getElementById('lbScroll'), lastFocus = null;
+  function openLb(im){ lastFocus = document.activeElement; lbImg.src = im.src; lbImg.alt = P.t(im.b) + ' ' + P.t(im.cap); document.getElementById('lbCap').textContent = P.t(im.b) + ' ' + P.t(im.cap);
+    lb.classList.remove('zoom'); lb.hidden = false; document.body.style.overflow = 'hidden'; document.getElementById('lbClose').focus(); }
+  function closeLb(){ lb.hidden = true; document.body.style.overflow = ''; if(lastFocus) lastFocus.focus(); }
+  document.getElementById('lbClose').onclick = closeLb;
+  document.getElementById('lbZoom').onclick = function(){ lb.classList.toggle('zoom'); };
+  lbImg.onclick = function(){ lb.classList.toggle('zoom'); };
+  lb.addEventListener('click', function(e){ if(e.target === lb || e.target === lbScroll) closeLb(); });
+  addEventListener('keydown', function(e){ if(e.key === 'Escape' && !lb.hidden) closeLb(); });
   P.on(render);
   P.init();
 })();
