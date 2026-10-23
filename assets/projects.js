@@ -33,6 +33,23 @@ window.STATUS = {
 
   window.PROJECTS = [
     {
+      slug:'railway-complex', type:'apartment', status:'concept', year:'2026',
+      title:{mn:'Монголын төмөр замын хотхон, 3 га', en:'Mongolian Railway complex, 3 ha'},
+      location:{mn:'Монгол', en:'Mongolia'},
+      text:{mn:'3 га талбайд орон сууцны дөрвөн блок, оффисын барилга, сургууль, цэцэрлэгийг нэг хотхон болгон төлөвлөсөн. Блокуудын хооронд хүүхдийн тоглоомын болон спортын талбай бүхий хашаа, гудамжны дагуу зогсоолтой.',
+            en:'A 3-hectare complex of four residential blocks, an office building, a school and a kindergarten, with courtyards of playgrounds and sports courts between the blocks and parking along the street.'},
+      credit:{mn:'Архитектор: Г.Мөнх-Алдар', en:'Architect: G. Munkh-Aldar'},
+      meta:[{label:{mn:'Талбай',en:'Site area'}, value:{mn:'3 га',en:'3 ha'}},
+            {label:{mn:'Бүрэлдэхүүн',en:'Programme'}, value:{mn:'Орон сууц, оффис, сургууль, цэцэрлэг',en:'Housing, office, school, kindergarten'}},
+            {label:{mn:'Шат',en:'Stage'}, value:{mn:'Концепц, 3D дүрслэл',en:'Concept, 3D visuals'}}],
+      images:[{src:'images/railway-complex/aerial.jpg',b:{mn:'Ерөнхий дүрслэл —',en:'Overview —'},cap:{mn:'Орон сууцны дөрвөн блок, оффисын барилга, гудамж, зогсоол',en:'Four residential blocks, office building, street and parking'}},{src:'images/railway-complex/plan.jpg',b:{mn:'Ерөнхий төлөвлөгөө —',en:'Master plan —'},cap:{mn:'Дээрээс харсан байдал: барилгууд, гудамж, зогсоол, тоглоомын болон спортын талбай',en:'Top view: buildings, street, parking, play and sports areas'}},{src:'images/railway-complex/courtyard.jpg',b:{mn:'Хашаа —',en:'Courtyard —'},cap:{mn:'Блокуудын хоорондох тоглоомын болон спортын талбай',en:'Play and sports areas between the blocks'}},{src:'images/railway-complex/birdseye.jpg',b:{mn:'Хашаа —',en:'Courtyard —'},cap:{mn:'Сагсан бөмбөгийн талбай, тоглоомын талбайнууд',en:'Basketball court and playgrounds'}},{src:'images/railway-complex/towers.jpg',b:{mn:'Орон сууц —',en:'Residential blocks —'},cap:{mn:'Орон сууцны блокууд, оффисын барилгын хамт',en:'Residential blocks with the office building'}},{src:'images/railway-complex/playground.jpg',b:{mn:'Тоглоомын талбай —',en:'Playground —'},cap:{mn:'Хашаан доторх хүүхдийн тоглоомын талбай',en:'Children’s playground in the courtyard'}},{src:'images/railway-complex/street.jpg',b:{mn:'Гудамжнаас —',en:'From the street —'},cap:{mn:'Орон сууцны блокууд явган хүний түвшнээс',en:'Residential blocks at street level'}}],
+      tabs:[
+        {id:'visuals', t:{mn:'3D дүрслэл',en:'3D visuals'},
+         p:{mn:'Хотхоны концепцийн дүрслэл. Баригдаагүй.',en:'Concept visuals of the complex. Not built.'},
+         imgs:[{src:'images/railway-complex/aerial.jpg',b:{mn:'Ерөнхий дүрслэл —',en:'Overview —'},cap:{mn:'Орон сууцны дөрвөн блок, оффисын барилга, гудамж, зогсоол',en:'Four residential blocks, office building, street and parking'}},{src:'images/railway-complex/plan.jpg',b:{mn:'Ерөнхий төлөвлөгөө —',en:'Master plan —'},cap:{mn:'Дээрээс харсан байдал: барилгууд, гудамж, зогсоол, тоглоомын болон спортын талбай',en:'Top view: buildings, street, parking, play and sports areas'}},{src:'images/railway-complex/courtyard.jpg',b:{mn:'Хашаа —',en:'Courtyard —'},cap:{mn:'Блокуудын хоорондох тоглоомын болон спортын талбай',en:'Play and sports areas between the blocks'}},{src:'images/railway-complex/birdseye.jpg',b:{mn:'Хашаа —',en:'Courtyard —'},cap:{mn:'Сагсан бөмбөгийн талбай, тоглоомын талбайнууд',en:'Basketball court and playgrounds'}},{src:'images/railway-complex/towers.jpg',b:{mn:'Орон сууц —',en:'Residential blocks —'},cap:{mn:'Орон сууцны блокууд, оффисын барилгын хамт',en:'Residential blocks with the office building'}},{src:'images/railway-complex/playground.jpg',b:{mn:'Тоглоомын талбай —',en:'Playground —'},cap:{mn:'Хашаан доторх хүүхдийн тоглоомын талбай',en:'Children’s playground in the courtyard'}},{src:'images/railway-complex/street.jpg',b:{mn:'Гудамжнаас —',en:'From the street —'},cap:{mn:'Орон сууцны блокууд явган хүний түвшнээс',en:'Residential blocks at street level'}}]}
+      ]
+    },
+    {
       slug:'house-district', type:'planning', status:'concept', year:'2026',
       title:{mn:'Амины сууцны хороолол, 20 га', en:'Residential district, 20 ha'},
       location:{mn:'Монгол', en:'Mongolia'},
