@@ -102,7 +102,7 @@
    Arriving: that same scene covers the screen, then settles into this page's hero. */
 (function(){
   var S = window.PSPScenes, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var MAP = {'':0, 'index.html':0, 'projects.html':1, 'project.html':7, 'studio.html':9};
+  var MAP = {'':0, 'index.html':0, 'projects.html':4, 'project.html':3, 'studio.html':2};
   function sceneFor(u){ var f = u.pathname.split('/').pop(); return MAP.hasOwnProperty(f) ? MAP[f] : null; }
   var EASE = 'cubic-bezier(.75,0,.2,1)';
 
