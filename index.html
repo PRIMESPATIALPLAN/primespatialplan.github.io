@@ -225,7 +225,7 @@ canvas.full{position:fixed;inset:0;width:100%;height:100%;display:block}
 <p class="sr">Prime Spatial Plan — амины орон сууц, таунхаус, орон сууцны барилгын зураг төсөл. Газар, санаа, эскиз, зураг төсөл, барилга.</p>
 
 <script src="assets/model.js?v=2"></script>
-<script src="assets/scenes.js?v=20"></script>
+<script src="assets/scenes.js?v=21"></script>
 <script src="assets/site.js?v=20"></script>
 <script>
 (function(){
@@ -315,7 +315,7 @@ canvas.full{position:fixed;inset:0;width:100%;height:100%;display:block}
   /* ---------- transitions: the model itself moves, like a recording — the land turns into a building floor by floor ---------- */
   var SS=PSPScenes.STATES, shownSt=SS[0], playing=!reduce, timer=null;
   function ease(t){ return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2; }
-  function sceneTone(st){ document.documentElement.classList.toggle('scene-light', (st.clay||0)>.5||(st.paper||0)>.5); }
+  function sceneTone(st){ document.documentElement.classList.toggle('scene-light', (st.clay||0)>.5||(st.paper||0)>.5||(st.rv||0)>.5); }
   function live(st){ var s=PSPScenes.dims(); if(bg.width!==s.w||bg.height!==s.h){ bg.width=s.w; bg.height=s.h; }
     PSPScenes.render(bg.getContext('2d'),s.w,s.h,st,s.w/innerWidth); }
   function go(target,auto){
