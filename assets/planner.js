@@ -22,7 +22,7 @@
         confirmClear:'Дахин дарж бүх зургийг устгана', saved:'Хадгалагдсан', addFloor:'+ Давхар', delFloor:'Давхар устгах',
         door:'Хаалга', win:'Цонх', garage:'Гаражийн хаалга', doors:'Хаалга', wins:'Цонх', roof:'Дээвэр', autoOn:'Автомат байрлал',
         rt:{auto:'Автомат', gable:'Хоёр налуу', hip:'Дөрвөн налуу', flat:'Хавтгай'},
-        fc:{auto:'Автомат (тоосго + шавардлага)', plaster:'Шавардлага', brick:'Тоосго', wood:'Модон өнгөлгөө', stone:'Чулуун өнгөлгөө'},
+        fc:{auto:'Автомат (тоосго + шавардлага)', plaster:'Шавардлага', brick:'Тоосго', wood:'Модон өнгөлгөө', timber:'Хар мод + чулуун булан', stone:'Чулуун өнгөлгөө'},
         rm:{seam:'Төмөр хавтан', tile:'Металл ваар', shingle:'Битум ширгэл'},
         hint:{draw:'Тор дээр чирж өрөө зурна · өрөөн дээр дарж сонгоно · хоёр хуруугаар томруулна', door:'Хананд дарж хаалга нэмнэ · хаалган дээр дарж сонгоно', win:'Хананд дарж цонх нэмнэ · цонхон дээр дарж сонгоно', select:'Өрөө, хаалга, цонхыг дарж сонгоод чирж зөөнө', d3:'Чирж эргүүлнэ · хоёр хуруугаар томруулж, зөөнө · баруун дээд кубаас харагдац сонгоно'},
         vc:{top:'ДЭЭР', front:'УРД', right:'БАРУУН', back:'АР', left:'ЗҮҮН'}},
@@ -31,7 +31,7 @@
         confirmClear:'Tap again to clear everything', saved:'Saved', addFloor:'+ Floor', delFloor:'Delete floor',
         door:'Door', win:'Window', garage:'Garage door', doors:'Doors', wins:'Windows', roof:'Roof', autoOn:'Auto layout',
         rt:{auto:'Auto', gable:'Gable', hip:'Hip', flat:'Flat'},
-        fc:{auto:'Auto (brick + render)', plaster:'Render', brick:'Brick', wood:'Timber cladding', stone:'Stone cladding'},
+        fc:{auto:'Auto (brick + render)', plaster:'Render', brick:'Brick', wood:'Timber cladding', timber:'Dark timber + stone corners', stone:'Stone cladding'},
         rm:{seam:'Standing seam metal', tile:'Metal tile', shingle:'Asphalt shingles'},
         hint:{draw:'Drag on the grid to draw a room · tap a room to select it · pinch or scroll to zoom', door:'Tap a wall to add a door · tap a door to select it', win:'Tap a wall to add a window · tap a window to select it', select:'Tap a room, door or window to select it, drag to move', d3:'Drag to orbit · pinch or scroll to zoom, two fingers to pan · pick a view on the cube'},
         vc:{top:'TOP', front:'FRONT', right:'RIGHT', back:'BACK', left:'LEFT'}}
@@ -50,7 +50,7 @@
   };
   var uid = 1;
   function ids(s){ s.floors.forEach(function(f){ f.rooms.concat(f.ops || []).forEach(function(r){ if(!r.id) r.id = uid++; else uid = Math.max(uid, r.id + 1); }); }); return s; }
-  var ROOFC = ['#8e3b2e', '#3f6b4e', '#2f5d86', '#55595f'];
+  var ROOFC = ['#8e3b2e', '#3f6b4e', '#2f5d86', '#55595f', '#2b2d31'];
   function defaults(s){ if(!s.roof) s.roof = {type:'auto', color:ROOFC[0]}; if(!s.roof.mat) s.roof.mat = 'seam'; if(!s.facade) s.facade = 'auto'; if(s.porch === undefined) s.porch = true; if(!s.v3) s.v3 = {style:'realistic', shadows:true, cut:false}; return s; }
 
   /* ---------- state ---------- */
@@ -314,17 +314,17 @@
     var b = [1e9, 1e9, -1e9, -1e9]; top.rooms.forEach(function(r){ if(r.type === 'balcony') return; b[0] = Math.min(b[0], r.x); b[1] = Math.min(b[1], r.y); b[2] = Math.max(b[2], r.x + r.w); b[3] = Math.max(b[3], r.y + r.h); });
     var L = Math.max(b[2] - b[0], b[3] - b[1]), D = Math.min(b[2] - b[0], b[3] - b[1]); return L / D < 1.3 ? 'hip' : 'gable'; }
   function model3(){ var colors = {}; TYPES.forEach(function(ty){ colors[ty.id] = ty.c; });
-    return {floors:state.floors.map(function(f, i){ return {rooms:f.rooms, ops:opsOf(i)}; }), cur:cur, cut:!!state.v3.cut, style:state.v3.style, shadows:state.v3.shadows,
+    return {floors:state.floors.map(function(f, i){ return {rooms:f.rooms, ops:opsOf(i)}; }), cur:cur, cut:!!state.v3.cut, style:state.v3.style, shadows:state.v3.shadows, persp:!!state.v3.persp,
       roof:{type:roofType(), color:state.roof.color, mat:state.roof.mat}, facade:state.facade === 'auto' ? 'mixed' : state.facade, porch:state.porch !== false, colors:colors}; }
   function bar3(){ document.querySelectorAll('[data-vs]').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.vs === state.v3.style ? 'true' : 'false'); });
-    $('plShadow').setAttribute('aria-pressed', state.v3.shadows ? 'true' : 'false'); $('plCut').setAttribute('aria-pressed', state.v3.cut ? 'true' : 'false'); }
+    $('plShadow').setAttribute('aria-pressed', state.v3.shadows ? 'true' : 'false'); $('plCut').setAttribute('aria-pressed', state.v3.cut ? 'true' : 'false'); $('plPersp').setAttribute('aria-pressed', state.v3.persp ? 'true' : 'false'); }
   function draw3d(){
     bar3();
     if(r3state === 2){ r3.update(model3()); return; }
     if(r3state === 3){ drawLegacy(); return; }
     if(r3state === 1) return;
     r3state = 1;
-    import(new URL('assets/planner3d.js?v=3', location.href).href).then(function(m){
+    import(new URL('assets/planner3d.js?v=4', location.href).href).then(function(m){
       r3 = m.create(cv, {cube:$('plCube')}); r3state = 2; window.PSP3D = r3; if(view === '3d') r3.update(model3());
     }).catch(function(err){ console.warn('3D fallback', err); r3state = 3; if(view === '3d') drawLegacy(); });
   }
@@ -480,6 +480,7 @@
   document.querySelectorAll('[data-vs]').forEach(function(b){ b.onclick = function(){ state.v3.style = b.dataset.vs; save(); draw3d(); }; });
   $('plShadow').onclick = function(){ state.v3.shadows = !state.v3.shadows; save(); draw3d(); };
   $('plCut').onclick = function(){ state.v3.cut = !state.v3.cut; save(); draw3d(); };
+  $('plPersp').onclick = function(){ state.v3.persp = !state.v3.persp; if(state.v3.persp) state.v3.style = 'realistic'; save(); draw3d(); };
   document.querySelectorAll('#plCube [data-v], #plHome').forEach(function(f){ f.onclick = function(){ if(r3state === 2) r3.view(f.dataset.v || 'home'); }; });
   addEventListener('psp-theme', function(){ if(view === '3d') draw3d(); });
   P.on(function(){ changed(); });

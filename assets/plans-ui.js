@@ -7,6 +7,8 @@
   var TAG = {oneStorey:{mn:'Нэг давхар', en:'Single storey'}, twoStorey:{mn:'Хоёр давхар', en:'Two storeys'}, compact:{mn:'Авсаархан', en:'Compact'},
     storage:{mn:'Агуулахтай', en:'Storage room'}, garage:{mn:'Гараж', en:'Garage'}, mudroom:{mn:'Үүдний өрөө', en:'Mud room'}, twoBaths:{mn:'2 АЦӨ', en:'2 bathrooms'},
     balcony:{mn:'Тагт', en:'Balcony'}, study:{mn:'Ажлын өрөө', en:'Home office'}};
+  var RMAT = {seam:{mn:'төмөр хавтан', en:'standing seam metal'}, tile:{mn:'металл ваар', en:'metal tile'}, shingle:{mn:'битум ширгэл', en:'asphalt shingles'}};
+  var FAC = {auto:{mn:'Тоосго + шавардлага', en:'Brick + render'}, plaster:{mn:'Шавардлага', en:'Render'}, brick:{mn:'Тоосго', en:'Brick'}, wood:{mn:'Модон өнгөлгөө', en:'Timber cladding'}, timber:{mn:'Хар мод, чулуун булан', en:'Dark timber, stone corners'}, stone:{mn:'Чулуун өнгөлгөө', en:'Stone cladding'}};
   var ROOF = {gable:{mn:'Хоёр налуу', en:'Gable'}, hip:{mn:'Дөрвөн налуу', en:'Hip'}, flat:{mn:'Хавтгай', en:'Flat'}};
   var S = {
     mn:{m2:'м²', beds:'Унтлагын өрөө', baths:'АЦӨ', floors:'Давхар', garage:'Гараж', yes:'Байгаа', no:'Байхгүй', sample:'Жишээ', onReq:'Үнийн санал авах', from:'-с эхэлнэ',
@@ -119,7 +121,7 @@
       try{ sessionStorage.setItem('psp-plan', JSON.stringify({msg:lines.join('\n'), area:String(Math.round(st.total))})); }catch(x){}
       location.href = 'studio.html#contact';
     }
-    function edit(){ try{ sessionStorage.setItem('psp-load', JSON.stringify({floors:p.floors, roof:p.roof, code:p.code})); }catch(x){} location.href = 'planner.html'; }
+    function edit(){ try{ sessionStorage.setItem('psp-load', JSON.stringify({floors:p.floors, roof:p.roof, facade:p.facade, code:p.code})); }catch(x){} location.href = 'planner.html'; }
     function gallery(){
       var main = document.getElementById('ppMain'), th = document.getElementById('ppThumbs'), im = p.images[gi];
       main.querySelector('img').src = im.src; main.querySelector('img').alt = t(im.cap); document.getElementById('ppCap').textContent = t(im.b) + ' ' + t(im.cap) + '  ·  ' + (gi + 1) + '/' + p.images.length;
@@ -148,7 +150,7 @@
           .concat(st.garage ? [[s('garageA'), fmt(st.garage) + ' ' + s('m2')]] : []).concat(st.balcony ? [[s('balcony'), fmt(st.balcony) + ' ' + s('m2')]] : [])],
         [{mn:'Өрөө', en:'Rooms'}, [[s('beds'), st.beds], [s('baths'), st.baths], [s('garage'), st.garage ? s('yes') : s('no')]]],
         [{mn:'Хэмжээ', en:'Dimensions'}, [[s('floors'), st.floors], [s('w'), fmt(st.w) + ' м'], [s('d'), fmt(st.d) + ' м'], [s('h'), '≈ ' + fmt(st.height) + ' м'], [s('fh'), '3.0 м']]],
-        [{mn:'Дээвэр ба суурь', en:'Roof and foundation'}, [[s('roof'), t(ROOF[p.roof.type])], [s('pitch'), p.roof.type === 'flat' ? '—' : '30°'], [s('found'), OPT.foundations.map(t).join(', ')]]]
+        [{mn:'Дээвэр ба суурь', en:'Roof and foundation'}, [[s('roof'), t(ROOF[p.roof.type]) + (p.roof.mat ? ', ' + t(RMAT[p.roof.mat]) : '')], [P.lang === 'en' ? 'Facade' : 'Фасад', t(FAC[p.facade || 'auto'])], [s('pitch'), p.roof.type === 'flat' ? '—' : '30°'], [s('found'), OPT.foundations.map(t).join(', ')]]]
       ];
       blocks.forEach(function(bk){ var d = el('div', 'ppspec', null, sp); el('h3', null, t(bk[0]), d); var dl = el('dl', null, null, d);
         bk[1].forEach(function(row){ var r = el('div', null, null, dl); el('dt', null, row[0], r); el('dd', null, String(row[1]), r); }); });

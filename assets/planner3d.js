@@ -5,7 +5,7 @@
 import * as THREE from './vendor/three.module.min.js';
 import {OrbitControls} from './vendor/OrbitControls.js';
 import {RoomEnvironment} from './vendor/RoomEnvironment.js';
-import {T, FACADE_FLAT} from './planner-tex.js?v=1';
+import {T, FACADE_FLAT} from './planner-tex.js?v=2';
 
 const FH = 3, SL = .25, PL = .3, T30 = Math.tan(30 * Math.PI / 180);
 const near = (a, b) => Math.abs(a - b) < 1e-4;
@@ -17,10 +17,11 @@ export function create(canvas, ui){
   renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   const scene = new THREE.Scene();
-  const cam = new THREE.OrthographicCamera(-10, 10, 10, -10, -1000, 2000);
+  const ocam = new THREE.OrthographicCamera(-10, 10, 10, -10, -1000, 2000), pcam = new THREE.PerspectiveCamera(36, 1, .1, 1500);
+  let cam = ocam, persp = false;
   const ctl = new OrbitControls(cam, canvas);
   ctl.enableDamping = true; ctl.dampingFactor = .12; ctl.maxPolarAngle = Math.PI * .5; ctl.screenSpacePanning = true;
-  ctl.minZoom = .3; ctl.maxZoom = 8; ctl.rotateSpeed = .8;
+  ctl.minZoom = .3; ctl.maxZoom = 8; ctl.rotateSpeed = .8; ctl.minDistance = 4; ctl.maxDistance = 160;
   const hemi = new THREE.HemisphereLight(0xe8eef5, 0x8d8f80, 1.15); scene.add(hemi);
   const amb = new THREE.AmbientLight(0xffffff, 0); scene.add(amb);
   const sun = new THREE.DirectionalLight(0xfff1df, 2.3); sun.castShadow = true;
@@ -28,7 +29,7 @@ export function create(canvas, ui){
   scene.add(sun, sun.target);
   const pmrem = new THREE.PMREMGenerator(renderer), envTex = pmrem.fromScene(new RoomEnvironment(), .04).texture;
   let root = new THREE.Group(); scene.add(root);
-  let MODEL = null, ENTRIES = [], PAVED = [];
+  let MODEL = null, ENTRIES = [], PAVED = [], PERIM = [];
   let frustum = 24, fbase = 24, fitted = false, M = null, LM = null, anim = null;
   const memo = {};
 
@@ -51,7 +52,8 @@ export function create(canvas, ui){
     const rm = m.roof.mat || 'seam', vc = (c) => hid ? new THREE.MeshBasicMaterial({color:'#ffffff', polygonOffset:true, polygonOffsetFactor:1, polygonOffsetUnits:1})
       : real ? new THREE.MeshStandardMaterial({vertexColors:true, flatShading:true, roughness:.95, envMapIntensity:.25}) : new THREE.MeshLambertMaterial({vertexColors:true, flatShading:true});
     const R = {
-      F:{plaster:tx('plaster', FACADE_FLAT.plaster), brick:tx('brick', FACADE_FLAT.brick, {roughness:.92}), wood:tx('wood', FACADE_FLAT.wood, {roughness:.7}), stone:tx('stone', FACADE_FLAT.stone)},
+      F:{plaster:tx('plaster', FACADE_FLAT.plaster), brick:tx('brick', FACADE_FLAT.brick, {roughness:.92}), wood:tx('wood', FACADE_FLAT.wood, {roughness:.7}), stone:tx('stone', FACADE_FLAT.stone), timber:tx('timber', FACADE_FLAT.timber, {roughness:.8})},
+      gravel:tx('gravel', '#c9c6bf', {roughness:1, env:.2}), deck:tx('deck', '#c9a77c', {roughness:.8}), rock:real ? new THREE.MeshStandardMaterial({color:'#9b968d', roughness:.95, flatShading:true, envMapIntensity:.3}) : mk('#c9c5bd', {flatShading:true}),
       porch:tx('stone', '#d4cfc6', {tint:'#e4e0d8'}), canopy:mk(real ? '#33363b' : '#55595f', {roughness:.5}),
       leaf:vc(), conifer:vc(),
       wallExt: mk(real ? '#efe8dc' : '#f1eee8', {roughness:.92}),
@@ -69,7 +71,7 @@ export function create(canvas, ui){
       rail: mk(real ? '#f2eee7' : '#f1eee8'),
       roof: tx(rm, m.roof.color, {tint:m.roof.color, roughness:rm === 'shingle' ? .9 : .42, metalness:rm === 'shingle' ? 0 : .45, side:THREE.DoubleSide, env:.7}),
       seam: new THREE.LineBasicMaterial({color:hid ? '#9a9da2' : new THREE.Color(m.roof.color).multiplyScalar(.62), transparent:true, opacity:hid ? .6 : .9}),
-      grass: real ? tx('grass', '#dfe3d6', {roughness:1, env:.15, tint:'#c4cab4'}) : mk('#dfe3d6', {hid:'#ffffff'}),
+      grass: real ? tx('grass', '#dfe3d6', {roughness:1, env:.15, tint:'#aab494'}) : mk('#dfe3d6', {hid:'#ffffff'}),
       earth: mk(real ? '#7b6a55' : '#c9c1b4', {roughness:1, hid:'#ffffff'}),
       pave: tx('pavers', '#d2cfc8', {roughness:.95}),
       trunk: tx('bark', '#a9998a'),
@@ -158,7 +160,13 @@ export function create(canvas, ui){
         if(r.type === 'rail'){ wbox(L.ori, L.c, a, b, t, z0, z0 + Math.min(1.05, H), mat); return; }
         const o = r.op, ext = r.type === 'ext', ct = cutTop ? M.cut : null;
         const piece = (y0, y1, top) => ext ? ewall(L.ori, L.c, a, b, t, y0, y1, r.side, i, top ? ct : null) : wbox(L.ori, L.c, a, b, t, y0, y1, top ? mat : wm);
-        if(!o){ piece(z0, z0 + H, true); return; }
+        if(ext && i === 0) PERIM.push({ori:L.ori, c:L.c, a:r.a, b:r.b, out:-(r.side || 1)});
+        if(!o){
+          if(ext && MODEL.facade === 'timber' && r.b - r.a > 1.3){ const cw = Math.min(.9, (r.b - r.a) / 2 - .1), sa = !prev ? a + cw : a, sb = !next ? b - cw : b;
+            if(!prev) wbox(L.ori, L.c, a, sa, t, z0, z0 + H, extMats(L.ori, r.side, M.F.stone, cutTop ? M.cut : null));
+            if(!next) wbox(L.ori, L.c, sb, b, t, z0, z0 + H, extMats(L.ori, r.side, M.F.stone, cutTop ? M.cut : null));
+            wbox(L.ori, L.c, sa, sb, t, z0, z0 + H, extMats(L.ori, r.side, M.F.timber, cutTop ? M.cut : null)); return; }
+          piece(z0, z0 + H, true); return; }
         const s = Math.min(o.s, H), hd = Math.min(o.h, H);
         if(ext && i === 0 && o.k === 'door') ENTRIES.push({ori:L.ori, c:L.c, a:r.a, b:r.b, out:-(r.side || 1), h:o.h});
         if(s > 0) piece(z0, z0 + s, s >= H);
@@ -247,9 +255,10 @@ export function create(canvas, ui){
   function porch(e, b, pad){
     const w = e.b - e.a, cu = (e.a + e.b) / 2, W = Math.max(w + 1.2, 2), D = 1.4, o = e.out;
     const c0 = e.c + o * .125, c1 = c0 + o * D, c2 = c1 + o * .32, c3 = c2 + o * .32;
-    prect(e.ori, cu - W / 2, cu + W / 2, c0, c1, -PL, 0, M.porch);
-    prect(e.ori, cu - W / 2, cu + W / 2, c1, c2, -PL, -.1, M.porch);
-    prect(e.ori, cu - W / 2, cu + W / 2, c2, c3, -PL, -.2, M.porch);
+    const pm = MODEL.facade === 'timber' || MODEL.facade === 'wood' ? M.deck : M.porch; if(pm === M.deck) PAVED.push(e.ori === 'h' ? [cu - W / 2, cu + W / 2, Math.min(c0, c3), Math.max(c0, c3)] : [Math.min(c0, c3), Math.max(c0, c3), cu - W / 2, cu + W / 2]);
+    prect(e.ori, cu - W / 2, cu + W / 2, c0, c1, -PL, 0, pm);
+    prect(e.ori, cu - W / 2, cu + W / 2, c1, c2, -PL, -.1, pm);
+    prect(e.ori, cu - W / 2, cu + W / 2, c2, c3, -PL, -.2, pm);
     const ch = Math.max(e.h + .3, 2.45);
     prect(e.ori, cu - W / 2 - .1, cu + W / 2 + .1, c0, c1 + o * .15, ch, ch + .12, M.canopy);
     [-1, 1].forEach(k => prect(e.ori, cu + k * (W / 2 - .05) - .05, cu + k * (W / 2 - .05) + .05, c1 - o * .02, c1 - o * .12, 0, ch, M.canopy));
@@ -270,22 +279,39 @@ export function create(canvas, ui){
     const y0 = -PL;
     if(kind === 'conifer'){
       part(new THREE.CylinderGeometry(.08 * s, .13 * s, 1.2 * s, 7), M.trunk, x, y0 + .6 * s, z, false);
-      for(let k = 0; k < 4; k++){ const g = paint(lumpy(new THREE.ConeGeometry((1.25 - .27 * k) * s, 1.55 * s, 9, 2).toNonIndexed(), seed + k, .06), '#3c5a37', seed * 7 + k);
-        part(g, M.conifer, x, y0 + (1.35 + k * .82) * s, z, edges); }
+      for(let k = 0; k < 6; k++){ const g = paint(lumpy(new THREE.ConeGeometry((1.15 - .16 * k) * s, 1.3 * s, 10, 2).toNonIndexed(), seed + k, .07), '#34503a', seed * 7 + k);
+        part(g, M.conifer, x, y0 + (1.4 + k * .7) * s, z, edges); }
       return; }
     part(new THREE.CylinderGeometry(.09 * s, .15 * s, 2 * s, 7), M.trunk, x, y0 + s, z, false);
     const r = rnd(seed); [[0, 2.75, 0, 1.15], [.62, 2.35, .25, .82], [-.55, 2.45, -.3, .86], [.1, 3.3, -.15, .78]].forEach((q, k) => {
-      const g = paint(lumpy(new THREE.IcosahedronGeometry(q[3] * s * (.9 + r() * .2), 2), seed + k * 3, .13), '#5c7d3c', seed * 13 + k);
+      const g = paint(lumpy(new THREE.IcosahedronGeometry(q[3] * s * (.9 + r() * .2), 3), seed + k * 3, .13), '#56743a', seed * 13 + k);
       part(g, M.leaf, x + q[0] * s, y0 + q[1] * s, z + q[2] * s, edges); });
   }
   function free(x, z, rad, b){ if(x > b[0] - rad && x < b[2] + rad && z > b[1] - rad && z < b[3] + rad) return false;
     return !PAVED.some(p => x > p[0] - rad && x < p[1] + rad && z > p[2] - rad && z < p[3] + rad); }
+  /* a ring of spruce and pine behind and around the plot, instanced */
+  function forest(b, pad){
+    const parts = [], r = rnd(91);
+    for(let k = 0; k < 7; k++){ const g = lumpy(new THREE.ConeGeometry(1.15 - .15 * k, 1.3, 9, 1).toNonIndexed(), 5 + k, .07); g.translate(0, 1.5 + k * .72, 0); paint(g, '#2f4a33', 40 + k); parts.push(g); }
+    const pos = [], col = []; parts.forEach(g => { pos.push(...g.attributes.position.array); col.push(...g.attributes.color.array); });
+    const cg = new THREE.BufferGeometry(); cg.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); cg.setAttribute('color', new THREE.Float32BufferAttribute(col, 3)); cg.computeVertexNormals();
+    const tg = new THREE.CylinderGeometry(.07, .12, 2, 6); tg.translate(0, 1, 0);
+    const cx = (b[0] + b[2]) / 2, cz = (b[1] + b[3]) / 2, R0 = Math.max(b[2] - b[0], b[3] - b[1]) / 2 + pad + 5, list = [];
+    for(let i = 0; i < 240 && list.length < 140; i++){ const an = r() * Math.PI * 2, d = R0 + 2 + r() * 38, x = cx + Math.cos(an) * d, z = cz + Math.sin(an) * d;
+      if(z > cz + 4 && Math.abs(x - cx) < R0 + 6 && d < R0 + 24) continue; list.push([x, z, 1.6 + r() * 2.4, r() * 6]); }
+    const im = new THREE.InstancedMesh(cg, M.conifer, list.length), it = new THREE.InstancedMesh(tg, M.trunk, list.length), mt = new THREE.Matrix4(), q = new THREE.Quaternion(), sc = new THREE.Vector3(), p = new THREE.Vector3();
+    list.forEach((t, i) => { q.setFromAxisAngle(new THREE.Vector3(0, 1, 0), t[3]); sc.set(t[2] * .75, t[2] * 1.45, t[2] * .75); p.set(t[0], -PL, t[1]); mt.compose(p, q, sc); im.setMatrixAt(i, mt); it.setMatrixAt(i, mt); });
+    im.castShadow = false; root.add(im, it);
+  }
   function landscape(b, pad, m){
     const edges = m.style !== 'realistic';
     const spots = [[b[0] - 4, b[1] - 3, 1.25, 'leaf'], [b[2] + 4.2, b[1] - 2, 1.1, 'conifer'], [b[2] + 3.6, b[3] + 4.6, 1.15, 'leaf'], [b[0] - 3.8, b[3] + 3.4, 1.0, 'conifer'],
       [b[0] - 5.5, (b[1] + b[3]) / 2, .95, 'conifer'], [(b[0] + b[2]) / 2, b[1] - 5.2, 1.2, 'leaf']];
     spots.forEach((q, k) => { let [x, z] = q; for(let t = 0; t < 6 && !free(x, z, 1.4, b); t++){ x += (x < (b[0] + b[2]) / 2 ? -1 : 1) * .9; }
       if(free(x, z, 1.4, b)) tree(x, z, q[2], q[3], 17 + k * 31, edges); });
+    /* boulders */
+    const rr = rnd(57); for(let k = 0; k < 7; k++){ const x = b[0] - pad + 1 + rr() * (b[2] - b[0] + 2 * pad - 2), z = b[1] - pad + 1 + rr() * (b[3] - b[1] + 2 * pad - 2), s = .25 + rr() * .45;
+      if(!free(x, z, 1, b)) continue; const g = lumpy(new THREE.DodecahedronGeometry(s, 0), k * 7, .2); g.scale(1.3, .6, 1); part(g, M.rock, x, -PL + s * .25, z, edges); }
     /* shrubs along the front facade, clear of paths */
     for(let x = b[0] + .7; x < b[2] - .5; x += 1.6){ const z = b[3] + .75;
       if(PAVED.some(p => x > p[0] - .7 && x < p[1] + .7 && z > p[2] - .7 && z < p[3] + .7)) continue;
@@ -297,7 +323,8 @@ export function create(canvas, ui){
     root.traverse(o => { if(o.geometry) o.geometry.dispose(); });
     scene.remove(root); root = new THREE.Group(); scene.add(root);
     if(M) Object.values(M).forEach(x => { if(x && x.dispose) x.dispose(); });
-    MODEL = m; ENTRIES = []; PAVED = [];
+    MODEL = m; ENTRIES = []; PAVED = []; PERIM = [];
+    persp = !!m.persp; cam = persp ? pcam : ocam; ctl.object = cam;
     m.nfl = m.floors.filter(f => f.rooms.some(r => r.type !== 'balcony')).length || 1;
     M = mats(m.style, m);
     LM = new THREE.LineBasicMaterial({color:'#1b1d21', transparent:true, opacity:m.style === 'realistic' ? .3 : m.style === 'shaded' ? .8 : 1});
@@ -318,7 +345,7 @@ export function create(canvas, ui){
 
     /* site pad, trees, paving */
     const pad = 8;
-    const site = box(b[0] - pad, b[2] + pad, -PL - .6, -PL, b[1] - pad, b[3] + pad, [M.earth, M.earth, M.grass, M.earth, M.earth, M.earth], {cast:false});
+    const site = (persp && real) ? null : box(b[0] - pad, b[2] + pad, -PL - .6, -PL, b[1] - pad, b[3] + pad, [M.earth, M.earth, M.grass, M.earth, M.earth, M.earth], {cast:false, noEdge:persp});
     if(site) site.receiveShadow = true;
     if(m.floors[0]) m.floors[0].ops.forEach(o => {
       if(o.k !== 'garage') return;
@@ -340,13 +367,22 @@ export function create(canvas, ui){
     });
     if(!m.cut && top >= 0) roof(m, top, top * FH + FH);
     if(m.porch) ENTRIES.forEach(e => porch(e, b, pad));
+    /* gravel drip strip around the ground floor */
+    if(real) PERIM.forEach(e => prect(e.ori, e.a - .1, e.b + .1, e.c + e.out * .13, e.c + e.out * .8, -PL, -PL + .02, M.gravel, {cast:false, noEdge:true}));
     landscape(b, pad, m);
+    /* eye-level surroundings: far lawn, forest, sky and haze */
+    scene.background = null; scene.fog = null;
+    if(persp && real){ scene.background = T('sky').map; scene.fog = new THREE.Fog('#dfe7ec', 28, 150);
+      const gg = new THREE.PlaneGeometry(600, 600); gg.rotateX(-Math.PI / 2); const gm = new THREE.Mesh(gg, M.grass); gm.position.set((b[0] + b[2]) / 2, -PL, (b[1] + b[3]) / 2); wuv(gg, gm.position); gm.receiveShadow = true; root.add(gm);
+      forest(b, pad); }
 
     /* camera and sun fit */
     const cx = (b[0] + b[2]) / 2, cz = (b[1] + b[3]) / 2, hgt = (top + 1) * FH + 2, diag = Math.hypot(b[2] - b[0] + 2 * pad, b[3] - b[1] + 2 * pad, hgt);
     sun.position.set(cx - 22, 34, cz + 26); sun.target.position.set(cx, 0, cz);
     const sc = sun.shadow.camera, ss = diag * .75; sc.left = -ss; sc.right = ss; sc.top = ss; sc.bottom = -ss; sc.near = 1; sc.far = 140; sc.updateProjectionMatrix();
     const key = [b.map(v => Math.round(v)).join(','), top].join('|');
+    memo.pd = Math.max(16, Math.hypot(b[2] - b[0], b[3] - b[1]) * 1.55 + 6);
+    if(memo.persp !== persp){ memo.persp = persp; if(fitted){ size(); home(false, cx, hgt * .3, cz); } }
     if(!fitted || key !== memo.key){ fbase = Math.max(11, Math.hypot(b[2] - b[0], b[3] - b[1], hgt) * 1.18); if(!fitted) home(false, cx, hgt * .3, cz); fitted = true; }
     memo.key = key; memo.center = [cx, hgt * .3, cz];
     size(); req();
@@ -354,7 +390,7 @@ export function create(canvas, ui){
 
   /* ---------- camera ---------- */
   function setDir(dir, animate){
-    const tgt = ctl.target.clone(), dist = 120, to = tgt.clone().add(dir.clone().normalize().multiplyScalar(dist));
+    const tgt = ctl.target.clone(), dist = persp ? (memo.pd || 30) : 120, to = tgt.clone().add(dir.clone().normalize().multiplyScalar(dist));
     if(!animate){ cam.position.copy(to); cam.up.set(0, 1, 0); cam.lookAt(tgt); ctl.update(); req(); return; }
     const from = cam.position.clone().sub(tgt), f2 = to.clone().sub(tgt), t0 = performance.now();
     anim = () => { const k = Math.min(1, (performance.now() - t0) / 450), e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
@@ -365,12 +401,15 @@ export function create(canvas, ui){
   function home(animate, x, y, z){
     if(x !== undefined) ctl.target.set(x, y, z); else if(memo.center) ctl.target.set(...memo.center);
     cam.zoom = 1; cam.updateProjectionMatrix();
+    if(persp){ ctl.target.y = 1.6; setDir(new THREE.Vector3(Math.sin(.62), .17, Math.cos(.62)), animate); return; }
     setDir(new THREE.Vector3(Math.sin(.7), .62, Math.cos(.7)), animate);
   }
   function size(){
     const r = canvas.parentElement.getBoundingClientRect(), w = Math.max(10, r.width), h = Math.max(10, r.height), a = w / h;
     frustum = a < 1.1 ? fbase * 1.1 / a * .82 : fbase;
     renderer.setSize(w, h, false);
+    pcam.aspect = a; pcam.fov = a < 1 ? 58 : 36; pcam.updateProjectionMatrix();
+    cam = persp ? pcam : ocam; if(persp) return;
     cam.left = -frustum * a / 2; cam.right = frustum * a / 2; cam.top = frustum / 2; cam.bottom = -frustum / 2; cam.updateProjectionMatrix();
   }
   let pending = false;

@@ -100,6 +100,7 @@
             <button type="button" data-vs="realistic" title="Realistic" aria-label="Realistic"><svg viewBox="0 0 24 24"><defs><radialGradient id="rvR" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff"/><stop offset=".5" stop-color="#d9a066"/><stop offset="1" stop-color="#6b4325"/></radialGradient></defs><circle cx="12" cy="12" r="8" fill="url(#rvR)"/></svg></button>
             <i class="rv-sep"></i>
             <button type="button" id="plShadow" title="Сүүдэр" aria-label="Сүүдэр" data-en-aria="Shadows"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2" fill="#f2b33d" stroke="#b9831f"/><path d="M9 2v1.5M9 12.5V14M3 8h1.5M13.5 8H15M4.8 3.8l1 1M12.2 11.2l1 1M4.8 12.2l1-1M12.2 4.8l1-1" stroke="#b9831f" stroke-width="1.2"/><path d="M10 20l4-6h7l-4 6z" fill="#7d8792"/></svg></button>
+            <button type="button" id="plPersp" title="Хүний нүдээр (перспектив)" aria-label="Хүний нүдээр" data-en-aria="Eye-level perspective"><svg viewBox="0 0 24 24"><path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg></button>
             <button type="button" id="plCut" title="Зүсэлт (Section Box)" aria-label="Зүсэлт" data-en-aria="Section box"><svg viewBox="0 0 24 24"><path d="M4 8l8-4 8 4v8l-8 4-8-4z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-dasharray="2 1.5"/><path d="M4 12l8-4 8 4-8 4z" fill="#e8742a" fill-opacity=".85" stroke="#b44f12" stroke-width="1"/></svg></button>
           </div>
         </div>
@@ -132,7 +133,7 @@
           <div class="f"><label for="plRoof" data-en="Roof">Дээвэр</label><select id="plRoof"><option value="auto">Автомат</option><option value="gable">Хоёр налуу</option><option value="hip">Дөрвөн налуу</option><option value="flat">Хавтгай</option></select></div>
           <div class="pl-sw" id="plRoofC" role="group" aria-label="Дээврийн өнгө" data-en-aria="Roof colour"></div>
           <div class="f"><label for="plRoofMat" data-en="Roof material">Дээврийн материал</label><select id="plRoofMat"><option value="seam">Төмөр хавтан</option><option value="tile">Металл ваар</option><option value="shingle">Битум ширгэл</option></select></div>
-          <div class="f"><label for="plFacade" data-en="Facade">Фасад (гадна хана)</label><select id="plFacade"><option value="auto">Автомат</option><option value="plaster">Шавардлага</option><option value="brick">Тоосго</option><option value="wood">Модон өнгөлгөө</option><option value="stone">Чулуун өнгөлгөө</option></select></div>
+          <div class="f"><label for="plFacade" data-en="Facade">Фасад (гадна хана)</label><select id="plFacade"><option value="auto">Автомат</option><option value="plaster">Шавардлага</option><option value="brick">Тоосго</option><option value="wood">Модон өнгөлгөө</option><option value="timber">Хар мод + чулуун булан</option><option value="stone">Чулуун өнгөлгөө</option></select></div>
           <label class="pl-check"><input type="checkbox" id="plPorch" checked><span data-en="Add entrance porch, steps and footpath automatically">Гадна хаалганд довжоо, шат, явган замыг автоматаар нэмэх</span></label>
         </section>
         <section class="pl-card">
@@ -165,6 +166,6 @@
   </div>
 </footer>
 <script src="assets/site.js?v=22"></script>
-<script src="assets/planner.js?v=4"></script>
+<script src="assets/planner.js?v=5"></script>
 </body>
 </html>

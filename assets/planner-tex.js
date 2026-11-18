@@ -94,6 +94,35 @@ const MAKERS = {
       h.fillStyle = '#bbb'; h.fillRect(x, y, tw - 4, rh - 3); }
     speckle(g, 512, 512, r, 16000, .35);
     return {map:tex(c, [1, .7]), bump:tex(b, [1, .7], false), bs:2}; },
+  /* dark vertical timber boards, 120 mm, Scandinavian style */
+  timber(){ const [c, g] = cv(512, 512), [b, h] = cv(512, 512), r = rng(21), n = 8, bw = 512 / n, pal = ['#2f2b27', '#35302b', '#2a2622', '#3a342e'];
+    h.fillStyle = '#cccccc'; h.fillRect(0, 0, 512, 512);
+    for(let i = 0; i < n; i++){ const x = i * bw; g.fillStyle = pal[Math.floor(r() * pal.length)]; g.fillRect(x, 0, bw, 512);
+      for(let k = 0; k < 26; k++){ const xx = x + r() * bw, a = .04 + r() * .08; g.strokeStyle = r() < .5 ? `rgba(0,0,0,${a})` : `rgba(200,180,150,${a * .5})`; g.lineWidth = .6 + r();
+        g.beginPath(); g.moveTo(xx, 0); for(let y = 0; y <= 512; y += 32) g.lineTo(xx + Math.sin(y * .02 + k) * 1.2, y); g.stroke(); }
+      g.fillStyle = 'rgba(0,0,0,.6)'; g.fillRect(x + bw - 4, 0, 4, 512); g.fillStyle = 'rgba(255,255,255,.06)'; g.fillRect(x, 0, 2, 512); h.fillStyle = '#333'; h.fillRect(x + bw - 4, 0, 4, 512); }
+    return {map:tex(c, [.96, 1.6]), bump:tex(b, [.96, 1.6], false), bs:2.5}; },
+  /* pea gravel */
+  gravel(){ const [c, g] = cv(512, 512), [b, h] = cv(512, 512), r = rng(14);
+    g.fillStyle = '#8c8a85'; g.fillRect(0, 0, 512, 512); h.fillStyle = '#555'; h.fillRect(0, 0, 512, 512);
+    for(let i = 0; i < 7000; i++){ const x = r() * 512, y = r() * 512, rx = 2 + r() * 4, ry = 1.5 + r() * 3, v = 120 + Math.floor(r() * 110);
+      g.fillStyle = `rgb(${v},${v - 3},${v - 8})`; g.beginPath(); g.ellipse(x, y, rx, ry, r() * 3, 0, 7); g.fill();
+      h.fillStyle = `rgb(${v + 40},${v + 40},${v + 40})`; h.beginPath(); h.ellipse(x, y, rx, ry, 0, 0, 7); h.fill(); }
+    return {map:tex(c, [1.2, 1.2]), bump:tex(b, [1.2, 1.2], false), bs:2}; },
+  /* decking boards */
+  deck(){ const [c, g] = cv(512, 512), [b, h] = cv(512, 512), r = rng(15), n = 7, bh = 512 / n;
+    h.fillStyle = '#ccc'; h.fillRect(0, 0, 512, 512);
+    for(let j = 0; j < n; j++){ const y = j * bh; g.fillStyle = ['#b08a62', '#a98259', '#b8946a'][j % 3]; g.fillRect(0, y, 512, bh);
+      for(let k = 0; k < 30; k++){ const yy = y + r() * bh; g.strokeStyle = `rgba(80,50,25,${.05 + r() * .1})`; g.lineWidth = .7; g.beginPath(); g.moveTo(0, yy); g.lineTo(512, yy + (r() - .5) * 3); g.stroke(); }
+      g.fillStyle = 'rgba(40,25,10,.55)'; g.fillRect(0, y + bh - 4, 512, 4); h.fillStyle = '#333'; h.fillRect(0, y + bh - 4, 512, 4); }
+    return {map:tex(c, [1, .98]), bump:tex(b, [1, .98], false), bs:1.5}; },
+  /* sky with soft clouds (screen background) */
+  sky(){ const [c, g] = cv(1024, 512), r = rng(31), gr = g.createLinearGradient(0, 0, 0, 512);
+    gr.addColorStop(0, '#5f8fc0'); gr.addColorStop(.55, '#a9c6e0'); gr.addColorStop(1, '#e6eef3'); g.fillStyle = gr; g.fillRect(0, 0, 1024, 512);
+    for(let i = 0; i < 26; i++){ const cx = r() * 1024, cy = 60 + r() * 260, w = 80 + r() * 200;
+      for(let k = 0; k < 14; k++){ const x = cx + (r() - .5) * w, y = cy + (r() - .5) * w * .22, rad = 18 + r() * 46, a = .1 + r() * .16;
+        const rg = g.createRadialGradient(x, y, 0, x, y, rad); rg.addColorStop(0, `rgba(255,255,255,${a})`); rg.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = rg; g.fillRect(x - rad, y - rad, rad * 2, rad * 2); } }
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return {map:t}; },
   bark(){ const [c, g] = cv(128, 256), r = rng(6); g.fillStyle = '#5d4636'; g.fillRect(0, 0, 128, 256);
     for(let i = 0; i < 160; i++){ g.strokeStyle = r() < .5 ? 'rgba(25,15,8,.5)' : 'rgba(150,120,95,.35)'; g.lineWidth = 1 + r() * 2; const x = r() * 128;
       g.beginPath(); g.moveTo(x, r() * 256); g.lineTo(x + (r() - .5) * 6, r() * 256); g.stroke(); }
@@ -106,5 +135,5 @@ const MAKERS = {
 function blotchRect(g, x, y, w, h, r){ const gr = g.createLinearGradient(x, y, x + w, y + h); gr.addColorStop(0, `rgba(255,255,255,${.08 * r()})`); gr.addColorStop(1, `rgba(0,0,0,${.12 * r()})`); g.fillStyle = gr; g.fillRect(x, y, w, h); }
 
 export function T(name){ if(!cache[name]) cache[name] = MAKERS[name](); return cache[name]; }
-export const FACADE_FLAT = {plaster:'#efe9df', brick:'#a8634a', wood:'#9b6c45', stone:'#aaa396'};
+export const FACADE_FLAT = {plaster:'#efe9df', brick:'#a8634a', wood:'#9b6c45', stone:'#aaa396', timber:'#3a3530'};
 export {shade};
