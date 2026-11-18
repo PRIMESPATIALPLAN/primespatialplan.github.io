@@ -279,7 +279,8 @@ footer{border-top:1px solid var(--rule);padding-block:48px 32px}
 .pl-main{display:grid;grid-template-columns:1fr;gap:16px}
 @media (min-width:1000px){.pl-main{grid-template-columns:minmax(0,1fr) 320px;align-items:start}}
 .pl-stage{position:relative;height:min(68vh,640px);min-height:380px;border:1px solid var(--hair);border-radius:10px;overflow:hidden;background:#fbfaf7}
-.pl-stage svg,.pl-stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none}
+#plSvg,#pl3d{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none}
+#plSvg[hidden],#pl3d[hidden],.pl-rv[hidden]{display:none}
 .pl-zoom{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:4px}
 .pl-zoom button{width:40px;height:40px;border-radius:8px;border:1px solid rgba(30,32,36,.18);background:rgba(255,255,255,.92);color:#22252b;font-size:1.2rem;cursor:pointer}
 .pl-hint{position:absolute;left:10px;bottom:8px;right:60px;font-size:.75rem;color:#5b616b;pointer-events:none;margin:0}
@@ -307,3 +308,37 @@ footer{border-top:1px solid var(--rule);padding-block:48px 32px}
 .pl-actions .btn{width:100%}
 .pl-note{font-size:.8rem}
 @media (max-width:640px){.pl-tools{margin-left:0}.pl-seg button span{display:none}.pl-seg button[data-mode]{padding:8px 12px}.pl-stage{height:62vh}.pl-hint{display:none}}
+/* planner: openings, roof, Revit-style 3D chrome */
+.pl-check{display:flex;gap:10px;align-items:flex-start;font-size:.92rem;font-weight:500;letter-spacing:0;text-transform:none;color:var(--ink);cursor:pointer;line-height:1.4}
+.pl-check input{-webkit-appearance:checkbox;appearance:auto;width:18px;height:18px;padding:0;margin:1px 0 0;border:0;accent-color:#F7991E;flex:none}
+.pl-small{font-size:.78rem;line-height:1.45}
+.pl-sw{display:flex;gap:8px}
+.pl-sw button{width:34px;height:34px;border-radius:8px;border:2px solid transparent;box-shadow:inset 0 0 0 1px rgba(0,0,0,.25);cursor:pointer}
+.pl-sw button[aria-pressed="true"]{border-color:var(--brand)}
+.pl-stage.v3{background:linear-gradient(180deg,#9fb6cc 0%,#dfe6ec 58%,#d5d8cc 100%)}
+.pl-stage.v3 .pl-hint{bottom:46px;color:#3b4048}
+.pl-rv{position:absolute;inset:0;pointer-events:none;font-family:Onest,Arial,sans-serif}
+.pl-rv>*{pointer-events:auto}
+.rv-tab{position:absolute;left:0;top:0;background:#f4f4f4;border:1px solid #b5b8bc;border-width:0 1px 1px 0;border-bottom-right-radius:5px;padding:7px 16px;font:600 12px/1 'JetBrains Mono',Menlo,monospace;color:#1f2226}
+.rv-vc{position:absolute;right:12px;top:10px;width:100px;height:104px}
+.rv-home{position:absolute;left:0;top:0;width:26px;height:26px;display:grid;place-items:center;border:0;background:none;color:#3a3f46;cursor:pointer;padding:0}
+.rv-home svg{width:18px;height:18px}
+.rv-scene{position:absolute;left:22px;top:22px;width:56px;height:56px;perspective:600px}
+.rv-cube{position:relative;width:56px;height:56px;transform-style:preserve-3d}
+.rv-cube button{position:absolute;left:0;top:0;width:56px;height:56px;display:grid;place-items:center;padding:0;background:rgba(238,240,243,.94);border:1px solid #8b9096;color:#30343a;font:600 8.5px/1 Onest,Arial,sans-serif;letter-spacing:.03em;cursor:pointer;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.rv-cube button:hover{background:#cfe3f7;color:#0b5aa8;border-color:#5d97cf}
+.rv-cube .f-front{transform:translateZ(28px)}
+.rv-cube .f-back{transform:rotateY(180deg) translateZ(28px)}
+.rv-cube .f-right{transform:rotateY(90deg) translateZ(28px)}
+.rv-cube .f-left{transform:rotateY(-90deg) translateZ(28px)}
+.rv-cube .f-top{transform:rotateX(90deg) translateZ(28px);background:rgba(250,251,252,.96)}
+.rv-ring{position:absolute;left:-14px;top:52px;width:84px;height:22px;border:2px solid rgba(70,76,84,.45);border-radius:50%;pointer-events:none}
+.rv-bar{position:absolute;left:0;bottom:0;display:flex;align-items:center;gap:2px;background:#f0f0f0;border:1px solid #b5b8bc;border-width:1px 1px 0 0;border-top-right-radius:5px;padding:3px 6px}
+.rv-bar button{width:32px;height:30px;padding:0;border:1px solid transparent;background:none;border-radius:3px;display:grid;place-items:center;cursor:pointer;color:#2b2e33}
+.rv-bar button:hover{background:#e2e8ef}
+.rv-bar button[aria-pressed="true"]{background:#cfe3f7;border-color:#7fb0e0}
+.rv-bar svg{width:19px;height:19px}
+.rv-scale{font:11px 'JetBrains Mono',Menlo,monospace;color:#30343a;padding:0 8px 0 2px}
+.rv-sep{width:1px;height:20px;background:#c3c6ca;margin:0 4px}
+@media (pointer:coarse){.rv-bar button{width:38px;height:36px}}
+@media (max-width:640px){.rv-scale{display:none}.pl-seg button[data-mode]{padding:8px 10px}}
