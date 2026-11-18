@@ -121,15 +121,24 @@
           var sc = L + (p.ori === 'h' && p.side === -1 ? 4 : 0); if(!best || sc > best.sc) best = {sc:sc, p:p, f:f}; }); }); });
         return !!best; });
       if(best){ var ca = r2((best.f[0] + best.f[1]) / 2 - .5); out.push({k:'door', ext:true, ori:best.p.ori, c:best.p.c, a:ca, b:ca + 1, s:0, h:2.2, sw:best.p.side}); } }
-    rooms.forEach(function(r, k){ if(r.type !== 'garage') return; var bp = null, bf = null;
-      parts[k].forEach(function(p){ free(p).forEach(function(f){ if(f[1] - f[0] >= 2.6 && (!bf || f[1] - f[0] > bf[1] - bf[0] + (p.ori === 'h' && p.side === -1 ? -1 : 0))){ bp = p; bf = f; } }); });
-      if(bp){ var w = Math.min(3, bf[1] - bf[0] - .4), a = r2((bf[0] + bf[1]) / 2 - w / 2); out.push({k:'garage', ori:bp.ori, c:bp.c, a:a, b:a + w, s:0, h:2.4, sw:bp.side}); } });
+    /* garage door: on the garage's short (entry) side, preferably facing the street (front), sized for one or two cars */
+    rooms.forEach(function(r, k){ if(r.type !== 'garage') return;
+      if(manual.some(function(o){ return o.k === 'garage' && edgesOf(r).some(function(e){ return onLine(o, e) && o.a < e.b && o.b > e.a; }); })) return;
+      var best = null, shortH = Math.abs(r.w - r.h) < 1 ? null : r.w <= r.h;
+      parts[k].forEach(function(p){ free(p).forEach(function(f){
+        var w = garageW(p.ori === 'h' ? r.w : r.h, f[1] - f[0]); if(!w) return;
+        var sc = (f[1] - f[0]) * .1 + (shortH === null ? 0 : (p.ori === 'h') === shortH ? 6 : 0) + (p.ori === 'h' && p.side === -1 ? 3 : 0);
+        if(!best || sc > best.sc) best = {sc:sc, p:p, f:f, w:w}; }); });
+      if(best){ var e0 = best.p.ori === 'h' ? [r.x, r.x + r.w] : [r.y, r.y + r.h], mid = Math.max(best.f[0] + best.w / 2 + .15, Math.min(best.f[1] - best.w / 2 - .15, (e0[0] + e0[1]) / 2)), a = r2(mid - best.w / 2);
+        out.push({k:'garage', ori:best.p.ori, c:best.p.c, a:a, b:a + best.w, s:0, h:best.w > 3.2 ? 2.25 : 2.4, sw:best.p.side}); } });
     rooms.forEach(function(r, k){ var cfg = WIN[r.type]; if(!cfg) return;
       parts[k].forEach(function(p){ free(p).forEach(function(f){ var F = f[1] - f[0]; if(F < cfg.w + .5 || (cfg.min && F < cfg.min)) return;
         var n = Math.max(1, Math.floor((F + 1.2) / (cfg.w + 2.4)));
         for(var q = 0; q < n; q++){ var cx = f[0] + F * (q + .5) / n, a = r2(cx - cfg.w / 2); out.push({k:'win', ori:p.ori, c:p.c, a:a, b:a + cfg.w, s:cfg.s, h:2.1, sw:p.side}); } }); }); });
     return out;
   }
+  /* door width for a garage side: one car up to 5.5 m of wall, two cars beyond; never wider than the free wall allows */
+  function garageW(side, free){ var w = side >= 5.6 ? Math.min(5, side - .8) : Math.max(2.4, Math.min(3, side - .8)); w = Math.min(w, free - .3); return w >= 2.2 ? r2(w) : 0; }
   function opValid(o, rooms){ return rooms.some(function(r){ return edgesOf(r).some(function(e){ return onLine(o, e) && o.a >= e.a - 1e-4 && o.b <= e.b + 1e-4; }); }); }
   function opsOf(fi){
     var f = state.floors[fi], man = (f.ops || []).filter(function(o){ return opValid(o, f.rooms); });
@@ -257,8 +266,12 @@
     if(mode === 'door' || mode === 'win'){ var e = nearEdge(p);
       if(e){
         var bath = e.r.type === 'bath', w = mode === 'door' ? .9 : bath ? .6 : 1.5, L = e.b - e.a; if(L < w + .2) w = Math.max(.5, L - .2);
-        var u = e.ori === 'h' ? p.x : p.y, v = (e.ori === 'h' ? p.y : p.x) - e.c, a = r2(Math.max(e.a + .1, Math.min(e.b - .1 - w, u - w / 2)));
-        var no = {id:uid++, k:mode, ori:e.ori, c:e.c, a:a, b:a + w, s:mode === 'door' ? 0 : bath ? 1.5 : .9, h:2.1, sw:Math.abs(v) > .02 ? (v > 0 ? 1 : -1) : e.side};
+        var u = e.ori === 'h' ? p.x : p.y, v = (e.ori === 'h' ? p.y : p.x) - e.c;
+        /* a door on a garage's outside wall becomes a garage door, sized and centred automatically */
+        var gk = mode === 'door' && e.r.type === 'garage' && extParts(e.r, floor().rooms).some(function(q){ return onLine(q, e) && u >= q.a && u <= q.b; });
+        if(gk){ var gw = garageW(L, L); if(gw){ w = gw; u = (e.a + e.b) / 2; } else gk = false; }
+        var a = r2(Math.max(e.a + .1, Math.min(e.b - .1 - w, u - w / 2)));
+        var no = {id:uid++, k:gk ? 'garage' : mode, ori:e.ori, c:e.c, a:a, b:a + w, s:mode === 'door' ? 0 : bath ? 1.5 : .9, h:gk ? (w > 3.2 ? 2.25 : 2.4) : 2.1, sw:gk ? e.side : Math.abs(v) > .02 ? (v > 0 ? 1 : -1) : e.side};
         checkpoint(); var f = floor(); f.ops = (f.ops || []).concat([no]); selectOp(no); changed(); return; } }
     if(mode === 'draw'){ drag = {kind:'draw', p0:{x:snap(p.x), y:snap(p.y)}, raw:p, on:r}; return; }
     if(r && mode === 'select'){ selOp = null; sel = r.id; drag = {kind:'move', r0:{x:r.x, y:r.y}, p0:p, snap:JSON.stringify(state)}; panel(); draw2d(); return; }
@@ -272,7 +285,17 @@
       vb = [drag.m.x - (drag.m.x - drag.vb0[0]) * w / drag.vb0[2], drag.m.y - (drag.m.y - drag.vb0[1]) * w / drag.vb0[2], w, hh]; draw2d(); return; }
     if(drag.kind === 'pan'){ var rc = svg.getBoundingClientRect(), sx = drag.vb0[2] / rc.width; vb = [drag.vb0[0] - (e.clientX - drag.c0.x) * sx, drag.vb0[1] - (e.clientY - drag.c0.y) * sx, drag.vb0[2], drag.vb0[3]]; draw2d(); return; }
     if(drag.kind === 'draw'){ var x2 = snap(p.x), y2 = snap(p.y); temp = {x:Math.min(drag.p0.x, x2), y:Math.min(drag.p0.y, y2), w:Math.abs(x2 - drag.p0.x), h:Math.abs(y2 - drag.p0.y)}; draw2d(); return; }
-    if(drag.kind === 'op'){ var o = getOp(); if(!o) return; var du = (o.ori === 'h' ? p.x - drag.p0.x : p.y - drag.p0.y); du = Math.round(du * 10) / 10;
+    if(drag.kind === 'op'){ var o = getOp(); if(!o) return;
+      /* dragged onto another wall: the opening hops there (a garage door only onto an outside garage wall) */
+      var ne = nearEdge(p);
+      if(ne && !onLine(o, ne) && Math.abs((o.ori === 'h' ? p.y : p.x) - o.c) > tol() * .8){
+        var nu = ne.ori === 'h' ? p.x : p.y, ok = true;
+        if(o.k === 'garage') ok = ne.r.type === 'garage' && extParts(ne.r, floor().rooms).some(function(q){ return onLine(q, ne) && nu >= q.a && nu <= q.b; });
+        if(ok){ if(o._auto) o = freeze(); var nw = o.b - o.a, L2 = ne.b - ne.a;
+          if(o.k === 'garage') nw = garageW(L2, L2) || nw; if(nw > L2 - .2) nw = Math.max(.5, L2 - .2);
+          o.ori = ne.ori; o.c = ne.c; o.a = r2(Math.max(ne.a + .05, Math.min(ne.b - .05 - nw, nu - nw / 2))); o.b = o.a + nw; o.sw = ne.side;
+          drag.host = [ne.a, ne.b]; drag.o0 = {a:o.a, b:o.b}; drag.p0 = p; drag.moved = true; draw2d(); panel(); return; } }
+      var du = (o.ori === 'h' ? p.x - drag.p0.x : p.y - drag.p0.y); du = Math.round(du * 10) / 10;
       if(!du && !drag.moved) return; if(o._auto) o = freeze(); drag.moved = true; var w = drag.o0.b - drag.o0.a, a = Math.max(drag.host[0] + .05, Math.min(drag.host[1] - .05 - w, drag.o0.a + du));
       o.a = r2(a); o.b = o.a + w; draw2d(); return; }
     var s = room(sel); if(!s) return;
