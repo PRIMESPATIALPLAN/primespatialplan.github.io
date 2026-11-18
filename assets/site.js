@@ -67,6 +67,9 @@
   /* Inquiry form (studio page). */
   function initForm(){
     var f = document.getElementById('inq'); if(!f) return;
+    try{ var pl = JSON.parse(sessionStorage.getItem('psp-plan') || 'null'); if(pl){ sessionStorage.removeItem('psp-plan');
+      document.getElementById('msg').value = pl.msg; if(pl.area) document.getElementById('area').value = pl.area;
+      setTimeout(function(){ var c = document.getElementById('contact'); if(c) c.scrollIntoView(); document.getElementById('name').focus({preventScroll:true}); }, 400); } }catch(x){}
     var err = document.getElementById('err'), res = document.getElementById('result'), out = document.getElementById('out');
     function v(id){ return document.getElementById(id).value.trim(); }
     function build(){

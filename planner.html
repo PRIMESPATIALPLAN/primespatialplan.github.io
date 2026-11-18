@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<script>try{if(localStorage.getItem('psp-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}</script>
+<meta name="theme-color" content="#0b0b0f">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Байшингаа зураарай — Prime Spatial Plan</title>
+<meta name="description" content="Prime Spatial Plan — амины орон сууц, таунхаус, орон сууцны барилгын зураг төсөл, интерьер дизайн, төлөвлөлт. Улаанбаатар, Монгол.">
+<meta property="og:title" content="Prime Spatial Plan">
+<meta property="og:description" content="Prime Spatial Plan — амины орон сууц, таунхаус, орон сууцны барилгын зураг төсөл, интерьер дизайн, төлөвлөлт. Улаанбаатар, Монгол.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 713 824'%3E%3Cpath fill='%23F7991E' fill-rule='evenodd' d='M357 0 713 207V618L357 824 0 618V207Z M357 160 138 285V695L274 773V617L357 662 575 537V285Z'/%3E%3Cpath d='M357 318 439 365V459L357 506 276 459V365Z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Onest:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap">
+<link rel="stylesheet" href="assets/style.css?v=22">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="psp-logo" viewBox="0 0 713 824">
+    <path fill="#F7991E" fill-rule="evenodd" d="M357 0 713 207V618L357 824 0 618V207Z M357 160 138 285V695L274 773V617L357 662 575 537V285Z"/>
+    <path fill="none" stroke="#FFFFFF" stroke-width="1" vector-effect="non-scaling-stroke" d="M0 207 138 285M713 207 575 285M357 662V824"/>
+    <path fill="none" stroke="#F7991E" stroke-width="1" vector-effect="non-scaling-stroke" d="M357 160V318M138 537 276 459M439 459 575 537M138 695 274 773"/>
+    <path fill="var(--cube,#111111)" d="M357 318 439 365V459L357 506 276 459V365Z"/>
+    <path fill="none" stroke="var(--cube-edge,#FFFFFF)" stroke-width="1" vector-effect="non-scaling-stroke" d="M276 365 357 412 439 365M357 412V506"/>
+  </symbol>
+</svg>
+<header class="top over">
+  <div class="bar">
+    <a class="mark" href="./"><svg viewBox="0 0 713 824" aria-hidden="true"><use href="#psp-logo"/></svg><span>Prime Spatial Plan</span></a>
+    <nav class="pills" aria-label="Menu">
+      <a class="pill draw" href="planner.html" aria-current="page" data-en="Draw">Зурах</a>
+      <a class="pill opt" href="studio.html" data-en="Studio">Студи</a>
+      <a class="pill opt" href="projects.html" data-en="Projects">Төслүүд</a>
+      <button class="pill theme-btn" type="button" id="themeBtn" aria-label="Цайвар / бараан горим" data-en-aria="Light / dark mode"><svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></button>
+      <span class="pill lang" role="group" aria-label="Хэл / Language">
+        <button type="button" data-lang="mn" aria-pressed="true">МН</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </span>
+      <a class="pill solid" href="studio.html#contact" data-en="Contact">Холбоо барих</a>
+    </nav>
+  </div>
+</header>
+<main id="top" class="planner">
+  <div class="wrap pl-head">
+    <span class="label" data-en="Online tool">Онлайн хэрэгсэл</span>
+    <h1 data-en="Draw your house">Байшингаа зураарай</h1>
+    <p data-en="Draw your rooms with a finger or a mouse, see them in 3D, and send the idea to us. No account needed — the drawing is kept in this browser.">Өрөөнүүдээ хуруугаараа эсвэл хулганаар зураад, 3D-ээр харж, санаагаа бидэнд илгээгээрэй. Бүртгэл хэрэггүй, зураг тань энэ хөтөч дээр хадгалагдана.</p>
+  </div>
+  <div class="wrap pl-app">
+    <div class="pl-bar">
+      <div class="pl-seg" role="group" aria-label="Горим" data-en-aria="Mode">
+        <button type="button" data-mode="draw" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="6" width="16" height="12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-dasharray="3 2"/><path d="M12 9v6M9 12h6" stroke="currentColor" stroke-width="1.8"/></svg><span data-en="Draw">Зурах</span></button>
+        <button type="button" data-mode="select" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4l12 8-5.5 1.2L15 19l-2.2 1-2.6-5.7L6 18z" fill="currentColor"/></svg><span data-en="Select / move">Сонгох, зөөх</span></button>
+      </div>
+      <div class="pl-seg" role="group" aria-label="Харагдац" data-en-aria="View">
+        <button type="button" data-view="2d" aria-pressed="true">2D</button>
+        <button type="button" data-view="3d" aria-pressed="false">3D</button>
+      </div>
+      <div class="pl-tools">
+        <button type="button" id="plUndo" class="pl-ic" aria-label="Буцаах" data-en-aria="Undo" title="Ctrl+Z"><svg viewBox="0 0 24 24"><path d="M9 7L4 12l5 5M4 12h10a6 6 0 010 12" fill="none" stroke="currentColor" stroke-width="1.8" transform="translate(0 -3)"/></svg></button>
+        <button type="button" id="plRedo" class="pl-ic" aria-label="Дахин хийх" data-en-aria="Redo"><svg viewBox="0 0 24 24"><path d="M15 7l5 5-5 5M20 12H10a6 6 0 000 12" fill="none" stroke="currentColor" stroke-width="1.8" transform="translate(0 -3)"/></svg></button>
+        <select id="plTpl" aria-label="Загвар" data-en-aria="Template">
+          <option value="" data-en="Start from a template…">Загвараас эхлэх…</option>
+          <option value="house" data-en="2-storey house">2 давхар амины сууц</option>
+          <option value="flat" data-en="Apartment, ~65 m²">Орон сууц, ~65 м²</option>
+          <option value="blank" data-en="Blank sheet">Хоосон хуудас</option>
+        </select>
+      </div>
+    </div>
+    <div class="pl-types" id="plTypes" role="group" aria-label="Өрөөний төрөл" data-en-aria="Room type"></div>
+    <div class="pl-floors"><div id="plFloors" class="pl-ftabs"></div><button type="button" id="plDelFloor" class="pl-link" hidden></button></div>
+    <div class="pl-main">
+      <div class="pl-stage" id="plStage">
+        <svg id="plSvg" role="img" aria-label="Байшингийн план" data-en-aria="House plan"></svg>
+        <canvas id="pl3d" hidden aria-label="3D харагдац" data-en-aria="3D view"></canvas>
+        <div class="pl-zoom" id="plZoom">
+          <button type="button" id="plZin" aria-label="Томруулах" data-en-aria="Zoom in">+</button>
+          <button type="button" id="plZout" aria-label="Жижигрүүлэх" data-en-aria="Zoom out">−</button>
+          <button type="button" id="plFit" aria-label="Бүгдийг харах" data-en-aria="Fit to screen">⤢</button>
+        </div>
+        <p class="pl-hint" data-en="Drag on the grid to draw a room · tap a room to select it · pinch or scroll to zoom">Тор дээр чирж өрөө зурна · өрөөн дээр дарж сонгоно · хоёр хуруугаар томруулна</p>
+      </div>
+      <aside class="pl-side">
+        <section class="pl-card">
+          <h2 data-en="Selected room">Сонгосон өрөө</h2>
+          <p id="plNone" class="pl-muted" data-en="No room selected. Tap a room to select it.">Өрөө сонгоогүй байна. Өрөөн дээр дарж сонгоно уу.</p>
+          <div id="plEdit" hidden>
+            <div class="f"><label for="plName" data-en="Name">Нэр</label><input id="plName" autocomplete="off"></div>
+            <div class="f"><label for="plType" data-en="Type">Төрөл</label><select id="plType"></select></div>
+            <div class="pl-2">
+              <div class="f"><label for="plW" data-en="Width, m">Өргөн, м</label><input id="plW" type="number" step="0.5" min="1" inputmode="decimal"></div>
+              <div class="f"><label for="plH" data-en="Length, m">Урт, м</label><input id="plH" type="number" step="0.5" min="1" inputmode="decimal"></div>
+            </div>
+            <p class="pl-area"><span data-en="Area">Талбай</span> <b id="plArea"></b></p>
+            <div class="pl-row"><button type="button" class="btn ghost" id="plDup" data-en="Duplicate">Хуулах</button><button type="button" class="btn ghost" id="plDel" data-en="Delete">Устгах</button></div>
+          </div>
+        </section>
+        <section class="pl-card">
+          <h2 data-en="Rooms">Өрөөнүүд</h2>
+          <ul class="pl-list" id="plList"></ul>
+          <p class="pl-total"><span data-en="Total area">Нийт талбай</span> <b id="plTotal"></b></p>
+        </section>
+        <div class="pl-actions">
+          <button type="button" class="btn" id="plSend" data-en="Send to Prime Spatial Plan →">Бидэнд илгээх →</button>
+          <button type="button" class="btn ghost" id="plPng" data-en="Download image">Зураг татах</button>
+          <button type="button" class="pl-link" id="plClear" data-en="Clear all">Бүгдийг арилгах</button>
+        </div>
+        <p class="pl-muted pl-note" data-en="This sketch is an idea to talk through, not a design. We turn it into drawings that meet building codes.">Энэ бол ярилцах санаа, зураг төсөл биш. Бид үүнийг норм дүрэмд нийцсэн зураг болгоно.</p>
+      </aside>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div class="fbig"><svg class="logo" viewBox="0 0 713 824" aria-hidden="true"><use href="#psp-logo"/></svg><b>Prime<br>Spatial Plan</b></div>
+      <div><h4 data-en="New projects">Шинэ төсөл</h4><p class="ph">+976 •••• ••••</p><p class="ph" data-en="email address">и-мэйл хаяг</p></div>
+      <div><h4 data-en="Office">Оффис</h4><p data-en="Ulaanbaatar, Mongolia">Улаанбаатар, Монгол</p><p class="ph" data-en="office address">оффисын хаяг</p></div>
+      <div><h4 data-en="Hours">Цагийн хуваарь</h4><p data-en="Monday – Friday">Даваа – Баасан</p><p>09:00 – 18:00</p></div>
+    </div>
+    <div class="legal">
+      <span data-en="© 2026 Prime Spatial Plan. All rights reserved.">© 2026 Prime Spatial Plan. Бүх эрх хуулиар хамгаалагдсан.</span>
+      <a href="#top" data-en="Back to top ↑">Дээш буцах ↑</a>
+    </div>
+  </div>
+</footer>
+<script src="assets/site.js?v=22"></script>
+<script src="assets/planner.js?v=1"></script>
+</body>
+</html>

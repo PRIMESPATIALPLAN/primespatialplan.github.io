@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Onest:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap">
-<link rel="stylesheet" href="assets/style.css?v=12">
+<link rel="stylesheet" href="assets/style.css?v=22">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -30,6 +30,7 @@
   <div class="bar">
     <a class="mark" href="./"><svg viewBox="0 0 713 824" aria-hidden="true"><use href="#psp-logo"/></svg><span>Prime Spatial Plan</span></a>
     <nav class="pills" aria-label="Menu">
+      <a class="pill draw" href="planner.html" data-en="Draw">Зурах</a>
       <a class="pill opt" href="studio.html" data-en="Studio">Студи</a>
       <a class="pill opt" href="projects.html" aria-current="page" data-en="Projects">Төслүүд</a>
       <button class="pill theme-btn" type="button" id="themeBtn" aria-label="Цайвар / бараан горим" data-en-aria="Light / dark mode"><svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></button>
@@ -43,7 +44,7 @@
 </header>
 <main id="top">
   <section class="hero proj">
-    <canvas class="hero-cv" data-scene="7" aria-hidden="true"></canvas>
+    <canvas class="hero-cv" data-scene="3" aria-hidden="true"></canvas>
     <div class="wrap hero-text"><a class="back" href="projects.html" data-en="← All projects">← Бүх төсөл</a><h1 id="ptitle"></h1><p id="ploc"></p></div>
   </section>
   <div class="wrap gallery" id="gallery">
@@ -88,7 +89,7 @@
 <script src="assets/projects.js?v=15"></script>
 <script src="assets/model.js?v=2"></script>
 <script src="assets/scenes.js?v=21"></script>
-<script src="assets/site.js?v=20"></script>
+<script src="assets/site.js?v=22"></script>
 <script>
 (function(){
   var P = PSP, slug = new URLSearchParams(location.search).get('p'), i = 0;
