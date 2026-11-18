@@ -8,7 +8,7 @@
     storage:{mn:'Агуулахтай', en:'Storage room'}, garage:{mn:'Гараж', en:'Garage'}, mudroom:{mn:'Үүдний өрөө', en:'Mud room'}, twoBaths:{mn:'2 АЦӨ', en:'2 bathrooms'},
     balcony:{mn:'Тагт', en:'Balcony'}, study:{mn:'Ажлын өрөө', en:'Home office'}};
   var RMAT = {seam:{mn:'төмөр хавтан', en:'standing seam metal'}, tile:{mn:'металл ваар', en:'metal tile'}, shingle:{mn:'битум ширгэл', en:'asphalt shingles'}};
-  var FAC = {auto:{mn:'Тоосго + шавардлага', en:'Brick + render'}, plaster:{mn:'Шавардлага', en:'Render'}, brick:{mn:'Тоосго', en:'Brick'}, wood:{mn:'Модон өнгөлгөө', en:'Timber cladding'}, timber:{mn:'Хар мод, чулуун булан', en:'Dark timber, stone corners'}, stone:{mn:'Чулуун өнгөлгөө', en:'Stone cladding'}};
+  var FAC = {auto:{mn:'Тоосго + шавардлага', en:'Brick + render'}, plaster:{mn:'Шавардлага', en:'Render'}, brick:{mn:'Тоосго', en:'Brick'}, wood:{mn:'Модон өнгөлгөө', en:'Timber cladding'}, timber:{mn:'Хар мод, чулуун булан', en:'Dark timber, stone corners'}, cedar:{mn:'Хүрэн мод, чулуун булан', en:'Cedar, stone corners'}, stone:{mn:'Чулуун өнгөлгөө', en:'Stone cladding'}};
   var ROOF = {gable:{mn:'Хоёр налуу', en:'Gable'}, hip:{mn:'Дөрвөн налуу', en:'Hip'}, flat:{mn:'Хавтгай', en:'Flat'}};
   var S = {
     mn:{m2:'м²', beds:'Унтлагын өрөө', baths:'АЦӨ', floors:'Давхар', garage:'Гараж', yes:'Байгаа', no:'Байхгүй', sample:'Жишээ', onReq:'Үнийн санал авах', from:'-с эхэлнэ',

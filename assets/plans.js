@@ -53,7 +53,7 @@ window.PSP_PLAN_OPTIONS = {
       title:{mn:'Нэг давхар амины сууц, гаражтай', en:'Single-storey house with garage'},
       lead:{mn:'Нэг давхарт 2 унтлагын өрөө, 2 ариун цэврийн өрөөтэй. Гаражаас жижиг үүдний өрөөгөөр дамжин шууд гал тогоо руу орно.',
             en:'Two bedrooms and two bathrooms on one level, with a small mud room linking the garage straight to the kitchen.'},
-      roof:{type:'gable', color:'#2b2d31', mat:'seam'}, facade:'timber', tags:['oneStorey', 'garage', 'mudroom', 'twoBaths'],
+      roof:{type:'gable', color:'#2b2d31', mat:'seam'}, facade:'cedar', tags:['oneStorey', 'garage', 'mudroom', 'twoBaths'],
       floors:[{rooms:[R('living',0,0,6.5,5), R('kitchen',6.5,0,4,4), R('hall',10.5,0,1.5,4), R('garage',12,0,4,7), R('hall',6.5,4,2,6), R('bed',0,5,4,5), R('bath',4,5,2.5,2.5), R('storage',4,7.5,2.5,2.5), R('bed',8.5,4,3.5,3.5), R('bath',8.5,7.5,3.5,2.5)]}]
     },
     {

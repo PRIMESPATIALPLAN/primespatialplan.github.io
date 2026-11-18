@@ -5,7 +5,7 @@
 import * as THREE from './vendor/three.module.min.js';
 import {OrbitControls} from './vendor/OrbitControls.js';
 import {RoomEnvironment} from './vendor/RoomEnvironment.js';
-import {T, FACADE_FLAT} from './planner-tex.js?v=2';
+import {T, FACADE_FLAT} from './planner-tex.js?v=4';
 
 const FH = 3, SL = .25, PL = .3, T30 = Math.tan(30 * Math.PI / 180);
 const near = (a, b) => Math.abs(a - b) < 1e-4;
@@ -27,7 +27,7 @@ export function create(canvas, ui){
   const sun = new THREE.DirectionalLight(0xfff1df, 2.3); sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048); sun.shadow.bias = -.0005; sun.shadow.normalBias = .03;
   scene.add(sun, sun.target);
-  const pmrem = new THREE.PMREMGenerator(renderer), envTex = pmrem.fromScene(new RoomEnvironment(), .04).texture;
+  const pmrem = new THREE.PMREMGenerator(renderer), envRoom = pmrem.fromScene(new RoomEnvironment(), .04).texture; let envSky = null;
   let root = new THREE.Group(); scene.add(root);
   let MODEL = null, ENTRIES = [], PAVED = [], PERIM = [];
   let frustum = 24, fbase = 24, fitted = false, M = null, LM = null, anim = null;
@@ -51,8 +51,12 @@ export function create(canvas, ui){
     };
     const rm = m.roof.mat || 'seam', vc = (c) => hid ? new THREE.MeshBasicMaterial({color:'#ffffff', polygonOffset:true, polygonOffsetFactor:1, polygonOffsetUnits:1})
       : real ? new THREE.MeshStandardMaterial({vertexColors:true, flatShading:true, roughness:.95, envMapIntensity:.25}) : new THREE.MeshLambertMaterial({vertexColors:true, flatShading:true});
+    const bb = (n, at) => { const m = new THREE.MeshStandardMaterial({map:T(n).map, alphaTest:at || .5, side:THREE.DoubleSide, roughness:.92, envMapIntensity:.25});
+      m.userData.depth = new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking, map:T(n).map, alphaTest:at || .5}); return m; };
     const R = {
-      F:{plaster:tx('plaster', FACADE_FLAT.plaster), brick:tx('brick', FACADE_FLAT.brick, {roughness:.92}), wood:tx('wood', FACADE_FLAT.wood, {roughness:.7}), stone:tx('stone', FACADE_FLAT.stone), timber:tx('timber', FACADE_FLAT.timber, {roughness:.8})},
+      F:{plaster:tx('plaster', FACADE_FLAT.plaster), brick:tx('brick', FACADE_FLAT.brick, {roughness:.92}), wood:tx('wood', FACADE_FLAT.wood, {roughness:.7}), stone:tx('stone', FACADE_FLAT.stone), timber:tx('timber', FACADE_FLAT.timber, {roughness:.8}), cedar:tx('cedar', FACADE_FLAT.cedar, {roughness:.8})},
+      concrete:tx('concrete', '#d2cfc8', {roughness:.92, env:.25}),
+      pine:real ? bb('pine') : null, leafy:real ? bb('leafy') : null, tuft:real ? bb('tuft', .35) : null,
       gravel:tx('gravel', '#c9c6bf', {roughness:1, env:.2}), deck:tx('deck', '#c9a77c', {roughness:.8}), rock:real ? new THREE.MeshStandardMaterial({color:'#9b968d', roughness:.95, flatShading:true, envMapIntensity:.3}) : mk('#c9c5bd', {flatShading:true}),
       porch:tx('stone', '#d4cfc6', {tint:'#e4e0d8'}), canopy:mk(real ? '#33363b' : '#55595f', {roughness:.5}),
       leaf:vc(), conifer:vc(),
@@ -67,11 +71,11 @@ export function create(canvas, ui){
       frame: mk(real ? '#3a3e44' : '#55595f', {roughness:.5, hid:'#ffffff'}),
       doorInt: mk(real ? '#d9cbb3' : '#e2d5bf', {roughness:.6}),
       doorExt: tx('doorWood', '#8a6040', {roughness:.55}),
-      garage: mk(real ? '#cfd2d6' : '#d6d8db', {roughness:.45, metalness:real ? .3 : 0}),
+      garage: real ? new THREE.MeshStandardMaterial({map:T('garageDoor').map, roughness:.45, metalness:.1, envMapIntensity:.5}) : mk('#d6d8db', {roughness:.45}),
       rail: mk(real ? '#f2eee7' : '#f1eee8'),
       roof: tx(rm, m.roof.color, {tint:m.roof.color, roughness:rm === 'shingle' ? .9 : .42, metalness:rm === 'shingle' ? 0 : .45, side:THREE.DoubleSide, env:.7}),
       seam: new THREE.LineBasicMaterial({color:hid ? '#9a9da2' : new THREE.Color(m.roof.color).multiplyScalar(.62), transparent:true, opacity:hid ? .6 : .9}),
-      grass: real ? tx('grass', '#dfe3d6', {roughness:1, env:.15, tint:'#aab494'}) : mk('#dfe3d6', {hid:'#ffffff'}),
+      grass: real ? tx('grass', '#dfe3d6', {roughness:1, env:.15, tint:'#c2c9ae'}) : mk('#dfe3d6', {hid:'#ffffff'}),
       earth: mk(real ? '#7b6a55' : '#c9c1b4', {roughness:1, hid:'#ffffff'}),
       pave: tx('pavers', '#d2cfc8', {roughness:.95}),
       trunk: tx('bark', '#a9998a'),
@@ -88,7 +92,7 @@ export function create(canvas, ui){
   function box(x0, x1, y0, y1, z0, z1, mat, o = {}){
     if(x1 - x0 < 1e-3 || y1 - y0 < 1e-3 || z1 - z0 < 1e-3) return null;
     const g = new THREE.BoxGeometry(x1 - x0, y1 - y0, z1 - z0), m = new THREE.Mesh(g, mat);
-    m.position.set((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2); wuv(g, m.position);
+    m.position.set((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2); if(!o.nouv) wuv(g, m.position);
     m.castShadow = o.cast !== false; m.receiveShadow = true; root.add(m);
     if(!o.noEdge){ const e = edgeLines(g); e.position.copy(m.position); root.add(e); }
     return m;
@@ -102,7 +106,7 @@ export function create(canvas, ui){
     uv.needsUpdate = true;
   }
   function prect(ori, u0, u1, v0, v1, y0, y1, mat, o){ const a = Math.min(u0, u1), b = Math.max(u0, u1), c = Math.min(v0, v1), d = Math.max(v0, v1);
-    if(mat === M.pave || mat === M.porch) PAVED.push(ori === 'h' ? [a, b, c, d] : [c, d, a, b]);
+    if(mat === M.pave || mat === M.porch || mat === M.concrete) PAVED.push(ori === 'h' ? [a, b, c, d] : [c, d, a, b]);
     return ori === 'h' ? box(a, b, y0, y1, c, d, mat, o) : box(c, d, y0, y1, a, b, mat, o); }
   /* facade material for an exterior wall piece */
   function facadeAt(i, yl){ const f = MODEL.facade; if(f !== 'mixed') return M.F[f] || M.F.plaster;
@@ -162,10 +166,10 @@ export function create(canvas, ui){
         const piece = (y0, y1, top) => ext ? ewall(L.ori, L.c, a, b, t, y0, y1, r.side, i, top ? ct : null) : wbox(L.ori, L.c, a, b, t, y0, y1, top ? mat : wm);
         if(ext && i === 0) PERIM.push({ori:L.ori, c:L.c, a:r.a, b:r.b, out:-(r.side || 1)});
         if(!o){
-          if(ext && MODEL.facade === 'timber' && r.b - r.a > 1.3){ const cw = Math.min(.9, (r.b - r.a) / 2 - .1), sa = !prev ? a + cw : a, sb = !next ? b - cw : b;
+          if(ext && (MODEL.facade === 'timber' || MODEL.facade === 'cedar') && r.b - r.a > 1.3){ const cw = Math.min(.9, (r.b - r.a) / 2 - .1), sa = !prev ? a + cw : a, sb = !next ? b - cw : b;
             if(!prev) wbox(L.ori, L.c, a, sa, t, z0, z0 + H, extMats(L.ori, r.side, M.F.stone, cutTop ? M.cut : null));
             if(!next) wbox(L.ori, L.c, sb, b, t, z0, z0 + H, extMats(L.ori, r.side, M.F.stone, cutTop ? M.cut : null));
-            wbox(L.ori, L.c, sa, sb, t, z0, z0 + H, extMats(L.ori, r.side, M.F.timber, cutTop ? M.cut : null)); return; }
+            wbox(L.ori, L.c, sa, sb, t, z0, z0 + H, extMats(L.ori, r.side, M.F[MODEL.facade], cutTop ? M.cut : null)); return; }
           piece(z0, z0 + H, true); return; }
         const s = Math.min(o.s, H), hd = Math.min(o.h, H);
         if(ext && i === 0 && o.k === 'door') ENTRIES.push({ori:L.ori, c:L.c, a:r.a, b:r.b, out:-(r.side || 1), h:o.h});
@@ -182,7 +186,8 @@ export function create(canvas, ui){
           return;
         }
         if(o.k === 'garage'){
-          const g = wbox(L.ori, L.c + (o.sw || 1) * -.05, a, b, .05, z0, z0 + hd, M.garage);
+          const g = wbox(L.ori, L.c + (o.sw || 1) * -.05, a, b, .05, z0, z0 + hd, M.garage, {nouv:true});
+          if(g && MODEL.style === 'realistic') return;
           if(g){ const pts = []; for(let y = .5; y < hd - .1; y += .5){ const yy = z0 + y - g.position.y;
               if(L.ori === 'h') pts.push(-(b - a) / 2, yy, -.03 * (o.sw || 1), (b - a) / 2, yy, -.03 * (o.sw || 1));
               else pts.push(-.03 * (o.sw || 1), yy, -(b - a) / 2, -.03 * (o.sw || 1), yy, (b - a) / 2); }
@@ -255,7 +260,7 @@ export function create(canvas, ui){
   function porch(e, b, pad){
     const w = e.b - e.a, cu = (e.a + e.b) / 2, W = Math.max(w + 1.2, 2), D = 1.4, o = e.out;
     const c0 = e.c + o * .125, c1 = c0 + o * D, c2 = c1 + o * .32, c3 = c2 + o * .32;
-    const pm = MODEL.facade === 'timber' || MODEL.facade === 'wood' ? M.deck : M.porch; if(pm === M.deck) PAVED.push(e.ori === 'h' ? [cu - W / 2, cu + W / 2, Math.min(c0, c3), Math.max(c0, c3)] : [Math.min(c0, c3), Math.max(c0, c3), cu - W / 2, cu + W / 2]);
+    const pm = /timber|wood|cedar/.test(MODEL.facade) ? M.deck : M.porch; if(pm === M.deck) PAVED.push(e.ori === 'h' ? [cu - W / 2, cu + W / 2, Math.min(c0, c3), Math.max(c0, c3)] : [Math.min(c0, c3), Math.max(c0, c3), cu - W / 2, cu + W / 2]);
     prect(e.ori, cu - W / 2, cu + W / 2, c0, c1, -PL, 0, pm);
     prect(e.ori, cu - W / 2, cu + W / 2, c1, c2, -PL, -.1, pm);
     prect(e.ori, cu - W / 2, cu + W / 2, c2, c3, -PL, -.2, pm);
@@ -263,7 +268,7 @@ export function create(canvas, ui){
     prect(e.ori, cu - W / 2 - .1, cu + W / 2 + .1, c0, c1 + o * .15, ch, ch + .12, M.canopy);
     [-1, 1].forEach(k => prect(e.ori, cu + k * (W / 2 - .05) - .05, cu + k * (W / 2 - .05) + .05, c1 - o * .02, c1 - o * .12, 0, ch, M.canopy));
     const edge = e.ori === 'h' ? (o > 0 ? b[3] + pad : b[1] - pad) : (o > 0 ? b[2] + pad : b[0] - pad);
-    if((edge - c3) * o > .2) prect(e.ori, cu - .6, cu + .6, c3, edge, -PL, -PL + .03, M.pave, {cast:false});
+    if((edge - c3) * o > .2) prect(e.ori, cu - .6, cu + .6, c3, edge, -PL, -PL + .03, MODEL.style === 'realistic' ? M.concrete : M.pave, {cast:false});
   }
   /* ---------- trees, shrubs ---------- */
   function rnd(seed){ let s = seed >>> 0 || 1; return () => (s = (Math.imul(s, 1664525) + 1013904223) >>> 0) / 4294967296; }
@@ -275,8 +280,23 @@ export function create(canvas, ui){
     g.setAttribute('color', new THREE.BufferAttribute(col, 3)); return g; }
   function part(g, mat, x, y, z, edges){ const m = new THREE.Mesh(g, mat); m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true; root.add(m);
     if(edges){ const e = edgeLines(g, 25); e.position.copy(m.position); root.add(e); } return m; }
+  /* cross-plane billboards: n vertical quads around the y axis, normals up so foliage is lit evenly */
+  function crossGeo(w, h, n, uvr){ const pos = [], uv = [], nor = [], u0 = uvr ? uvr[0] : 0, v0 = uvr ? uvr[1] : 0, u1 = uvr ? uvr[2] : 1, v1 = uvr ? uvr[3] : 1;
+    for(let k = 0; k < n; k++){ const a = k * Math.PI / n, cx = Math.cos(a) * w / 2, cz = Math.sin(a) * w / 2, Q = [[-cx, 0, -cz], [cx, 0, cz], [cx, h, cz], [-cx, h, -cz]];
+      [0, 1, 2, 0, 2, 3].forEach(i => pos.push(...Q[i])); [[u0, v0], [u1, v0], [u1, v1], [u0, v0], [u1, v1], [u0, v1]].forEach(q => uv.push(...q)); for(let i = 0; i < 6; i++) nor.push(0, 1, 0); }
+    const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2)); g.setAttribute('normal', new THREE.Float32BufferAttribute(nor, 3)); return g; }
+  /* camera-facing (around the vertical axis) billboard; in the shadow pass it faces the sun so the shadow keeps the tree's outline */
+  const _v = new THREE.Vector3();
+  function sprite(g, mat, x, z, rot, shadow){ const m = new THREE.Mesh(g, mat); m.position.set(x, -PL, z); m.castShadow = shadow; m.customDepthMaterial = mat.userData.depth;
+    const face = c => { if(c.isOrthographicCamera){ c.getWorldDirection(_v); m.rotation.y = Math.atan2(-_v.x, -_v.z); } else m.rotation.y = Math.atan2(c.position.x - x, c.position.z - z);
+      m.updateMatrix(); m.matrixWorld.copy(m.matrix); m.modelViewMatrix.multiplyMatrices(c.matrixWorldInverse, m.matrixWorld); m.normalMatrix.getNormalMatrix(m.modelViewMatrix); };
+    m.onBeforeRender = (r, sc, c) => face(c); m.onBeforeShadow = (r, o, c, sc) => face(sc); root.add(m); return m; }
   function tree(x, z, s, kind, seed, edges){
     const y0 = -PL;
+    if(MODEL.style === 'realistic'){ const r = rnd(seed);
+      if(kind === 'conifer') sprite(crossGeo(3.4 * s, 7 * s, 1), M.pine, x, z, 0, true);
+      else sprite(crossGeo(5 * s, 6.6 * s, 1), M.leafy, x, z, 0, true);
+      return; }
     if(kind === 'conifer'){
       part(new THREE.CylinderGeometry(.08 * s, .13 * s, 1.2 * s, 7), M.trunk, x, y0 + .6 * s, z, false);
       for(let k = 0; k < 6; k++){ const g = paint(lumpy(new THREE.ConeGeometry((1.15 - .16 * k) * s, 1.3 * s, 10, 2).toNonIndexed(), seed + k, .07), '#34503a', seed * 7 + k);
@@ -299,8 +319,9 @@ export function create(canvas, ui){
     const cx = (b[0] + b[2]) / 2, cz = (b[1] + b[3]) / 2, R0 = Math.max(b[2] - b[0], b[3] - b[1]) / 2 + pad + 5, list = [];
     for(let i = 0; i < 240 && list.length < 140; i++){ const an = r() * Math.PI * 2, d = R0 + 2 + r() * 38, x = cx + Math.cos(an) * d, z = cz + Math.sin(an) * d;
       if(z > cz + 4 && Math.abs(x - cx) < R0 + 6 && d < R0 + 24) continue; list.push([x, z, 1.6 + r() * 2.4, r() * 6]); }
-    const im = new THREE.InstancedMesh(cg, M.conifer, list.length), it = new THREE.InstancedMesh(tg, M.trunk, list.length), mt = new THREE.Matrix4(), q = new THREE.Quaternion(), sc = new THREE.Vector3(), p = new THREE.Vector3();
-    list.forEach((t, i) => { q.setFromAxisAngle(new THREE.Vector3(0, 1, 0), t[3]); sc.set(t[2] * .75, t[2] * 1.45, t[2] * .75); p.set(t[0], -PL, t[1]); mt.compose(p, q, sc); im.setMatrixAt(i, mt); it.setMatrixAt(i, mt); });
+    if(MODEL.style === 'realistic'){ const g = crossGeo(3.2, 7, 1); list.forEach(t => { const sp = sprite(g, M.pine, t[0], t[1], 0, false); sp.scale.set(t[2] * .55, t[2] * .62, t[2] * .55); }); return; }
+    const real = false, im = new THREE.InstancedMesh(real ? crossGeo(3.2, 7, 3) : cg, real ? M.pine : M.conifer, list.length), it = new THREE.InstancedMesh(tg, M.trunk, real ? 0 : list.length), mt = new THREE.Matrix4(), q = new THREE.Quaternion(), sc = new THREE.Vector3(), p = new THREE.Vector3();
+    list.forEach((t, i) => { q.setFromAxisAngle(new THREE.Vector3(0, 1, 0), t[3]); if(real) sc.set(t[2] * .55, t[2] * .62, t[2] * .55); else sc.set(t[2] * .75, t[2] * 1.45, t[2] * .75); p.set(t[0], -PL, t[1]); mt.compose(p, q, sc); im.setMatrixAt(i, mt); if(!real) it.setMatrixAt(i, mt); });
     im.castShadow = false; root.add(im, it);
   }
   function landscape(b, pad, m){
@@ -315,8 +336,10 @@ export function create(canvas, ui){
     /* shrubs along the front facade, clear of paths */
     for(let x = b[0] + .7; x < b[2] - .5; x += 1.6){ const z = b[3] + .75;
       if(PAVED.some(p => x > p[0] - .7 && x < p[1] + .7 && z > p[2] - .7 && z < p[3] + .7)) continue;
+      if(m.style === 'realistic'){ sprite(crossGeo(1.25, 1, 1, [.06, .3, .94, .92]), M.leafy, x, z, 0, true); continue; }
       const g = paint(lumpy(new THREE.IcosahedronGeometry(.42 + (x * 7 % 1) * .12, 1), x * 3, .14), '#58763a', Math.floor(x * 100));
       part(g, M.leaf, x, -PL + .3, z, edges); }
+
   }
   /* ---------- whole model ---------- */
   function build(m){
@@ -330,7 +353,8 @@ export function create(canvas, ui){
     LM = new THREE.LineBasicMaterial({color:'#1b1d21', transparent:true, opacity:m.style === 'realistic' ? .3 : m.style === 'shaded' ? .8 : 1});
     const real = m.style === 'realistic';
     renderer.toneMapping = real ? THREE.ACESFilmicToneMapping : THREE.NoToneMapping; renderer.toneMappingExposure = 1.05;
-    scene.environment = real ? envTex : null;
+    if(real && !envSky) envSky = pmrem.fromEquirectangular(T('skyDay').map).texture;
+    scene.environment = real ? envSky : null;
     hemi.intensity = real ? .7 : m.style === 'shaded' ? .55 : 0; amb.intensity = m.style === 'shaded' ? .55 : 0;
     sun.intensity = real ? 2.6 : m.style === 'shaded' ? 1.4 : 0; sun.castShadow = m.shadows && m.style !== 'hidden';
 
@@ -350,7 +374,7 @@ export function create(canvas, ui){
     if(m.floors[0]) m.floors[0].ops.forEach(o => {
       if(o.k !== 'garage') return;
       const out = -(o.sw || 1), c1 = o.c + out * (o.ori === 'h' ? (out > 0 ? b[3] + pad - o.c : o.c - b[1] + pad) : (out > 0 ? b[2] + pad - o.c : o.c - b[0] + pad));
-      prect(o.ori, o.a - .3, o.b + .3, o.c, c1, -PL, -PL + .04, M.pave, {cast:false});
+      prect(o.ori, o.a - .3, o.b + .3, o.c, c1, -PL, -PL + .04, real ? M.concrete : M.pave, {cast:false});
     });
     m.floors.forEach((f, i) => {
       if(i > lastF) return;
@@ -372,7 +396,7 @@ export function create(canvas, ui){
     landscape(b, pad, m);
     /* eye-level surroundings: far lawn, forest, sky and haze */
     scene.background = null; scene.fog = null;
-    if(persp && real){ scene.background = T('sky').map; scene.fog = new THREE.Fog('#dfe7ec', 28, 150);
+    if(persp && real){ scene.background = T('skyDay').map; scene.fog = new THREE.Fog('#dfe7ec', 28, 150);
       const gg = new THREE.PlaneGeometry(600, 600); gg.rotateX(-Math.PI / 2); const gm = new THREE.Mesh(gg, M.grass); gm.position.set((b[0] + b[2]) / 2, -PL, (b[1] + b[3]) / 2); wuv(gg, gm.position); gm.receiveShadow = true; root.add(gm);
       forest(b, pad); }
 
