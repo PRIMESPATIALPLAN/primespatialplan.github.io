@@ -295,7 +295,7 @@ export function create(canvas, ui){
 
   return {
     update(m){ build(m); },
-    view(name){ const D = {top:[0, 1, .0001], front:[0, 0, 1], back:[0, 0, -1], right:[1, 0, 0], left:[-1, 0, 0]}; if(name === 'home') return home(true); setDir(new THREE.Vector3(...D[name]), true); },
+    view(name){ const D = {top:[0, 1, .0001], front:[0, 0, 1], back:[0, 0, -1], right:[1, 0, 0], left:[-1, 0, 0]}; if(name === 'home') return home(true); if(name === 'rear') return setDir(new THREE.Vector3(-Math.sin(.8), .55, -Math.cos(.8)), true); setDir(new THREE.Vector3(...D[name]), true); },
     resize(){ size(); req(); },
     png(cb){
       renderer.render(scene, cam);

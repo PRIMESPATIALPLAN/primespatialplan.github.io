@@ -53,8 +53,12 @@
   var state = null;
   try{ state = JSON.parse(localStorage.getItem('psp-planner') || 'null'); }catch(x){}
   if(!state || !state.floors || !state.floors.length) state = TEMPLATES.house();
+  var loadNote = null;
+  try{ var ld = JSON.parse(sessionStorage.getItem('psp-load') || 'null'); if(ld && ld.floors){ sessionStorage.removeItem('psp-load');
+      var prev = JSON.stringify(state); state = {floors:ld.floors, roof:ld.roof, v3:state.v3}; loadNote = {prev:prev, code:ld.code}; } }catch(x){}
   ids(state); defaults(state);
   var cur = 0, sel = null, selOp = null, mode = 'draw', curType = 'bed', view = '2d', hist = [], fut = [];
+  if(loadNote) hist.push(loadNote.prev);
   function snap(v){ return Math.round(v / GRID) * GRID; }
   function floor(){ return state.floors[cur]; }
   function room(id){ var r = null; floor().rooms.forEach(function(x){ if(x.id === id) r = x; }); return r; }
@@ -316,8 +320,8 @@
     if(r3state === 3){ drawLegacy(); return; }
     if(r3state === 1) return;
     r3state = 1;
-    import(new URL('assets/planner3d.js?v=1', location.href).href).then(function(m){
-      r3 = m.create(cv, {cube:$('plCube')}); r3state = 2; if(view === '3d') r3.update(model3());
+    import(new URL('assets/planner3d.js?v=2', location.href).href).then(function(m){
+      r3 = m.create(cv, {cube:$('plCube')}); r3state = 2; window.PSP3D = r3; if(view === '3d') r3.update(model3());
     }).catch(function(err){ console.warn('3D fallback', err); r3state = 3; if(view === '3d') drawLegacy(); });
   }
   function drawLegacy(){

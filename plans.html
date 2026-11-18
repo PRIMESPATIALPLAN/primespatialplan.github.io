@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="mn">
+<head>
+<meta charset="utf-8">
+<script>try{if(localStorage.getItem('psp-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}</script>
+<meta name="theme-color" content="#0b0b0f">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Бэлэн зураг — Prime Spatial Plan</title>
+<meta name="description" content="Prime Spatial Plan — амины сууцны бэлэн зураг: багц, суурь, нэмэлт үйлчилгээгээ сонгож захиална.">
+<meta property="og:title" content="Бэлэн зураг — Prime Spatial Plan">
+<meta property="og:description" content="Prime Spatial Plan — амины сууцны бэлэн зураг: багц, суурь, нэмэлт үйлчилгээгээ сонгож захиална.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 713 824'%3E%3Cpath fill='%23F7991E' fill-rule='evenodd' d='M357 0 713 207V618L357 824 0 618V207Z M357 160 138 285V695L274 773V617L357 662 575 537V285Z'/%3E%3Cpath d='M357 318 439 365V459L357 506 276 459V365Z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Onest:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap">
+<link rel="stylesheet" href="assets/style.css?v=24">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="psp-logo" viewBox="0 0 713 824">
+    <path fill="#F7991E" fill-rule="evenodd" d="M357 0 713 207V618L357 824 0 618V207Z M357 160 138 285V695L274 773V617L357 662 575 537V285Z"/>
+    <path fill="none" stroke="#FFFFFF" stroke-width="1" vector-effect="non-scaling-stroke" d="M0 207 138 285M713 207 575 285M357 662V824"/>
+    <path fill="none" stroke="#F7991E" stroke-width="1" vector-effect="non-scaling-stroke" d="M357 160V318M138 537 276 459M439 459 575 537M138 695 274 773"/>
+    <path fill="var(--cube,#111111)" d="M357 318 439 365V459L357 506 276 459V365Z"/>
+    <path fill="none" stroke="var(--cube-edge,#FFFFFF)" stroke-width="1" vector-effect="non-scaling-stroke" d="M276 365 357 412 439 365M357 412V506"/>
+  </symbol>
+</svg>
+<header class="top over">
+  <div class="bar">
+    <a class="mark" href="./"><svg viewBox="0 0 713 824" aria-hidden="true"><use href="#psp-logo"/></svg><span>Prime Spatial Plan</span></a>
+    <nav class="pills" aria-label="Menu">
+      <a class="pill draw" href="planner.html" data-en="Draw">Зурах</a>
+      <a class="pill opt" href="plans.html" aria-current="page" data-en="Plans">Бэлэн зураг</a>
+      <a class="pill opt" href="studio.html" data-en="Studio">Студи</a>
+      <a class="pill opt" href="projects.html" data-en="Projects">Төслүүд</a>
+      <button class="pill theme-btn" type="button" id="themeBtn" aria-label="Цайвар / бараан горим" data-en-aria="Light / dark mode"><svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></button>
+      <span class="pill lang" role="group" aria-label="Хэл / Language">
+        <button type="button" data-lang="mn" aria-pressed="true">МН</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </span>
+      <a class="pill solid" href="studio.html#contact" data-en="Contact">Холбоо барих</a>
+    </nav>
+  </div>
+</header>
+<main id="top" class="plans">
+  <div class="wrap pl-head">
+    <span class="label" data-en="House plans">Бэлэн зураг</span>
+    <h1 data-en="Ready-made house plans">Амины сууцны бэлэн зураг</h1>
+    <p data-en="Choose a plan, pick a package and options, and send us your order. Every plan can be opened in the drawing tool and changed to suit you.">Зураг сонгоод багц, нэмэлтээ тохируулж захиалгаа илгээгээрэй. Зураг бүрийг «Зурах» хэрэгслээр нээж, өөрт тохируулан өөрчилж болно.</p>
+  </div>
+  <div class="wrap">
+    <div class="pf-bar"><div class="pf" id="plFilters"></div><span class="pf-count" id="plCount"></span></div>
+    <div class="grid pgrid" id="plGrid"></div>
+    <div class="pp-band">
+      <div><h2 data-en="Want something of your own?">Өөрийнхөөрөө хүсэж байна уу?</h2><p data-en="Sketch your rooms in the drawing tool or ask us for a custom design.">«Зурах» хэрэгслээр өрөөнүүдээ зураад үзээрэй, эсвэл захиалгат зураг төсөл хийлгээрэй.</p></div>
+      <div class="pp-band-a"><a class="btn" href="planner.html" data-en="Open the drawing tool">Зурах хэрэгсэл нээх</a><a class="btn ghost" href="studio.html#contact" data-en="Custom design">Захиалгат зураг</a></div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div class="fbig"><svg class="logo" viewBox="0 0 713 824" aria-hidden="true"><use href="#psp-logo"/></svg><b>Prime<br>Spatial Plan</b></div>
+      <div><h4 data-en="New projects">Шинэ төсөл</h4><p class="ph">+976 •••• ••••</p><p class="ph" data-en="email address">и-мэйл хаяг</p></div>
+      <div><h4 data-en="Office">Оффис</h4><p data-en="Ulaanbaatar, Mongolia">Улаанбаатар, Монгол</p><p class="ph" data-en="office address">оффисын хаяг</p></div>
+      <div><h4 data-en="Hours">Цагийн хуваарь</h4><p data-en="Monday – Friday">Даваа – Баасан</p><p>09:00 – 18:00</p></div>
+    </div>
+    <div class="legal">
+      <span data-en="© 2026 Prime Spatial Plan. All rights reserved.">© 2026 Prime Spatial Plan. Бүх эрх хуулиар хамгаалагдсан.</span>
+      <a href="#top" data-en="Back to top ↑">Дээш буцах ↑</a>
+    </div>
+  </div>
+</footer>
+<script src="assets/site.js?v=22"></script>
+<script src="assets/plans.js?v=1"></script>
+<script src="assets/plans-ui.js?v=1"></script>
+</body>
+</html>
