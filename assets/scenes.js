@@ -267,7 +267,7 @@
     sc=sc||1; W/=sc; H/=sc;
     var pal=PAL[themeName()], ink=pal.ink, clay=st.clay;
     var model=st.model||0, paper=st.paper||0, sk=st.sketch||0, idea=st.idea||0, topo=st.topo||0, bg=mixc(mixc(mixc(pal.bg,CLAY.bg,clay),'#d5d4d0',model),'#f4f3ef',paper), sideC=pal.side, topC=pal.top;
-    var rv=st.rv||0;
+    var rv=st.rv||0, NG=[];
     if(clay>.5) ink='46,50,58'; if(paper>.5) ink='26,28,34'; if(rv>.5) ink='34,38,46';
     var inkE=rv>.5?'rgba(28,30,34,.62)':'rgba('+ink+','+(.92*(1-clay*(model>.5?.84:.7)))+')';
     g.setTransform(sc,0,0,sc,0,0); g.globalAlpha=1; g.fillStyle=bg; g.fillRect(0,0,W,H);
@@ -410,7 +410,7 @@
         f.l.forEach(function(lp){ lp.forEach(function(p,i){ var q=P(p[0],p[1],p[2]+o.zo); i?g.lineTo(q[0],q[1]):g.moveTo(q[0],q[1]); }); g.closePath(); });
         var glass=(e.c==='n')&&Math.abs(f.n[2])<.5;
         if(rv>.5){ var k=lam(f.n);
-          if(glass){ var bb=[1e9,1e9,-1e9,-1e9]; f.l[0].forEach(function(p){ var q=P(p[0],p[1],p[2]+o.zo); bb[1]=Math.min(bb[1],q[1]); bb[3]=Math.max(bb[3],q[1]); });
+          if(glass){ if(o.a>.5) NG.push(f.l[0].map(function(p){ return P(p[0],p[1],p[2]+o.zo); })); var bb=[1e9,1e9,-1e9,-1e9]; f.l[0].forEach(function(p){ var q=P(p[0],p[1],p[2]+o.zo); bb[1]=Math.min(bb[1],q[1]); bb[3]=Math.max(bb[3],q[1]); });
             var gg=g.createLinearGradient(0,bb[1],0,bb[3]); gg.addColorStop(0,tone('#c9dbe8',k+.15)); gg.addColorStop(.55,tone('#7593a9',k+.1)); gg.addColorStop(1,tone('#3f5263',k+.1)); g.fillStyle=gg; }
           else { var m=MAT[e.c]||MAT.w; if(e.c==='f'&&f.n[2]>.6&&e.z1>5.5) m='#c5c3bd'; if(e.c==='w'&&f.n[2]>.6) m='#dcd8d0'; g.fillStyle=tone(m,k); }
           g.fill('evenodd'); g.strokeStyle=inkE; g.lineWidth=(e.c==='n'||e.c==='d'||e.c==='r')?.45:.7; g.stroke(); g.globalAlpha=1; return; }
@@ -458,6 +458,20 @@
     if(!C.port) sheet(g,W*.3,H*.12,st.label,ink,la*(1-clay)*(1-paper*st.plan)*(1-uiA)*(1-rv));
     if(!C.port&&(uiA>.02||pv)&&st.view) revitUI(g,C,st,W,H,Math.max(uiA,pv?1:0)*la,st.ui>.5||rv>.5);
     if(paper>.5&&!C.port&&st.plan>.5) paperSheet(g,C,st,ink,paper*la);
+    if(themeName()==='dark') nightify(g,W,H,st,paper,rv,NG);
+  }
+  /* night theme: paper stages become a dark drawing sheet (luminance inverted, hues kept),
+     the realistic stage becomes a dusk view with lit windows */
+  var tmpC=null;
+  function nightify(g,W,H,st,paper,rv,glass){
+    var inv=paper*(1-rv), cv=g.canvas;
+    if(inv>.02){ if(!tmpC) tmpC=document.createElement('canvas'); if(tmpC.width!==cv.width||tmpC.height!==cv.height){ tmpC.width=cv.width; tmpC.height=cv.height; }
+      var t=tmpC.getContext('2d'); t.setTransform(1,0,0,1,0,0); t.globalAlpha=1; t.filter='invert(1) hue-rotate(180deg) saturate(1.25) brightness(1.06)'; t.clearRect(0,0,cv.width,cv.height); t.drawImage(cv,0,0); t.filter='none';
+      g.save(); g.setTransform(1,0,0,1,0,0); g.globalAlpha=inv; g.drawImage(tmpC,0,0); g.globalCompositeOperation='lighten'; g.fillStyle='#16243b'; g.fillRect(0,0,cv.width,cv.height); g.restore(); }
+    if(rv>.02){ g.save(); g.globalCompositeOperation='multiply'; g.globalAlpha=rv*.88;
+      var ng=g.createLinearGradient(0,0,0,H); ng.addColorStop(0,'#26324d'); ng.addColorStop(.5,'#3c4766'); ng.addColorStop(1,'#4b5470'); g.fillStyle=ng; g.fillRect(0,0,W,H); g.restore();
+      g.save(); g.globalAlpha=rv; glass.forEach(function(q){ path(g,q); var bb=bbox(q), gg=g.createLinearGradient(0,bb[1],0,bb[3]); gg.addColorStop(0,'rgba(255,214,140,.95)'); gg.addColorStop(1,'rgba(240,160,70,.85)'); g.fillStyle=gg; g.fill(); g.strokeStyle='rgba(40,34,30,.6)'; g.lineWidth=.5; g.stroke(); });
+      g.restore(); }
   }
 
   /* ---------- cache for still images (subpage heroes, portal previews, settled homepage frames) ---------- */

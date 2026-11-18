@@ -22,6 +22,8 @@
         confirmClear:'Дахин дарж бүх зургийг устгана', saved:'Хадгалагдсан', addFloor:'+ Давхар', delFloor:'Давхар устгах',
         door:'Хаалга', win:'Цонх', garage:'Гаражийн хаалга', doors:'Хаалга', wins:'Цонх', roof:'Дээвэр', autoOn:'Автомат байрлал',
         rt:{auto:'Автомат', gable:'Хоёр налуу', hip:'Дөрвөн налуу', flat:'Хавтгай'},
+        fc:{auto:'Автомат (тоосго + шавардлага)', plaster:'Шавардлага', brick:'Тоосго', wood:'Модон өнгөлгөө', stone:'Чулуун өнгөлгөө'},
+        rm:{seam:'Төмөр хавтан', tile:'Металл ваар', shingle:'Битум ширгэл'},
         hint:{draw:'Тор дээр чирж өрөө зурна · өрөөн дээр дарж сонгоно · хоёр хуруугаар томруулна', door:'Хананд дарж хаалга нэмнэ · хаалган дээр дарж сонгоно', win:'Хананд дарж цонх нэмнэ · цонхон дээр дарж сонгоно', select:'Өрөө, хаалга, цонхыг дарж сонгоод чирж зөөнө', d3:'Чирж эргүүлнэ · хоёр хуруугаар томруулж, зөөнө · баруун дээд кубаас харагдац сонгоно'},
         vc:{top:'ДЭЭР', front:'УРД', right:'БАРУУН', back:'АР', left:'ЗҮҮН'}},
     en:{floor:'floor', area:'m²', total:'Total area', none:'No room selected. Tap a room to select it.', name:'Name', type:'Type', w:'Width, m', h:'Length, m',
@@ -29,6 +31,8 @@
         confirmClear:'Tap again to clear everything', saved:'Saved', addFloor:'+ Floor', delFloor:'Delete floor',
         door:'Door', win:'Window', garage:'Garage door', doors:'Doors', wins:'Windows', roof:'Roof', autoOn:'Auto layout',
         rt:{auto:'Auto', gable:'Gable', hip:'Hip', flat:'Flat'},
+        fc:{auto:'Auto (brick + render)', plaster:'Render', brick:'Brick', wood:'Timber cladding', stone:'Stone cladding'},
+        rm:{seam:'Standing seam metal', tile:'Metal tile', shingle:'Asphalt shingles'},
         hint:{draw:'Drag on the grid to draw a room · tap a room to select it · pinch or scroll to zoom', door:'Tap a wall to add a door · tap a door to select it', win:'Tap a wall to add a window · tap a window to select it', select:'Tap a room, door or window to select it, drag to move', d3:'Drag to orbit · pinch or scroll to zoom, two fingers to pan · pick a view on the cube'},
         vc:{top:'TOP', front:'FRONT', right:'RIGHT', back:'BACK', left:'LEFT'}}
   };
@@ -47,7 +51,7 @@
   var uid = 1;
   function ids(s){ s.floors.forEach(function(f){ f.rooms.concat(f.ops || []).forEach(function(r){ if(!r.id) r.id = uid++; else uid = Math.max(uid, r.id + 1); }); }); return s; }
   var ROOFC = ['#8e3b2e', '#3f6b4e', '#2f5d86', '#55595f'];
-  function defaults(s){ if(!s.roof) s.roof = {type:'auto', color:ROOFC[0]}; if(!s.v3) s.v3 = {style:'realistic', shadows:true, cut:false}; return s; }
+  function defaults(s){ if(!s.roof) s.roof = {type:'auto', color:ROOFC[0]}; if(!s.roof.mat) s.roof.mat = 'seam'; if(!s.facade) s.facade = 'auto'; if(s.porch === undefined) s.porch = true; if(!s.v3) s.v3 = {style:'realistic', shadows:true, cut:false}; return s; }
 
   /* ---------- state ---------- */
   var state = null;
@@ -55,7 +59,7 @@
   if(!state || !state.floors || !state.floors.length) state = TEMPLATES.house();
   var loadNote = null;
   try{ var ld = JSON.parse(sessionStorage.getItem('psp-load') || 'null'); if(ld && ld.floors){ sessionStorage.removeItem('psp-load');
-      var prev = JSON.stringify(state); state = {floors:ld.floors, roof:ld.roof, v3:state.v3}; loadNote = {prev:prev, code:ld.code}; } }catch(x){}
+      var prev = JSON.stringify(state); state = {floors:ld.floors, roof:ld.roof, facade:ld.facade, v3:state.v3}; loadNote = {prev:prev, code:ld.code}; } }catch(x){}
   ids(state); defaults(state);
   var cur = 0, sel = null, selOp = null, mode = 'draw', curType = 'bed', view = '2d', hist = [], fut = [];
   if(loadNote) hist.push(loadNote.prev);
@@ -311,7 +315,7 @@
     var L = Math.max(b[2] - b[0], b[3] - b[1]), D = Math.min(b[2] - b[0], b[3] - b[1]); return L / D < 1.3 ? 'hip' : 'gable'; }
   function model3(){ var colors = {}; TYPES.forEach(function(ty){ colors[ty.id] = ty.c; });
     return {floors:state.floors.map(function(f, i){ return {rooms:f.rooms, ops:opsOf(i)}; }), cur:cur, cut:!!state.v3.cut, style:state.v3.style, shadows:state.v3.shadows,
-      roof:{type:roofType(), color:state.roof.color}, colors:colors}; }
+      roof:{type:roofType(), color:state.roof.color, mat:state.roof.mat}, facade:state.facade === 'auto' ? 'mixed' : state.facade, porch:state.porch !== false, colors:colors}; }
   function bar3(){ document.querySelectorAll('[data-vs]').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.vs === state.v3.style ? 'true' : 'false'); });
     $('plShadow').setAttribute('aria-pressed', state.v3.shadows ? 'true' : 'false'); $('plCut').setAttribute('aria-pressed', state.v3.cut ? 'true' : 'false'); }
   function draw3d(){
@@ -320,7 +324,7 @@
     if(r3state === 3){ drawLegacy(); return; }
     if(r3state === 1) return;
     r3state = 1;
-    import(new URL('assets/planner3d.js?v=2', location.href).href).then(function(m){
+    import(new URL('assets/planner3d.js?v=3', location.href).href).then(function(m){
       r3 = m.create(cv, {cube:$('plCube')}); r3state = 2; window.PSP3D = r3; if(view === '3d') r3.update(model3());
     }).catch(function(err){ console.warn('3D fallback', err); r3state = 3; if(view === '3d') drawLegacy(); });
   }
@@ -393,7 +397,7 @@
       if(document.activeElement !== $('plOpW')) $('plOpW').value = Math.round((o.b - o.a) * 100) / 100;
       $('plOpFlip').hidden = o.k === 'win'; }
     $('plAuto').checked = floor().auto !== false;
-    $('plRoof').value = state.roof.type;
+    $('plRoof').value = state.roof.type; $('plRoofMat').value = state.roof.mat; $('plFacade').value = state.facade; $('plPorch').checked = state.porch !== false;
     Array.prototype.forEach.call($('plRoofC').children, function(b){ b.setAttribute('aria-pressed', b.dataset.c === state.roof.color ? 'true' : 'false'); });
     if(s){ var ts = $('plType'); ts.innerHTML = ''; TYPES.forEach(function(ty){ var o = document.createElement('option'); o.value = ty.id; o.textContent = ty[P.lang]; if(ty.id === s.type) o.selected = true; ts.appendChild(o); });
       $('plName').value = s.name || ''; $('plName').placeholder = label(s); panelValues(); }
@@ -417,7 +421,9 @@
   function changed(){ save(); floorTabs(); typeChips(); panel(); if(view === '2d') draw2d(); else draw3d(); $('plUndo').disabled = !hist.length; $('plRedo').disabled = !fut.length; hint(); }
   function hint(){ var H = t('hint'); $('plHint').textContent = view === '3d' ? H.d3 : H[mode] || H.draw;
     var V = t('vc'); document.querySelectorAll('#plCube [data-v]').forEach(function(f){ f.textContent = V[f.dataset.v]; });
-    var R = t('rt'); Array.prototype.forEach.call($('plRoof').options, function(op){ op.textContent = R[op.value]; }); }
+    var R = t('rt'); Array.prototype.forEach.call($('plRoof').options, function(op){ op.textContent = R[op.value]; });
+    var F = t('fc'); Array.prototype.forEach.call($('plFacade').options, function(op){ op.textContent = F[op.value]; });
+    var RM = t('rm'); Array.prototype.forEach.call($('plRoofMat').options, function(op){ op.textContent = RM[op.value]; }); }
 
   /* ---------- controls ---------- */
   document.querySelectorAll('[data-mode]').forEach(function(b){ b.onclick = function(){ setMode(b.dataset.mode); }; });
@@ -430,6 +436,9 @@
     var c = (o.a + o.b) / 2, a = Math.max(hst[0] + .05, Math.min(hst[1] - .05 - w, c - w / 2)); o.a = r2(a); o.b = o.a + w; changed(); };
   $('plAuto').onchange = function(){ checkpoint(); var f = floor(); if(this.checked){ f.auto = true; f.ops = []; } else freeze(); selOp = null; changed(); };
   $('plRoof').onchange = function(){ checkpoint(); state.roof.type = this.value; changed(); };
+  $('plRoofMat').onchange = function(){ checkpoint(); state.roof.mat = this.value; changed(); };
+  $('plFacade').onchange = function(){ checkpoint(); state.facade = this.value; changed(); };
+  $('plPorch').onchange = function(){ checkpoint(); state.porch = this.checked; changed(); };
   ROOFC.forEach(function(c){ var b = document.createElement('button'); b.type = 'button'; b.dataset.c = c; b.style.background = c; b.setAttribute('aria-label', c);
     b.onclick = function(){ checkpoint(); state.roof.color = c; changed(); }; $('plRoofC').appendChild(b); });
   $('plDup').onclick = function(){ var s = room(sel); if(!s) return; checkpoint(); var r = {id:uid++, type:s.type, name:s.name, x:s.x + s.w, y:s.y, w:s.w, h:s.h}; floor().rooms.push(r); sel = r.id; changed(); };
@@ -462,7 +471,7 @@
       var c0 = cur; cur = i; lines.push('', (i + 1) + ' ' + t('floor') + ' (' + fmt(ft) + ' ' + t('area') + '):');
       f.rooms.forEach(function(r){ lines.push('• ' + label(r) + ' — ' + fmt(r.w) + ' × ' + fmt(r.h) + ' м = ' + fmt(area(r)) + ' ' + t('area')); }); cur = c0; });
     var nd = 0, nw = 0; state.floors.forEach(function(f, i){ opsOf(i).forEach(function(o){ if(o.k === 'win') nw++; else nd++; }); });
-    lines.push('', t('doors') + ': ' + nd + ' · ' + t('wins') + ': ' + nw + ' · ' + t('roof') + ': ' + t('rt')[roofType()]);
+    lines.push('', t('doors') + ': ' + nd + ' · ' + t('wins') + ': ' + nw + ' · ' + t('roof') + ': ' + t('rt')[roofType()] + ', ' + t('rm')[state.roof.mat] + ' · ' + (P.lang === 'en' ? 'Facade' : 'Фасад') + ': ' + t('fc')[state.facade]);
     lines.push('', t('sum') + ': ' + fmt(tot) + ' ' + t('area'));
     try{ sessionStorage.setItem('psp-plan', JSON.stringify({msg:lines.join('\n'), area:String(Math.round(tot)), floors:state.floors.length})); }catch(x){}
     location.href = 'studio.html#contact';
