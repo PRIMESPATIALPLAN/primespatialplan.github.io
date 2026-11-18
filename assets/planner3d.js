@@ -5,7 +5,7 @@
 import * as THREE from './vendor/three.module.min.js';
 import {OrbitControls} from './vendor/OrbitControls.js';
 import {RoomEnvironment} from './vendor/RoomEnvironment.js';
-import {T, FACADE_FLAT} from './planner-tex.js?v=4';
+import {T, FACADE_FLAT} from './planner-tex.js?v=5';
 
 const FH = 3, SL = .25, PL = .3, T30 = Math.tan(30 * Math.PI / 180);
 const near = (a, b) => Math.abs(a - b) < 1e-4;
@@ -342,7 +342,62 @@ export function create(canvas, ui){
 
   }
   /* ---------- whole model ---------- */
+  /* ---------- "Render": progressive path tracing of the same scene (global illumination, soft light, reflections) ---------- */
+  let PT = null, ptOn = false, ptSaved = null, ptCb = null, ptGoal = 600, ptEnv = null;
+  function envData(){ if(ptEnv) return ptEnv;
+    const src = T('skyDay').map.image, w = 512, h = 256, c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d'); g.drawImage(src, 0, 0, w, h);
+    const px = g.getImageData(0, 0, w, h).data, f = new Float32Array(w * h * 4);
+    for(let y = 0; y < h; y++) for(let x = 0; x < w; x++){ const i = (y * w + x) * 4, o = ((h - 1 - y) * w + x) * 4; for(let k = 0; k < 3; k++) f[o + k] = Math.pow(px[i + k] / 255, 2.2) * 1.15; f[o + 3] = 1; }
+    ptEnv = new THREE.DataTexture(f, w, h, THREE.RGBAFormat, THREE.FloatType); ptEnv.mapping = THREE.EquirectangularReflectionMapping; ptEnv.magFilter = THREE.LinearFilter; ptEnv.minFilter = THREE.LinearFilter; ptEnv.needsUpdate = true; return ptEnv; }
+  /* path tracing starts by itself when the view is still (D5-style progressive refinement) and pauses while the user moves the camera */
+  let buildId = 0, ptBuilt = -1, ptBusy = false, interacting = false, ptTimer = 0, ptFail = false;
+  function canPT(){ return !ptFail && MODEL && MODEL.style === 'realistic' && renderer.capabilities.isWebGL2; }
+  function autoRender(delay){ clearTimeout(ptTimer); if(!canPT()) return;
+    ptTimer = setTimeout(async () => {
+      if(interacting || anim || ptBusy) return;
+      try{
+        ['backgroundRotation', 'environmentRotation'].forEach(k => { if(!(k in scene)) Object.defineProperty(THREE.Scene.prototype, k, {configurable:true, get(){ return this['_' + k] || (this['_' + k] = new THREE.Euler()); }}); });
+        const mod = await import('./vendor/three-gpu-pathtracer.module.js');
+        if(!PT){ PT = new mod.WebGLPathTracer(renderer); PT.tiles.set(2, 2); PT.minSamples = 2; PT.renderDelay = 0; PT.fadeDuration = 400; PT.bounces = 5; PT.filterGlossyFactor = .5;
+          PT.renderScale = matchMedia('(pointer: coarse)').matches ? .6 : Math.min(1, 1.5 / renderer.getPixelRatio()); }
+        if(ptBuilt !== buildId){ ptBusy = true; const id = buildId; PT.setScene(ptScene(), cam); ptBusy = false; if(id !== buildId) return autoRender(50); ptBuilt = id; }
+        else { PT.setCamera(cam); }
+        if(interacting || anim) return;
+        ptOn = true; req();
+      }catch(e){ console.warn('path tracer off', e); ptFail = true; ptBusy = false; ptOn = false; }
+    }, delay ?? 700);
+  }
+  /* the path tracer gets a compact copy of the scene: one merged mesh per material, billboards as crossed planes */
+  function ptScene(){
+    const B = new Map(), v = new THREE.Vector3(), n = new THREE.Vector3(), nm = new THREE.Matrix3();
+    root.updateMatrixWorld(true);
+    root.traverse(o => {
+      if(!o.isMesh || o.isInstancedMesh || !o.visible) return;
+      const mats = Array.isArray(o.material) ? o.material : [o.material], g = o.geometry.index ? o.geometry.toNonIndexed() : o.geometry;
+      const P = g.attributes.position, N = g.attributes.normal, U = g.attributes.uv, groups = g.groups.length && Array.isArray(o.material) ? g.groups : [{start:0, count:P.count, materialIndex:0}];
+      let mws = [o.matrixWorld];
+      if(o.onBeforeShadow && o.customDepthMaterial){ mws = [0, Math.PI / 2].map(a => new THREE.Matrix4().compose(o.position, new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), .5 + a), o.scale)); }
+      mws.forEach(mw => { nm.getNormalMatrix(mw);
+        groups.forEach(gr => { const mat = mats[gr.materialIndex || 0]; if(!mat || mat.isLineBasicMaterial) return;
+          if(!B.has(mat)) B.set(mat, {p:[], n:[], u:[]}); const b = B.get(mat);
+          for(let i = gr.start; i < Math.min(gr.start + gr.count, P.count); i++){
+            v.fromBufferAttribute(P, i).applyMatrix4(mw); b.p.push(v.x, v.y, v.z);
+            if(N){ n.fromBufferAttribute(N, i).applyMatrix3(nm).normalize(); b.n.push(n.x, n.y, n.z); } else b.n.push(0, 1, 0);
+            if(U) b.u.push(U.getX(i), U.getY(i)); else b.u.push(0, 0); } }); });
+      if(g !== o.geometry) g.dispose();
+    });
+    const sc = new THREE.Scene();
+    B.forEach((b, mat) => { if(!b.p.length) return; const g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.Float32BufferAttribute(b.p, 3)); g.setAttribute('normal', new THREE.Float32BufferAttribute(b.n, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(b.u, 2));
+      sc.add(new THREE.Mesh(g, mat)); });
+    const s2 = new THREE.DirectionalLight(sun.color, sun.intensity); s2.position.copy(sun.position); s2.target.position.copy(sun.target.position); sc.add(s2, s2.target);
+    sc.environment = envData(); sc.background = scene.background; sc.backgroundIntensity = 1;
+    return sc;
+  }
+  function pauseRender(){ clearTimeout(ptTimer); if(ptOn){ ptOn = false; req(); } }
+  function stopRender(){ pauseRender(); }
   function build(m){
+    pauseRender(); buildId++;
     root.traverse(o => { if(o.geometry) o.geometry.dispose(); });
     scene.remove(root); root = new THREE.Group(); scene.add(root);
     if(M) Object.values(M).forEach(x => { if(x && x.dispose) x.dispose(); });
@@ -353,8 +408,7 @@ export function create(canvas, ui){
     LM = new THREE.LineBasicMaterial({color:'#1b1d21', transparent:true, opacity:m.style === 'realistic' ? .3 : m.style === 'shaded' ? .8 : 1});
     const real = m.style === 'realistic';
     renderer.toneMapping = real ? THREE.ACESFilmicToneMapping : THREE.NoToneMapping; renderer.toneMappingExposure = 1.05;
-    if(real && !envSky) envSky = pmrem.fromEquirectangular(T('skyDay').map).texture;
-    scene.environment = real ? envSky : null;
+    scene.environment = real ? envData() : null;
     hemi.intensity = real ? .7 : m.style === 'shaded' ? .55 : 0; amb.intensity = m.style === 'shaded' ? .55 : 0;
     sun.intensity = real ? 2.6 : m.style === 'shaded' ? 1.4 : 0; sun.castShadow = m.shadows && m.style !== 'hidden';
 
@@ -396,7 +450,7 @@ export function create(canvas, ui){
     landscape(b, pad, m);
     /* eye-level surroundings: far lawn, forest, sky and haze */
     scene.background = null; scene.fog = null;
-    if(persp && real){ scene.background = T('skyDay').map; scene.fog = new THREE.Fog('#dfe7ec', 28, 150);
+    if(persp && real){ scene.background = envData(); scene.fog = new THREE.Fog('#dfe7ec', 28, 150);
       const gg = new THREE.PlaneGeometry(600, 600); gg.rotateX(-Math.PI / 2); const gm = new THREE.Mesh(gg, M.grass); gm.position.set((b[0] + b[2]) / 2, -PL, (b[1] + b[3]) / 2); wuv(gg, gm.position); gm.receiveShadow = true; root.add(gm);
       forest(b, pad); }
 
@@ -409,7 +463,7 @@ export function create(canvas, ui){
     if(memo.persp !== persp){ memo.persp = persp; if(fitted){ size(); home(false, cx, hgt * .3, cz); } }
     if(!fitted || key !== memo.key){ fbase = Math.max(11, Math.hypot(b[2] - b[0], b[3] - b[1], hgt) * 1.18); if(!fitted) home(false, cx, hgt * .3, cz); fitted = true; }
     memo.key = key; memo.center = [cx, hgt * .3, cz];
-    size(); req();
+    size(); req(); autoRender(900);
   }
 
   /* ---------- camera ---------- */
@@ -419,7 +473,8 @@ export function create(canvas, ui){
     const from = cam.position.clone().sub(tgt), f2 = to.clone().sub(tgt), t0 = performance.now();
     anim = () => { const k = Math.min(1, (performance.now() - t0) / 450), e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
       const v = from.clone().normalize().lerp(f2.clone().normalize(), e).normalize().multiplyScalar(dist);
-      cam.position.copy(tgt.clone().add(v)); cam.lookAt(tgt); if(k >= 1) anim = null; };
+      cam.position.copy(tgt.clone().add(v)); cam.lookAt(tgt); if(k >= 1){ anim = null; autoRender(); } };
+    pauseRender();
     req();
   }
   function home(animate, x, y, z){
@@ -440,10 +495,13 @@ export function create(canvas, ui){
   function req(){ if(!pending){ pending = true; requestAnimationFrame(frame); } }
   function frame(){
     pending = false; if(anim) anim();
+    if(ptOn && PT){ PT.renderSample(); cube(); if(ui && ui.status) ui.status(Math.floor(PT.samples), ptGoal); if(PT.samples < ptGoal) req(); return; }
     const moved = ctl.update(); renderer.render(scene, cam); cube();
     if(moved || anim) req();
   }
-  ctl.addEventListener('change', req);
+  ctl.addEventListener('change', () => { if(ptOn) pauseRender(); req(); });
+  ctl.addEventListener('start', () => { interacting = true; pauseRender(); });
+  ctl.addEventListener('end', () => { interacting = false; autoRender(); });
   function cube(){
     if(!ui || !ui.cube) return;
     const v = cam.position.clone().sub(ctl.target), az = Math.atan2(v.x, v.z), el = Math.atan2(v.y, Math.hypot(v.x, v.z));
@@ -454,9 +512,10 @@ export function create(canvas, ui){
   return {
     update(m){ build(m); },
     view(name){ const D = {top:[0, 1, .0001], front:[0, 0, 1], back:[0, 0, -1], right:[1, 0, 0], left:[-1, 0, 0]}; if(name === 'home') return home(true); if(name === 'rear') return setDir(new THREE.Vector3(-Math.sin(.8), .55, -Math.cos(.8)), true); setDir(new THREE.Vector3(...D[name]), true); },
-    resize(){ size(); req(); },
+    resize(){ size(); pauseRender(); req(); autoRender(); },
+    rendering(){ return ptOn; },
     png(cb){
-      renderer.render(scene, cam);
+      if(!ptOn) renderer.render(scene, cam);
       const w = canvas.width, h = canvas.height, c = document.createElement('canvas'); c.width = w; c.height = h;
       const g = c.getContext('2d'), gr = g.createLinearGradient(0, 0, 0, h);
       gr.addColorStop(0, '#9fb6cc'); gr.addColorStop(.6, '#e4eaee'); gr.addColorStop(1, '#d5d8cc');

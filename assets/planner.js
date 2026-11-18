@@ -347,8 +347,8 @@
     if(r3state === 3){ drawLegacy(); return; }
     if(r3state === 1) return;
     r3state = 1;
-    import(new URL('assets/planner3d.js?v=6', location.href).href).then(function(m){
-      r3 = m.create(cv, {cube:$('plCube')}); r3state = 2; window.PSP3D = r3; if(view === '3d') r3.update(model3());
+    import(new URL('assets/planner3d.js?v=7', location.href).href).then(function(m){
+      r3 = m.create(cv, {cube:$('plCube'), status:function(n, g){ var h = $('plHint'); if(!h) return; h.textContent = n >= g ? (P.lang === 'en' ? 'Photoreal render complete' : 'Бодит рэндэр бэлэн боллоо') : (P.lang === 'en' ? 'Refining photoreal render… ' : 'Бодит рэндэр гаргаж байна… ') + Math.round(n / g * 100) + '%'; }}); r3state = 2; window.PSP3D = r3; if(view === '3d') r3.update(model3());
     }).catch(function(err){ console.warn('3D fallback', err); r3state = 3; if(view === '3d') drawLegacy(); });
   }
   function drawLegacy(){
