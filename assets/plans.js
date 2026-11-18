@@ -26,6 +26,19 @@ window.PSP_PLAN_OPTIONS = {
 
 (function(){
   function R(t, x, y, w, h){ return {type:t, x:x, y:y, w:w, h:h}; }
+  /* "Монгол орны нөхцөлд зориулсан 5 хаусны дизайн" — the studio's concept collection (renders and plans from the presentation sheet) */
+  function C(slug, code, en, mn, ld, area, rooms, baths, tags){ var d = 'images/plans/' + slug + '/';
+    return {slug:slug, code:code, concept:true, wide:true, title:{mn:en + ' — ' + mn.t, en:en}, lead:{mn:ld.mn, en:ld.en}, spec:{area:area, rooms:rooms, baths:baths, floors:1}, tags:tags,
+      note:{mn:'Концепц дизайн: рэндэр болон план нь санааг харуулна. Ажлын зургийг таны газар, хүсэлтэд тохируулж, норм дүрмийн дагуу боловсруулна.', en:'Concept design: the renders and plan show the idea. Working drawings are prepared for your plot and brief and checked against building codes.'},
+      images:[{src:d + 'day.jpg', b:{mn:'Өдөр —', en:'Day —'}, cap:{mn:'Гадна төрх', en:'Exterior'}}, {src:d + 'night.jpg', b:{mn:'Орой —', en:'Evening —'}, cap:{mn:'Гадна төрх, гэрэлтүүлэгтэй', en:'Exterior, lit'}}, {src:d + 'plan.png', b:{mn:'План —', en:'Plan —'}, cap:{mn:'Давхрын план', en:'Floor plan'}}],
+      sheets:[{src:d + 'plan.png', cap:{mn:'Давхрын план', en:'Floor plan'}}]}; }
+  var CONCEPTS = [
+    C('skyline', 'PSP-SKY-120', 'Skyline House', {t:'минимал хаус'}, {mn:'Орчин үеийн минимал хэв маягтай, өндөр таазтай хаус.', en:'A modern, minimal house with high ceilings.'}, 120, 3, 2, ['modern', 'minimal', 'highCeiling', 'bigGlass']),
+    C('family', 'PSP-FAM-140', 'Family House', {t:'гэр бүлийн хаус'}, {mn:'Гэр бүлд зориулсан, дулаан уур амьсгалтай хаус.', en:'A warm, welcoming house designed for a family.'}, 140, 4, 2, ['family', 'bigGlass']),
+    C('nature', 'PSP-NAT-160', 'Nature House', {t:'модон элементтэй хаус'}, {mn:'Байгальтай уялдсан, модон элементтэй хаус.', en:'A house in tune with nature, with timber details.'}, 160, 4, 3, ['nature', 'wood', 'bigGlass']),
+    C('villa', 'PSP-VIL-180', 'Modern Villa', {t:'орчин үеийн вилла'}, {mn:'Тансаг, орчин үеийн стильтэй хаус.', en:'A premium house in a contemporary style.'}, 180, 4, 3, ['villa', 'modern', 'bigGlass']),
+    C('compact', 'PSP-CMP-100', 'Compact House', {t:'авсаархан хаус'}, {mn:'Жижиг, оновчтой шийдэлтэй хаус.', en:'A small house with an efficient layout.'}, 100, 3, 2, ['compact', 'bigGlass'])
+  ];
   window.PSP_PLANS = [
     {
       slug:'h100', code:'PSP-H100', sample:true,
@@ -57,6 +70,7 @@ window.PSP_PLAN_OPTIONS = {
   ];
   /* images are generated per plan: exterior renders, elevation, 3D cut, and plan sheets per floor */
   window.PSP_PLANS.forEach(function(p){
+    if(p.images) return;
     var d = 'images/plans/' + p.slug + '/';
     p.images = [
       {src:d + 'persp.jpg', b:{mn:'3D —', en:'3D —'}, cap:{mn:'Хүний нүдний өндрөөс', en:'Eye-level view'}},
@@ -68,4 +82,5 @@ window.PSP_PLAN_OPTIONS = {
     if(p.floors.length > 1) p.images.push({src:d + 'cut-2.jpg', b:{mn:'3D зүсэлт —', en:'3D cut —'}, cap:{mn:'2-р давхар', en:'First floor'}});
     p.sheets = p.floors.map(function(_, i){ return {src:d + 'plan-' + (i + 1) + '.png', cap:i ? {mn:'2-р давхрын план', en:'First floor plan'} : {mn:'1-р давхрын план', en:'Ground floor plan'}}; });
   });
+  window.PSP_PLANS = CONCEPTS.concat(window.PSP_PLANS);
 })();

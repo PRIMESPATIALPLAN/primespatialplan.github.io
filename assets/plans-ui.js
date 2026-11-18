@@ -4,7 +4,7 @@
   var P = window.PSP, PLANS = window.PSP_PLANS, OPT = window.PSP_PLAN_OPTIONS;
   var RT = {living:{mn:'Зочны өрөө', en:'Living room'}, bed:{mn:'Унтлагын өрөө', en:'Bedroom'}, kitchen:{mn:'Гал тогоо', en:'Kitchen'}, bath:{mn:'АЦӨ', en:'Bathroom'},
     hall:{mn:'Коридор', en:'Hall'}, study:{mn:'Ажлын өрөө', en:'Study'}, storage:{mn:'Агуулах', en:'Storage'}, garage:{mn:'Гарааш', en:'Garage'}, balcony:{mn:'Тагт', en:'Balcony'}};
-  var TAG = {oneStorey:{mn:'Нэг давхар', en:'Single storey'}, twoStorey:{mn:'Хоёр давхар', en:'Two storeys'}, compact:{mn:'Авсаархан', en:'Compact'},
+  var TAG = {modern:{mn:'Орчин үеийн', en:'Modern'}, minimal:{mn:'Минимал', en:'Minimal'}, highCeiling:{mn:'Өндөр тааз', en:'High ceilings'}, family:{mn:'Гэр бүлд', en:'Family'}, bigGlass:{mn:'Том цонх', en:'Large glazing'}, wood:{mn:'Модон элемент', en:'Timber details'}, nature:{mn:'Байгальд ойр', en:'Close to nature'}, villa:{mn:'Тансаг', en:'Premium'}, terrace:{mn:'Террас', en:'Terrace'},oneStorey:{mn:'Нэг давхар', en:'Single storey'}, twoStorey:{mn:'Хоёр давхар', en:'Two storeys'}, compact:{mn:'Авсаархан', en:'Compact'},
     storage:{mn:'Агуулахтай', en:'Storage room'}, garage:{mn:'Гараж', en:'Garage'}, mudroom:{mn:'Үүдний өрөө', en:'Mud room'}, twoBaths:{mn:'2 АЦӨ', en:'2 bathrooms'},
     balcony:{mn:'Тагт', en:'Balcony'}, study:{mn:'Ажлын өрөө', en:'Home office'}};
   var RMAT = {seam:{mn:'төмөр хавтан', en:'standing seam metal'}, tile:{mn:'металл ваар', en:'metal tile'}, shingle:{mn:'битум ширгэл', en:'asphalt shingles'}};
@@ -12,19 +12,20 @@
   var ROOF = {gable:{mn:'Хоёр налуу', en:'Gable'}, hip:{mn:'Дөрвөн налуу', en:'Hip'}, flat:{mn:'Хавтгай', en:'Flat'}};
   var S = {
     mn:{m2:'м²', beds:'Унтлагын өрөө', baths:'АЦӨ', floors:'Давхар', garage:'Гараж', yes:'Байгаа', no:'Байхгүй', sample:'Жишээ', onReq:'Үнийн санал авах', from:'-с эхэлнэ',
-        all:'Бүгд', f1:'1 давхар', f2:'2 давхар', b2:'2 өрөө', b3:'3+ өрөө', g:'Гаражтай', count:'зураг', none:'Шүүлтэд тохирох зураг алга.', sortA:'Талбай: багаас их', sortD:'Талбай: ихээс бага',
+        all:'Бүгд', f1:'1 давхар', f2:'2 давхар', b2:'2 өрөө', b3:'3+ өрөө', g:'Гаражтай', count:'зураг', none:'Шүүлтэд тохирох зураг алга.', sortF:'Онцлох', sortA:'Талбай: багаас их', sortD:'Талбай: ихээс бага',
         floor:'давхар', total:'Нийт талбай', living:'Амьдрах талбай', garageA:'Гараж', balcony:'Тагт', w:'Өргөн', d:'Урт', h:'Барилгын өндөр', fh:'Давхрын өндөр', roof:'Дээвэр', pitch:'Дээврийн налуу', found:'Суурь',
-        sum:'Дүн', quote:'Сонголтоо илгээхэд үнийн санал гаргаж өгнө', free:'Багтсан', order:'Захиалга', pkg:'Багц', mirror:'Толин тусгал', addons:'Нэмэлт', none2:'Үгүй', yes2:'Тийм', area:'Талбай', price:'Үнэ'},
+        sum:'Дүн', rooms:'Өрөө', concept:'Концепц', quote:'Сонголтоо илгээхэд үнийн санал гаргаж өгнө', free:'Багтсан', order:'Захиалга', pkg:'Багц', mirror:'Толин тусгал', addons:'Нэмэлт', none2:'Үгүй', yes2:'Тийм', area:'Талбай', price:'Үнэ'},
     en:{m2:'m²', beds:'Bedrooms', baths:'Bathrooms', floors:'Storeys', garage:'Garage', yes:'Yes', no:'No', sample:'Sample', onReq:'Price on request', from:' and up',
-        all:'All', f1:'1 storey', f2:'2 storeys', b2:'2 beds', b3:'3+ beds', g:'With garage', count:'plans', none:'No plans match these filters.', sortA:'Area: low to high', sortD:'Area: high to low',
+        all:'All', f1:'1 storey', f2:'2 storeys', b2:'2 beds', b3:'3+ beds', g:'With garage', count:'plans', none:'No plans match these filters.', sortF:'Featured', sortA:'Area: low to high', sortD:'Area: high to low',
         floor:'floor', total:'Total area', living:'Living area', garageA:'Garage', balcony:'Balcony', w:'Width', d:'Depth', h:'Building height', fh:'Floor-to-floor height', roof:'Roof', pitch:'Roof pitch', found:'Foundation',
-        sum:'Subtotal', quote:'Send your choices and we will quote a price', free:'Included', order:'Order', pkg:'Package', mirror:'Mirrored', addons:'Add-ons', none2:'No', yes2:'Yes', area:'Area', price:'Price'}
+        sum:'Subtotal', rooms:'Rooms', concept:'Concept', quote:'Send your choices and we will quote a price', free:'Included', order:'Order', pkg:'Package', mirror:'Mirrored', addons:'Add-ons', none2:'No', yes2:'Yes', area:'Area', price:'Price'}
   };
   function s(k){ return S[P.lang][k]; }
   function t(o){ return o[P.lang] || o.mn; }
   function fmt(v, d){ return (Math.round(v * (d || 10)) / (d || 10)).toLocaleString(P.lang === 'en' ? 'en-US' : 'mn-MN'); }
   function money(v){ return Math.round(v).toLocaleString('en-US').replace(/,/g, ' ') + ' ' + OPT.currency; }
   function stats(p){
+    if(p.spec) return {spec:true, floors:p.spec.floors || 1, beds:p.spec.rooms, rooms:p.spec.rooms, baths:p.spec.baths, garage:0, balcony:0, living:p.spec.area, total:p.spec.area, perFloor:[p.spec.area]};
     var r = {floors:p.floors.length, beds:0, baths:0, garage:0, balcony:0, living:0, perFloor:[], b:[1e9, 1e9, -1e9, -1e9]};
     p.floors.forEach(function(f, i){ var fl = 0;
       f.rooms.forEach(function(x){
@@ -42,11 +43,11 @@
   }
   function priceFrom(){ var v = OPT.packages.map(function(k){ return k.price; }).filter(function(x){ return typeof x === 'number'; }); return v.length ? Math.min.apply(null, v) : null; }
   function el(tag, cls, txt, parent){ var e = document.createElement(tag); if(cls) e.className = cls; if(txt != null) e.textContent = txt; if(parent) parent.appendChild(e); return e; }
-  function statLine(st){ return [fmt(st.total) + ' ' + s('m2'), st.beds + ' ' + s('beds').toLowerCase(), st.baths + ' ' + s('baths'), st.floors + ' ' + s('floor')].concat(st.garage ? [s('garage').toLowerCase()] : []).join(' · '); }
+  function statLine(st){ return [fmt(st.total) + ' ' + s('m2'), st.beds + ' ' + (st.spec ? s('rooms') : s('beds')).toLowerCase(), st.baths + ' ' + s('baths'), st.floors + ' ' + s('floor')].concat(st.garage ? [s('garage').toLowerCase()] : []).join(' · '); }
   function card(p, parent){
     var st = stats(p), a = el('a', 'card pcard', null, parent); a.href = 'plan.html?p=' + encodeURIComponent(p.slug);
-    var th = el('div', 'thumb render', null, a), img = el('img', null, null, th); img.src = p.images[0].src; img.alt = t(p.title); img.loading = 'lazy';
-    el('span', 'badge', p.code, th); if(p.sample) el('span', 'badge alt', s('sample'), th);
+    var th = el('div', 'thumb render' + (p.wide ? ' wide' : ''), null, a), img = el('img', null, null, th); img.src = p.images[0].src; img.alt = t(p.title); img.loading = 'lazy';
+    el('span', 'badge', p.code, th); if(p.sample || p.concept) el('span', 'badge alt', s(p.concept ? 'concept' : 'sample'), th);
     el('h3', null, t(p.title), a); el('p', null, statLine(st), a);
     var pf = priceFrom(); el('p', 'pprice', pf == null ? s('onReq') : money(pf) + s('from'), a);
     return a;
@@ -55,16 +56,16 @@
   /* ---------- catalog ---------- */
   function catalog(){
     var grid = document.getElementById('plGrid'); if(!grid) return;
-    var F = {floors:'all', beds:'all', garage:'all', sort:'asc'};
+    var F = {floors:'all', beds:'all', garage:'all', sort:'feat'};
     var groups = [['floors', [['all', 'all'], ['1', 'f1'], ['2', 'f2']]], ['beds', [['all', 'all'], ['2', 'b2'], ['3', 'b3']]], ['garage', [['all', 'all'], ['yes', 'g']]]];
     function bar(){
       var box = document.getElementById('plFilters'); box.innerHTML = '';
       groups.forEach(function(g){ var grp = el('div', 'pf-grp', null, box); grp.setAttribute('role', 'group');
-        el('span', 'pf-lab', s(g[0] === 'floors' ? 'floors' : g[0] === 'beds' ? 'beds' : 'garage'), grp);
+        el('span', 'pf-lab', s(g[0] === 'floors' ? 'floors' : g[0] === 'beds' ? 'rooms' : 'garage'), grp);
         g[1].forEach(function(o){ var b = el('button', 'pl-chip', s(o[1]), grp); b.type = 'button'; b.setAttribute('aria-pressed', F[g[0]] === o[0] ? 'true' : 'false');
           b.onclick = function(){ F[g[0]] = o[0]; render(); }; }); });
       var sel = el('select', 'pf-sort', null, box); sel.setAttribute('aria-label', 'Sort');
-      [['asc', 'sortA'], ['desc', 'sortD']].forEach(function(o){ var op = el('option', null, s(o[1]), sel); op.value = o[0]; if(F.sort === o[0]) op.selected = true; });
+      [['feat', 'sortF'], ['asc', 'sortA'], ['desc', 'sortD']].forEach(function(o){ var op = el('option', null, s(o[1]), sel); op.value = o[0]; if(F.sort === o[0]) op.selected = true; });
       sel.onchange = function(){ F.sort = this.value; render(); };
     }
     function render(){
@@ -73,7 +74,7 @@
         if(F.floors !== 'all' && x.st.floors !== +F.floors) return false;
         if(F.beds === '2' && x.st.beds !== 2) return false; if(F.beds === '3' && x.st.beds < 3) return false;
         if(F.garage === 'yes' && !x.st.garage) return false; return true; });
-      list.sort(function(a, b){ return F.sort === 'asc' ? a.st.total - b.st.total : b.st.total - a.st.total; });
+      if(F.sort !== 'feat') list.sort(function(a, b){ return F.sort === 'asc' ? a.st.total - b.st.total : b.st.total - a.st.total; });
       list.forEach(function(x){ card(x.p, grid); });
       document.getElementById('plCount').textContent = list.length + ' ' + s('count');
       if(!list.length) el('p', 'pl-muted', s('none'), grid);
@@ -129,11 +130,13 @@
     }
     function render(){
       document.title = p.code + ' — ' + t(p.title) + ' — Prime Spatial Plan';
-      document.getElementById('ppCode').textContent = p.code + (p.sample ? ' · ' + s('sample') : '');
+      document.getElementById('ppCode').textContent = p.code + (p.sample ? ' · ' + s('sample') : p.concept ? ' · ' + s('concept') : '');
+      document.getElementById('ppMain').classList.toggle('wide', !!p.wide); document.getElementById('ppEdit').hidden = !p.floors;
+      document.getElementById('ppNote').textContent = t(p.note || {mn:'Жишээ зураг: төлөвлөлт, үзүүлэлтүүд нь манай загвараас гарсан. Эцсийн зургийг таны газарт тохируулж, норм дүрмийн дагуу боловсруулна.', en:'Sample plan: the layout and specs come from our drawing model. Final drawings are prepared for your plot and checked against building codes.'});
       document.getElementById('ppTitle').textContent = t(p.title);
       document.getElementById('ppLead').textContent = t(p.lead);
       var sb = document.getElementById('ppStats'); sb.innerHTML = '';
-      [[fmt(st.total), s('m2')], [st.beds, s('beds')], [st.baths, s('baths')], [st.floors, s('floors')], [st.garage ? '1' : '—', s('garage')]].forEach(function(x){ var d = el('div', null, null, sb); el('b', null, x[0], d); el('span', null, x[1], d); });
+      [[fmt(st.total), s('m2')], [st.beds, st.spec ? s('rooms') : s('beds')], [st.baths, s('baths')], [st.floors, s('floors')]].concat(st.spec ? [] : [[st.garage ? '1' : '—', s('garage')]]).forEach(function(x){ var d = el('div', null, null, sb); el('b', null, x[0], d); el('span', null, x[1], d); });
       gallery(); buy();
       /* sheets */
       var sh = document.getElementById('ppSheets'); sh.innerHTML = '';
@@ -141,11 +144,17 @@
         var img = el('img', null, null, b); img.src = x.src; img.alt = t(x.cap); img.loading = 'lazy';
         b.onclick = function(){ lb(x.src, t(x.cap)); };
         var fc = el('figcaption', null, null, f); el('b', null, t(x.cap), fc); el('span', null, fmt(st.perFloor[i]) + ' ' + s('m2'), fc);
+        if(!p.floors) return;
         var ul = el('ul', 'pprooms', null, f);
         p.floors[i].rooms.forEach(function(r){ var li = el('li', null, null, ul); el('span', null, t(RT[r.type]), li); el('span', null, fmt(r.w) + ' × ' + fmt(r.h) + ' м', li); el('b', null, fmt(r.w * r.h) + ' ' + s('m2'), li); }); });
       /* spec table */
       var sp = document.getElementById('ppSpecs'); sp.innerHTML = '';
-      var blocks = [
+      var blocks = st.spec ? [
+        [{mn:'Талбай', en:'Areas'}, [[s('total'), fmt(st.total) + ' ' + s('m2')]]],
+        [{mn:'Өрөө', en:'Rooms'}, [[s('rooms'), st.rooms], [s('baths'), st.baths]]],
+        [{mn:'Ерөнхий', en:'General'}, [[s('floors'), st.floors], [P.lang === 'en' ? 'Status' : 'Төлөв', s('concept')]]],
+        [{mn:'Суурь', en:'Foundation'}, [[s('found'), OPT.foundations.map(t).join(', ')]]]
+      ] : [
         [{mn:'Талбай', en:'Areas'}, [[s('total'), fmt(st.total) + ' ' + s('m2')], [s('living'), fmt(st.living) + ' ' + s('m2')]].concat(st.perFloor.map(function(a, i){ return [(i + 1) + (P.lang === 'en' ? ['st', 'nd'][i] || 'th' : '-р') + ' ' + s('floor'), fmt(a) + ' ' + s('m2')]; }))
           .concat(st.garage ? [[s('garageA'), fmt(st.garage) + ' ' + s('m2')]] : []).concat(st.balcony ? [[s('balcony'), fmt(st.balcony) + ' ' + s('m2')]] : [])],
         [{mn:'Өрөө', en:'Rooms'}, [[s('beds'), st.beds], [s('baths'), st.baths], [s('garage'), st.garage ? s('yes') : s('no')]]],
@@ -155,7 +164,7 @@
       blocks.forEach(function(bk){ var d = el('div', 'ppspec', null, sp); el('h3', null, t(bk[0]), d); var dl = el('dl', null, null, d);
         bk[1].forEach(function(row){ var r = el('div', null, null, dl); el('dt', null, row[0], r); el('dd', null, String(row[1]), r); }); });
       var tg = document.getElementById('ppTags'); tg.innerHTML = ''; p.tags.forEach(function(k){ el('span', 'pptag', t(TAG[k]), tg); });
-      var sim = document.getElementById('ppSimilar'); sim.innerHTML = ''; PLANS.filter(function(x){ return x !== p; }).slice(0, 3).forEach(function(x){ card(x, sim); });
+      var sim = document.getElementById('ppSimilar'); sim.innerHTML = ''; PLANS.filter(function(x){ return x !== p && !!x.spec === !!p.spec; }).slice(0, 3).forEach(function(x){ card(x, sim); });
     }
     document.getElementById('ppOrder').onclick = order;
     document.getElementById('ppEdit').onclick = edit;

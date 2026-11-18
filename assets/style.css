@@ -407,3 +407,8 @@ footer{border-top:1px solid var(--rule);padding-block:48px 32px}
 @media (max-width:1000px){.pp-top{grid-template-columns:minmax(0,1fr)}.pp-buy{position:static}.pp-specs{grid-template-columns:repeat(2,1fr)}.pgrid{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:640px){.pgrid{grid-template-columns:1fr}.pp-specs{grid-template-columns:1fr}.pp-stats b{font-size:1.1rem}.pp-stats span{font-size:.6rem}.pp-thumbs button{width:76px}.pprooms li{grid-template-columns:1fr auto 60px}}
 @media (max-width:640px){#planPage{padding-top:128px}.plans .pl-head{padding-top:140px}}
+.thumb.wide img{object-position:50% 60%}
+.pp-main.wide{aspect-ratio:auto;background:#0e1014}
+.pp-main.wide img{height:auto;object-fit:contain}
+.pp-stats{display:flex}.pp-stats div{flex:1 1 0;min-width:0}
+.ppsheet{max-width:760px}
