@@ -5,7 +5,7 @@
 import * as THREE from './vendor/three.module.min.js';
 import {OrbitControls} from './vendor/OrbitControls.js';
 import {RoomEnvironment} from './vendor/RoomEnvironment.js';
-import {T, FACADE_FLAT} from './planner-tex.js?v=6';
+import {T, FACADE_FLAT} from './planner-tex.js?v=7';
 import {furnish} from './planner-furnish.js?v=1';
 import {GLTFLoader} from './vendor/GLTFLoader.js';
 
@@ -56,7 +56,7 @@ export function create(canvas, ui){
     const bb = (n, at) => { const m = new THREE.MeshStandardMaterial({map:T(n).map, alphaTest:at || .5, side:THREE.DoubleSide, roughness:.92, envMapIntensity:.25});
       m.userData.depth = new THREE.MeshDepthMaterial({depthPacking:THREE.RGBADepthPacking, map:T(n).map, alphaTest:at || .5}); return m; };
     const R = {
-      F:{plaster:tx('plaster', FACADE_FLAT.plaster), brick:tx('brick', FACADE_FLAT.brick, {roughness:.92}), wood:tx('wood', FACADE_FLAT.wood, {roughness:.7}), stone:tx('stone', FACADE_FLAT.stone), timber:tx('timber', FACADE_FLAT.timber, {roughness:.8}), cedar:tx('cedar', FACADE_FLAT.cedar, {roughness:.8})},
+      F:{plaster:tx('plaster', FACADE_FLAT.plaster), brick:tx('brick', FACADE_FLAT.brick, {roughness:.92}), wood:tx('wood', FACADE_FLAT.wood, {roughness:.7}), stone:tx('stone', FACADE_FLAT.stone), timber:tx('timber', FACADE_FLAT.timber, {roughness:.8}), cedar:tx('cedar', FACADE_FLAT.cedar, {roughness:.8}), metal:tx('metalPanel', FACADE_FLAT.metal, {tint:m.metalColor || '#4a4e55', roughness:.38, metalness:.55, env:.8})},
       concrete:tx('concrete', '#d2cfc8', {roughness:.92, env:.25}),
       pine:real ? bb('pine') : null, leafy:real ? bb('leafy') : null, tuft:real ? bb('tuft', .35) : null,
       gravel:tx('gravel', '#c9c6bf', {roughness:1, env:.2}), deck:tx('deck', '#c9a77c', {roughness:.8}), rock:real ? new THREE.MeshStandardMaterial({color:'#9b968d', roughness:.95, flatShading:true, envMapIntensity:.3}) : mk('#c9c5bd', {flatShading:true}),
@@ -219,6 +219,29 @@ export function create(canvas, ui){
     });
   }
 
+  /* mono-pitch roof: 12° slope across the short side, high edge at the back, end walls and high wall filled up to the roof */
+  function shedRoof(m, rs, b, zt){
+    const T = Math.tan(12 * Math.PI / 180), o = .5, alongX = b[2] - b[0] >= b[3] - b[1];
+    const P = (u, v, h) => alongX ? [u, h, v] : [v, h, u];
+    const bu0 = alongX ? b[0] : b[1], bu1 = alongX ? b[2] : b[3], bv0 = alongX ? b[1] : b[0], bv1 = alongX ? b[3] : b[2];
+    /* front (street) side is +v when the long side runs along x; the low edge faces the front */
+    const lowAtMax = alongX, H = v => zt + (lowAtMax ? (bv1 - v) : (v - bv0)) * T;
+    const u0 = bu0 - o, u1 = bu1 + o, v0 = bv0 - o, v1 = bv1 + o, th = .22, len = (v1 - v0) / Math.cos(12 * Math.PI / 180);
+    const mb = MB();
+    for(const d of [0, -th]){ const A = P(u0, v0, H(v0) + d), B = P(u1, v0, H(v0) + d), C = P(u1, v1, H(v1) + d), D = P(u0, v1, H(v1) + d);
+      if(lowAtMax) mb.quad(D, C, B, A); else mb.quad(A, B, C, D);
+      if(d === 0){ if(lowAtMax) mb.uvq([u0, 0], [u1, 0], [u1, len], [u0, len]); else mb.uvq([u0, 0], [u1, 0], [u1, len], [u0, len]); } else mb.uvq([0, 0], [0, 0], [0, 0], [0, 0]); }
+    [[u0, v0, u1, v0], [u1, v0, u1, v1], [u1, v1, u0, v1], [u0, v1, u0, v0]].forEach(e => mb.quad(P(e[0], e[1], H(e[1])), P(e[2], e[3], H(e[3])), P(e[2], e[3], H(e[3]) - th), P(e[0], e[1], H(e[1]) - th)));
+    const g = mb.geo(), mesh = new THREE.Mesh(g, M.roof); mesh.castShadow = true; mesh.receiveShadow = true; root.add(mesh); root.add(edgeLines(g, 15));
+    /* infill walls between the top of the walls (zt - .3) and the roof underside */
+    const t = .25, base = zt - .3, gb = MB();
+    for(const u of [bu0, bu1]) for(const sgn of [-1, 1]){ const uu = u + sgn * t / 2;
+      gb.quad(P(uu, bv0, base), P(uu, bv1, base), P(uu, bv1, H(bv1) - th), P(uu, bv0, H(bv0) - th)); }
+    const hv = lowAtMax ? bv0 : bv1;
+    for(const sgn of [-1, 1]){ const vv = hv + sgn * t / 2; gb.quad(P(bu0, vv, base), P(bu1, vv, base), P(bu1, vv, H(hv) - th), P(bu0, vv, H(hv) - th)); }
+    const gg = gb.geo(); wuv(gg, {x:0, y:0, z:0}); const fm = facadeAt(m.floors.length - 1, 2).clone(); fm.side = THREE.DoubleSide;
+    const gm = new THREE.Mesh(gg, fm); gm.castShadow = true; gm.receiveShadow = true; root.add(gm); root.add(edgeLines(gg, 30));
+  }
   /* ---------- roof ---------- */
   function roof(m, top, zt){
     const rs = m.floors[top].rooms.filter(r => r.type !== 'balcony'); if(!rs.length) return;
@@ -229,6 +252,7 @@ export function create(canvas, ui){
       rs.forEach(r => box(r.x - .3, r.x + r.w + .3, zt - SL, zt + .15, r.y - .3, r.y + r.h + .3, M.roof));
       return;
     }
+    if(type === 'shed') return shedRoof(m, rs, b, zt);
     const o = .5, alongX = b[2] - b[0] >= b[3] - b[1];
     const P = (u, v, h) => alongX ? [u, h, v] : [v, h, u];
     const bu0 = alongX ? b[0] : b[1], bu1 = alongX ? b[2] : b[3], bv0 = alongX ? b[1] : b[0], bv1 = alongX ? b[3] : b[2];
@@ -417,7 +441,7 @@ export function create(canvas, ui){
   }
   /* a generated tree (cached per preset, cloned per use), scaled to a target height; materials made physically based */
   function realTree(preset, height, x, z, rot){
-    if(A.state !== 2) return false;
+    if(A.state !== 2 || !MODEL.realVeg) return false;
     let tpl = A.trees[preset];
     if(!tpl){ try{ const t = new A.ez.Tree(); t.loadPreset(preset); t.generate(); t.updateMatrixWorld(true);
         t.traverse(o => { if(!o.isMesh) return; const m0 = o.material, std = new THREE.MeshStandardMaterial({color:m0.color, map:m0.map, normalMap:m0.normalMap || null, roughnessMap:m0.roughnessMap || null,
@@ -438,7 +462,7 @@ export function create(canvas, ui){
     return u > e.a - .95 && u < e.b + .95 && v * e.out > -.05 && v * e.out < .95; }); }
   /* dense lawn: instanced grass clumps with colour variation */
   function lawnGrass(inside, area, count, b){
-    if(A.state !== 2) return;
+    if(A.state !== 2 || !MODEL.realVeg) return;
     const mat = new THREE.MeshStandardMaterial({map:A.grassMap, alphaTest:.45, side:THREE.DoubleSide, roughness:.9, envMapIntensity:.25, color:'#86ad55'});
     const n = Math.round(Math.min(count, area * 70)), im = new THREE.InstancedMesh(A.grassGeo, mat, n), r = rnd(5), mt = new THREE.Matrix4(), q = new THREE.Quaternion(), sc = new THREE.Vector3(), p = new THREE.Vector3(), up = new THREE.Vector3(0, 1, 0), col = new THREE.Color();
     let i = 0;
@@ -536,9 +560,9 @@ export function create(canvas, ui){
     const pad = 8;
     const disc = m.site !== 'plot', cx0 = (b[0] + b[2]) / 2, cz0 = (b[1] + b[3]) / 2, RD = Math.hypot(b[2] - b[0], b[3] - b[1]) / 2 + 3.4;
     MODEL.disc = disc ? {cx:cx0, cz:cz0, R:RD} : null;
-    if(real) loadAssets();
+    if(real && m.realVeg) loadAssets();
     if(disc){
-      const lawnMat = real && A.lawn ? new THREE.MeshStandardMaterial({map:A.lawn, color:'#d9e2c8', roughness:1, envMapIntensity:.2}) : M.grass;
+      const lawnMat = real && A.lawn && m.realVeg ? new THREE.MeshStandardMaterial({map:A.lawn, color:'#d9e2c8', roughness:1, envMapIntensity:.2}) : M.grass;
       const lg = new THREE.CylinderGeometry(RD, RD, .3, 128), lm = new THREE.Mesh(lg, [M.earth, lawnMat, M.earth]); lm.position.set(cx0, -PL - .15, cz0); wuv(lg, lm.position); lm.receiveShadow = true; root.add(lm);
       const cg = new THREE.CylinderGeometry(RD + .16, RD + .16, .42, 128), cm = new THREE.Mesh(cg, real ? M.concrete : M.slab); cm.position.set(cx0, -PL - .215, cz0); wuv(cg, cm.position); cm.receiveShadow = true; cm.castShadow = true; root.add(cm);
       if(!(MODEL.style === 'hidden')){ const fl = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), new THREE.ShadowMaterial({opacity:m.tod === 'evening' ? .5 : .22})); fl.rotation.x = -Math.PI / 2; fl.position.set(cx0, -PL - .38, cz0); fl.receiveShadow = true; fl.userData.noPT = true; root.add(fl); }

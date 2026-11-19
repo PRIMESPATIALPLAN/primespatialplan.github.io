@@ -159,6 +159,15 @@ const MAKERS = {
     for(let j = 0; j < 2; j++) for(let i = 0; i < 2; i++){ const v = 214 + Math.floor(r() * 16); g.fillStyle = `rgb(${v},${v - 2},${v - 6})`; g.fillRect(i * 256 + 2, j * 256 + 2, 252, 252); }
     blotch(g, 512, 512, r, 30, .04); speckle(g, 512, 512, r, 5000, .1);
     return {map:tex(c, [1.2, 1.2])}; },
+  /* standing-seam metal facade panels, 500 mm wide, vertical (grey, tinted per colour) */
+  metalPanel(){ const [c, g] = cv(512, 512), [b, h] = cv(512, 512), r = rng(71), n = 4, pw = 512 / n;
+    g.fillStyle = '#d9d9d9'; g.fillRect(0, 0, 512, 512); h.fillStyle = '#808080'; h.fillRect(0, 0, 512, 512);
+    for(let i = 0; i < n; i++){ const x = i * pw, gr = g.createLinearGradient(x, 0, x + pw, 0);
+      gr.addColorStop(0, '#c8c8c8'); gr.addColorStop(.5, '#e6e6e6'); gr.addColorStop(1, '#c4c4c4'); g.fillStyle = gr; g.fillRect(x, 0, pw, 512);
+      g.fillStyle = '#f7f7f7'; g.fillRect(x + pw - 7, 0, 3, 512); g.fillStyle = '#7d7d7d'; g.fillRect(x + pw - 4, 0, 4, 512);
+      h.fillStyle = '#ffffff'; h.fillRect(x + pw - 8, 0, 8, 512); }
+    speckle(g, 512, 512, r, 1500, .05);
+    return {map:tex(c, [2, 2]), bump:tex(b, [2, 2], false), bs:2}; },
   /* painted conifer for cross-plane billboards (alpha) */
   pine(){ const [c, g] = cv(256, 512), r = rng(41);
     g.fillStyle = '#4a3626'; g.fillRect(124, 300, 8, 212);
@@ -204,5 +213,5 @@ function eq(sky, gr, cl, seed){ const [c, g] = cv(1024, 512), r = rng(seed);
   G = g.createLinearGradient(0, 256, 0, 512); G.addColorStop(0, gr[0]); G.addColorStop(1, gr[1]); g.fillStyle = G; g.fillRect(0, 256, 1024, 256);
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.mapping = THREE.EquirectangularReflectionMapping; return {map:t}; }
 export function T(name){ if(!cache[name]) cache[name] = MAKERS[name](); return cache[name]; }
-export const FACADE_FLAT = {plaster:'#efe9df', brick:'#a8634a', wood:'#9b6c45', stone:'#aaa396', timber:'#3a3530', cedar:'#7a5a40'};
+export const FACADE_FLAT = {plaster:'#efe9df', brick:'#a8634a', wood:'#9b6c45', stone:'#aaa396', timber:'#3a3530', cedar:'#7a5a40', metal:'#5a5f66'};
 export {shade};
