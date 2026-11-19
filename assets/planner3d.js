@@ -81,7 +81,7 @@ export function create(canvas, ui){
       earth: mk(real ? '#7b6a55' : '#c9c1b4', {roughness:1, hid:'#ffffff'}),
       pave: tx('pavers', '#d2cfc8', {roughness:.95}),
       trunk: tx('bark', '#a9998a'),
-      crown: mk(real ? '#6e8c52' : '#b9cba5', {flatShading:true}),
+      crown: mk(real ? '#5f8a3e' : '#b9cba5', {flatShading:true, roughness:.9}),
       floor: {}
     };
     const par = tx('parquet', '#c9a57a', {roughness:.55, env:.35}), til = tx('tiles', '#dedbd5', {roughness:.3, env:.4});
@@ -342,6 +342,12 @@ export function create(canvas, ui){
       m.updateMatrix(); m.matrixWorld.copy(m.matrix); m.modelViewMatrix.multiplyMatrices(c.matrixWorldInverse, m.matrixWorld); m.normalMatrix.getNormalMatrix(m.modelViewMatrix); };
     m.onBeforeRender = (r, sc, c) => face(c); m.onBeforeShadow = (r, o, c, sc) => face(sc); root.add(m); return m; }
   function tree(x, z, s, kind, seed, edges){
+    /* classic low-poly tree: one trunk and one faceted round crown, in every style */
+    { const y0 = -PL, k = s * 1.15;
+      const tr = new THREE.Mesh(new THREE.CylinderGeometry(.1 * k, .14 * k, 1.7 * k, 8), M.trunk); tr.position.set(x, y0 + .85 * k, z); tr.castShadow = true; root.add(tr);
+      const cg = new THREE.IcosahedronGeometry(1.25 * k, 1), cr = new THREE.Mesh(cg, M.crown); cr.position.set(x, y0 + 2.3 * k, z); cr.castShadow = true; cr.receiveShadow = true; root.add(cr);
+      if(MODEL.style !== 'realistic'){ const e = edgeLines(cg, 8); e.position.copy(cr.position); root.add(e); }
+      return; }
     const y0 = -PL;
     if(MODEL.style === 'realistic'){ const r = rnd(seed);
       if(kind === 'conifer'){ if(!realTree('Pine Medium', 7.5 * s, x, z, r() * 6)) sprite(crossGeo(3.4 * s, 7 * s, 1), M.pine, x, z, 0, true); }
