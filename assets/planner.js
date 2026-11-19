@@ -337,17 +337,17 @@
     var b = [1e9, 1e9, -1e9, -1e9]; top.rooms.forEach(function(r){ if(r.type === 'balcony') return; b[0] = Math.min(b[0], r.x); b[1] = Math.min(b[1], r.y); b[2] = Math.max(b[2], r.x + r.w); b[3] = Math.max(b[3], r.y + r.h); });
     var L = Math.max(b[2] - b[0], b[3] - b[1]), D = Math.min(b[2] - b[0], b[3] - b[1]); return L / D < 1.3 ? 'hip' : 'gable'; }
   function model3(){ var colors = {}; TYPES.forEach(function(ty){ colors[ty.id] = ty.c; });
-    return {floors:state.floors.map(function(f, i){ return {rooms:f.rooms, ops:opsOf(i)}; }), cur:cur, cut:!!state.v3.cut, style:state.v3.style, shadows:state.v3.shadows, persp:!!state.v3.persp, tod:state.v3.tod || 'day', fence:state.fence !== false,
+    return {floors:state.floors.map(function(f, i){ return {rooms:f.rooms, ops:opsOf(i)}; }), cur:cur, cut:!!state.v3.cut, style:state.v3.style, shadows:state.v3.shadows, persp:!!state.v3.persp, tod:state.v3.tod || 'day', fence:state.fence !== false, site:state.site || 'disc',
       roof:{type:roofType(), color:state.roof.color, mat:state.roof.mat}, facade:state.facade === 'auto' ? 'mixed' : state.facade, porch:state.porch !== false, colors:colors}; }
   function bar3(){ document.querySelectorAll('[data-vs]').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.vs === state.v3.style ? 'true' : 'false'); });
-    $('plShadow').setAttribute('aria-pressed', state.v3.shadows ? 'true' : 'false'); document.querySelectorAll('[data-io]').forEach(function(b){ b.setAttribute('aria-pressed', (b.dataset.io === 'in') === !!state.v3.cut ? 'true' : 'false'); }); $('plTod').setAttribute('aria-pressed', state.v3.tod === 'evening' ? 'true' : 'false'); stage.classList.toggle('eve', state.v3.tod === 'evening'); $('plPersp').setAttribute('aria-pressed', state.v3.persp ? 'true' : 'false'); }
+    $('plShadow').setAttribute('aria-pressed', state.v3.shadows ? 'true' : 'false'); document.querySelectorAll('[data-io]').forEach(function(b){ b.setAttribute('aria-pressed', (b.dataset.io === 'in') === !!state.v3.cut ? 'true' : 'false'); }); $('plTod').setAttribute('aria-pressed', state.v3.tod === 'evening' ? 'true' : 'false'); stage.classList.toggle('eve', state.v3.tod === 'evening'); stage.classList.toggle('studio', (state.site || 'disc') === 'disc'); $('plPersp').setAttribute('aria-pressed', state.v3.persp ? 'true' : 'false'); }
   function draw3d(){
     bar3();
     if(r3state === 2){ r3.update(model3()); return; }
     if(r3state === 3){ drawLegacy(); return; }
     if(r3state === 1) return;
     r3state = 1;
-    import(new URL('assets/planner3d.js?v=8', location.href).href).then(function(m){
+    import(new URL('assets/planner3d.js?v=10', location.href).href).then(function(m){
       r3 = m.create(cv, {cube:$('plCube'), status:function(n, g){ var h = $('plHint'); if(!h) return; h.textContent = n >= g ? (P.lang === 'en' ? 'Photoreal render complete' : 'Бодит рэндэр бэлэн боллоо') : (P.lang === 'en' ? 'Refining photoreal render… ' : 'Бодит рэндэр гаргаж байна… ') + Math.round(n / g * 100) + '%'; }}); r3state = 2; window.PSP3D = r3; if(view === '3d') r3.update(model3());
     }).catch(function(err){ console.warn('3D fallback', err); r3state = 3; if(view === '3d') drawLegacy(); });
   }
@@ -420,7 +420,7 @@
       if(document.activeElement !== $('plOpW')) $('plOpW').value = Math.round((o.b - o.a) * 100) / 100;
       $('plOpFlip').hidden = o.k === 'win'; }
     $('plAuto').checked = floor().auto !== false;
-    $('plRoof').value = state.roof.type; $('plRoofMat').value = state.roof.mat; $('plFacade').value = state.facade; $('plPorch').checked = state.porch !== false; $('plFence').checked = state.fence !== false;
+    $('plRoof').value = state.roof.type; $('plRoofMat').value = state.roof.mat; $('plFacade').value = state.facade; $('plPorch').checked = state.porch !== false; $('plFence').checked = state.fence !== false; $('plSite').value = state.site || 'disc'; $('plFence').closest('label').hidden = (state.site || 'disc') === 'disc';
     Array.prototype.forEach.call($('plRoofC').children, function(b){ b.setAttribute('aria-pressed', b.dataset.c === state.roof.color ? 'true' : 'false'); });
     if(s){ var ts = $('plType'); ts.innerHTML = ''; TYPES.forEach(function(ty){ var o = document.createElement('option'); o.value = ty.id; o.textContent = ty[P.lang]; if(ty.id === s.type) o.selected = true; ts.appendChild(o); });
       $('plName').value = s.name || ''; $('plName').placeholder = label(s); panelValues(); }
@@ -508,6 +508,7 @@
     if(st.requestFullscreen) st.requestFullscreen().catch(function(){ st.classList.toggle('full'); }); else st.classList.toggle('full'); setTimeout(function(){ if(r3state === 2) r3.resize(); }, 300); };
   document.addEventListener('fullscreenchange', function(){ setTimeout(function(){ if(r3state === 2) r3.resize(); else draw3d(); }, 200); });
   $('plFence').onchange = function(){ checkpoint(); state.fence = this.checked; changed(); };
+  $('plSite').onchange = function(){ checkpoint(); state.site = this.value; changed(); };
   $('plPersp').onclick = function(){ state.v3.persp = !state.v3.persp; if(state.v3.persp) state.v3.style = 'realistic'; save(); draw3d(); };
   document.querySelectorAll('#plCube [data-v], #plHome').forEach(function(f){ f.onclick = function(){ if(r3state === 2) r3.view(f.dataset.v || 'home'); }; });
   addEventListener('psp-theme', function(){ if(view === '3d') draw3d(); });

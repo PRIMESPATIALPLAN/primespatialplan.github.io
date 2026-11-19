@@ -419,3 +419,5 @@ footer{border-top:1px solid var(--rule);padding-block:48px 32px}
 .pl-stage.v3.eve .pl-hint{color:#d9dee8}
 .pl-stage.full{position:fixed;inset:0;z-index:200;height:100vh!important;border-radius:0}
 .pl-stage:fullscreen{height:100vh!important;border-radius:0}
+.pl-stage.v3.studio{background:radial-gradient(120% 90% at 50% 35%,#f4f5f6 0%,#dfe1e4 55%,#c9ccd1 100%)}
+.pl-stage.v3.studio.eve{background:radial-gradient(120% 90% at 50% 35%,#3a4258 0%,#232838 60%,#161a24 100%)}
