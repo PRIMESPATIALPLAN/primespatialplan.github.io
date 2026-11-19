@@ -432,7 +432,9 @@ export function create(canvas, ui){
     root.add(c); return true;
   }
   /* the gravel drip strip around the ground floor stays clear of grass */
-  function onGravel(x, z){ return PERIM.some(e => { const u = e.ori === 'h' ? x : z, v = (e.ori === 'h' ? z : x) - e.c;
+  function onGravel(x, z){ const f0 = MODEL && MODEL.floors[0];
+    if(f0 && f0.rooms.some(r => x > r.x - .95 && x < r.x + r.w + .95 && z > r.y - .95 && z < r.y + r.h + .95)) return true;
+    return PERIM.some(e => { const u = e.ori === 'h' ? x : z, v = (e.ori === 'h' ? z : x) - e.c;
     return u > e.a - .95 && u < e.b + .95 && v * e.out > -.05 && v * e.out < .95; }); }
   /* dense lawn: instanced grass clumps with colour variation */
   function lawnGrass(inside, area, count, b){
