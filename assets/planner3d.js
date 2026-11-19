@@ -431,13 +431,16 @@ export function create(canvas, ui){
     c.traverse(o => { if(o.isMesh && o.material.userData.depth) o.customDepthMaterial = o.material.userData.depth; });
     root.add(c); return true;
   }
+  /* the gravel drip strip around the ground floor stays clear of grass */
+  function onGravel(x, z){ return PERIM.some(e => { const u = e.ori === 'h' ? x : z, v = (e.ori === 'h' ? z : x) - e.c;
+    return u > e.a - .95 && u < e.b + .95 && v * e.out > -.05 && v * e.out < .95; }); }
   /* dense lawn: instanced grass clumps with colour variation */
   function lawnGrass(inside, area, count, b){
     if(A.state !== 2) return;
     const mat = new THREE.MeshStandardMaterial({map:A.grassMap, alphaTest:.45, side:THREE.DoubleSide, roughness:.9, envMapIntensity:.25, color:'#86ad55'});
     const n = Math.round(Math.min(count, area * 70)), im = new THREE.InstancedMesh(A.grassGeo, mat, n), r = rnd(5), mt = new THREE.Matrix4(), q = new THREE.Quaternion(), sc = new THREE.Vector3(), p = new THREE.Vector3(), up = new THREE.Vector3(0, 1, 0), col = new THREE.Color();
     let i = 0;
-    for(let t = 0; t < n * 3 && i < n; t++){ const pt = inside(r()); if(!pt || !free(pt[0], pt[1], .12, b)) continue;
+    for(let t = 0; t < n * 3 && i < n; t++){ const pt = inside(r()); if(!pt || !free(pt[0], pt[1], .12, b) || onGravel(pt[0], pt[1])) continue;
       q.setFromAxisAngle(up, r() * 6.28); const s = .7 + r() * .7; sc.set(s * (.8 + r() * .5), s, s * (.8 + r() * .5)); p.set(pt[0], -PL, pt[1]); mt.compose(p, q, sc); im.setMatrixAt(i, mt);
       col.setHSL(.17 + r() * .1, .25 + r() * .3, .62 + r() * .3); im.setColorAt(i, col); i++; }
     im.count = i; im.receiveShadow = true; im.castShadow = false; root.add(im);
