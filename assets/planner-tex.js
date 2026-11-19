@@ -144,6 +144,21 @@ const MAKERS = {
       for(let i = 0; i < 4; i++){ const x = 18 + i * 124; if(j === 0){ g.fillStyle = '#3d4a56'; g.fillRect(x + 6, y + 30, 100, 62); g.fillStyle = 'rgba(255,255,255,.25)'; g.fillRect(x + 8, y + 32, 40, 20); }
         else { g.strokeStyle = 'rgba(0,0,0,.12)'; g.lineWidth = 3; g.strokeRect(x + 6, y + 22, 100, 80); } } }
     const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return {map:t}; },
+  /* oak parquet planks (staggered) */
+  parquet(){ const [c, g] = cv(512, 512), r = rng(61), rows = 8, rh = 64;
+    for(let j = 0; j < rows; j++){ let x = -Math.floor(r() * 200);
+      while(x < 512){ const w = 180 + Math.floor(r() * 160), v = r();
+        g.fillStyle = `hsl(${30 + v * 8},${38 + v * 10}%,${52 + v * 12}%)`; g.fillRect(x, j * rh, w, rh);
+        for(let k = 0; k < 18; k++){ const yy = j * rh + r() * rh; g.strokeStyle = `rgba(90,55,25,${.05 + r() * .09})`; g.lineWidth = .6 + r(); g.beginPath(); g.moveTo(x, yy); g.bezierCurveTo(x + w * .3, yy + (r() - .5) * 6, x + w * .7, yy + (r() - .5) * 6, x + w, yy); g.stroke(); }
+        g.fillStyle = 'rgba(60,35,15,.45)'; g.fillRect(x, j * rh, 2, rh); x += w; }
+      g.fillStyle = 'rgba(60,35,15,.4)'; g.fillRect(0, j * rh + rh - 2, 512, 2); }
+    return {map:tex(c, [1.6, 1.28])}; },
+  /* large-format floor tiles */
+  tiles(){ const [c, g] = cv(512, 512), r = rng(63);
+    g.fillStyle = '#a9a6a0'; g.fillRect(0, 0, 512, 512);
+    for(let j = 0; j < 2; j++) for(let i = 0; i < 2; i++){ const v = 214 + Math.floor(r() * 16); g.fillStyle = `rgb(${v},${v - 2},${v - 6})`; g.fillRect(i * 256 + 2, j * 256 + 2, 252, 252); }
+    blotch(g, 512, 512, r, 30, .04); speckle(g, 512, 512, r, 5000, .1);
+    return {map:tex(c, [1.2, 1.2])}; },
   /* painted conifer for cross-plane billboards (alpha) */
   pine(){ const [c, g] = cv(256, 512), r = rng(41);
     g.fillStyle = '#4a3626'; g.fillRect(124, 300, 8, 212);

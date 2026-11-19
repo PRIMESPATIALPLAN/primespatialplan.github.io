@@ -412,3 +412,10 @@ footer{border-top:1px solid var(--rule);padding-block:48px 32px}
 .pp-main.wide img{height:auto;object-fit:contain}
 .pp-stats{display:flex}.pp-stats div{flex:1 1 0;min-width:0}
 .ppsheet{max-width:760px}
+.rv-io{position:absolute;left:64px;top:0;display:flex;background:#f4f4f4;border:1px solid #b5b8bc;border-top:0;border-bottom-right-radius:5px;border-bottom-left-radius:5px;overflow:hidden}
+.rv-io button{border:0;background:none;padding:7px 14px;font:600 12px/1 Onest,Arial,sans-serif;color:#30343a;cursor:pointer}
+.rv-io button[aria-pressed="true"]{background:#1f2328;color:#fff}
+.pl-stage.v3.eve{background:linear-gradient(180deg,#141c30 0%,#2c3754 58%,#22262d 100%)}
+.pl-stage.v3.eve .pl-hint{color:#d9dee8}
+.pl-stage.full{position:fixed;inset:0;z-index:200;height:100vh!important;border-radius:0}
+.pl-stage:fullscreen{height:100vh!important;border-radius:0}

@@ -5,7 +5,8 @@
 import * as THREE from './vendor/three.module.min.js';
 import {OrbitControls} from './vendor/OrbitControls.js';
 import {RoomEnvironment} from './vendor/RoomEnvironment.js';
-import {T, FACADE_FLAT} from './planner-tex.js?v=5';
+import {T, FACADE_FLAT} from './planner-tex.js?v=6';
+import {furnish} from './planner-furnish.js?v=1';
 
 const FH = 3, SL = .25, PL = .3, T30 = Math.tan(30 * Math.PI / 180);
 const near = (a, b) => Math.abs(a - b) < 1e-4;
@@ -62,7 +63,7 @@ export function create(canvas, ui){
       leaf:vc(), conifer:vc(),
       wallExt: mk(real ? '#efe8dc' : '#f1eee8', {roughness:.92}),
       wallInt: mk(real ? '#f7f4ee' : '#f7f6f2'),
-      cut: mk('#3b3e44', {hid:'#3b3e44'}),
+      cut: mk('#d8d3cb', {hid:'#d8d3cb'}),
       slab: mk(real ? '#e6e1d8' : '#e9e7e2'),
       plinth: tx('stone', '#bdbab3', {tint:'#8f8a82', roughness:.95}),
       glass: hid ? new THREE.MeshBasicMaterial({color:'#e5eef5', transparent:true, opacity:.75, polygonOffset:true, polygonOffsetFactor:1, polygonOffsetUnits:1})
@@ -82,8 +83,22 @@ export function create(canvas, ui){
       crown: mk(real ? '#6e8c52' : '#b9cba5', {flatShading:true}),
       floor: {}
     };
-    const fin = {living:'#b98c5f', bed:'#c09a6e', study:'#b98c5f', hall:'#c8b79e', kitchen:'#d8d4cc', bath:'#cfd8da', storage:'#bdb9b0', garage:'#a9a7a2', balcony:'#8d7357'};
-    Object.keys(m.colors).forEach(k => { R.floor[k] = mk(real ? (fin[k] || '#cccccc') : m.colors[k], {roughness:.7}); });
+    const par = tx('parquet', '#c9a57a', {roughness:.55, env:.35}), til = tx('tiles', '#dedbd5', {roughness:.3, env:.4});
+    const FL = {living:par, bed:par, study:par, hall:par, kitchen:til, bath:til, storage:R.concrete, garage:R.concrete, balcony:R.deck};
+    Object.keys(m.colors).forEach(k => { R.floor[k] = real ? (FL[k] || par) : mk(m.colors[k], {roughness:.7}); });
+    /* furniture */
+    const eve = m.tod === 'evening', em = (c, e, k) => hid ? mk(c) : real ? new THREE.MeshStandardMaterial({color:c, emissive:e, emissiveIntensity:k, roughness:.6}) : new THREE.MeshLambertMaterial({color:c, emissive:e, emissiveIntensity:k});
+    R.Fu = {wood:mk('#b88a5c', {roughness:.6}), woodDark:mk('#5b4332', {roughness:.6}), white:mk('#f1efea', {roughness:.5}), linen:mk('#ece7de', {roughness:.95}), headboard:mk('#8a7563', {roughness:.9}),
+      sofa:mk('#8d939a', {roughness:.95}), sofaB:mk('#b7a48c', {roughness:.95}), cushion:mk('#a5aab0', {roughness:.95}), black:mk('#26282c', {roughness:.5}), metal:mk('#aab0b6', {roughness:.35, metalness:.6}),
+      shade:em('#f5ead8', '#ffcf8a', eve ? 2.4 : .15), ceramic:mk('#f7f6f2', {roughness:.15}), water:mk('#9cc3d6', {roughness:.05}), mirror:mk('#d9e1e6', {roughness:.05, metalness:.9}),
+      glassP:hid ? mk('#eef3f6') : new THREE.MeshStandardMaterial({color:'#cfe0ea', transparent:true, opacity:.35, roughness:.05}),
+      rug:mk('#d6c7ae', {roughness:1}), rug2:mk('#b9c0c6', {roughness:1}), plant:mk('#4f7d3b', {roughness:.9, flatShading:true}), pot:mk('#cbb79c', {roughness:.8}), screen:mk('#14161a', {roughness:.2}),
+      worktop:mk('#3b3a38', {roughness:.35}), tile:mk('#e8e6e1', {roughness:.3}), steel:mk('#c9cdd1', {roughness:.3, metalness:.7}), box:mk('#c4a57c', {roughness:.9}),
+      car:[mk('#9aa3ad', {roughness:.25, metalness:.6}), mk('#24304a', {roughness:.25, metalness:.6}), mk('#7a2a26', {roughness:.25, metalness:.6})], carGlass:mk('#1d2430', {roughness:.08, metalness:.3}),
+      lightW:em('#ffffff', '#fff4dc', eve ? 2 : .3), accent:['#c46a43', '#5d7fa8', '#7d9a6a', '#b8945a'].map(c => mk(c, {roughness:.95}))};
+    R.fence = tx('deck', '#7a5a43', {tint:'#9b7d68', roughness:.85});
+    R.bollard = mk('#2c2e32', {roughness:.5}); R.bulb = em('#fff2d6', '#ffd9a0', eve ? 3 : .2);
+    if(eve && !hid){ R.glass.emissive = new THREE.Color('#ffc98a'); R.glass.emissiveIntensity = real ? 1.8 : 1; R.glass.opacity = .9; }
     return R;
   }
 
@@ -233,6 +248,9 @@ export function create(canvas, ui){
     const per = hip ? [[u0, v0, ye, u1, v0, ye], [u1, v0, ye, u1, v1, ye], [u1, v1, ye, u0, v1, ye], [u0, v1, ye, u0, v0, ye]]
       : [[u0, v0, ye, u1, v0, ye], [u1, v0, ye, u1, vm, hr], [u1, vm, hr, u1, v1, ye], [u1, v1, ye, u0, v1, ye], [u0, v1, ye, u0, vm, hr], [u0, vm, hr, u0, v0, ye]];
     per.forEach(e => mb.quad(P(e[0], e[1], e[2]), P(e[3], e[4], e[5]), P(e[3], e[4], e[5] - th), P(e[0], e[1], e[2] - th)));
+    { const lv = rs.filter(r => r.type === 'living')[0] || rs.slice().sort((a, b) => b.w * b.h - a.w * a.h)[0];
+      if(lv){ const lu = alongX ? lv.x + lv.w / 2 : lv.y + lv.h / 2, lvv = vm + Math.min(1, half * .35), q = P(Math.max(bu0 + .6, Math.min(bu1 - .6, lu)), lvv, 0);
+        box(q[0] - .3, q[0] + .3, zt - .4, hr + .5, q[2] - .3, q[2] + .3, M.F.brick); box(q[0] - .36, q[0] + .36, hr + .5, hr + .58, q[2] - .36, q[2] + .36, M.canopy); } }
     const g = mb.geo(), mesh = new THREE.Mesh(g, M.roof); mesh.castShadow = true; mesh.receiveShadow = true; root.add(mesh); root.add(edgeLines(g, 15));
     /* standing seams (drawn as lines when the roof is not textured) */
     if(MODEL.style === 'realistic' || (m.roof.mat || 'seam') !== 'seam'){ gableWalls(); return; }
@@ -268,7 +286,10 @@ export function create(canvas, ui){
     prect(e.ori, cu - W / 2 - .1, cu + W / 2 + .1, c0, c1 + o * .15, ch, ch + .12, M.canopy);
     [-1, 1].forEach(k => prect(e.ori, cu + k * (W / 2 - .05) - .05, cu + k * (W / 2 - .05) + .05, c1 - o * .02, c1 - o * .12, 0, ch, M.canopy));
     const edge = e.ori === 'h' ? (o > 0 ? b[3] + pad : b[1] - pad) : (o > 0 ? b[2] + pad : b[0] - pad);
-    if((edge - c3) * o > .2) prect(e.ori, cu - .6, cu + .6, c3, edge, -PL, -PL + .03, MODEL.style === 'realistic' ? M.concrete : M.pave, {cast:false});
+    if((edge - c3) * o > .2){ prect(e.ori, cu - .6, cu + .6, c3, edge, -PL, -PL + .03, MODEL.style === 'realistic' ? M.concrete : M.pave, {cast:false});
+      for(let d = 1.2; d < Math.abs(edge - c3) - .8; d += 2.6){ const vv = c3 + o * d, uu = cu + .9, x = e.ori === 'h' ? uu : vv, z = e.ori === 'h' ? vv : uu;
+        cylAt(x, -PL, z, .06, .55, M.bollard, 10); cylAt(x, -PL + .55, z, .065, .07, M.bulb, 10); } }
+    if(MODEL.tod === 'evening'){ const L = new THREE.PointLight('#ffd3a0', MODEL.style === 'realistic' ? 9 : 4, 7, 2), pc = (c0 + c1) / 2; L.position.set(e.ori === 'h' ? cu : pc, ch - .25, e.ori === 'h' ? pc : cu); root.add(L); }
   }
   /* ---------- trees, shrubs ---------- */
   function rnd(seed){ let s = seed >>> 0 || 1; return () => (s = (Math.imul(s, 1664525) + 1013904223) >>> 0) / 4294967296; }
@@ -341,14 +362,29 @@ export function create(canvas, ui){
       part(g, M.leaf, x, -PL + .3, z, edges); }
 
   }
+  function cylAt(x, y, z, r, h, mat, seg){ const g = new THREE.CylinderGeometry(r, r, h, seg || 12), m = new THREE.Mesh(g, mat); m.position.set(x, y + h / 2, z); m.castShadow = true; m.receiveShadow = true; root.add(m); return m; }
+  function sphAt(x, y, z, r, mat){ const g = new THREE.SphereGeometry(r, 12, 9), m = new THREE.Mesh(g, mat); m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true; root.add(m); return m; }
+  /* wooden plot fence with openings where paths and drives leave the plot */
+  function fence(b, pad){
+    const x0 = b[0] - pad + .35, x1 = b[2] + pad - .35, z0 = b[1] - pad + .35, z1 = b[3] + pad - .35, y = -PL;
+    const sides = [['h', z0, x0, x1], ['h', z1, x0, x1], ['v', x0, z0, z1], ['v', x1, z0, z1]];
+    sides.forEach(([ori, c, a0, a1]) => {
+      const gaps = PAVED.filter(p => ori === 'h' ? (p[2] <= c + .4 && p[3] >= c - .4) : (p[0] <= c + .4 && p[1] >= c - .4)).map(p => ori === 'h' ? [p[0] - .3, p[1] + .3] : [p[2] - .3, p[3] + .3]);
+      let segs = [[a0, a1]]; gaps.forEach(g => { const n = []; segs.forEach(sg => { if(g[1] <= sg[0] || g[0] >= sg[1]) n.push(sg); else { if(g[0] > sg[0]) n.push([sg[0], g[0]]); if(g[1] < sg[1]) n.push([g[1], sg[1]]); } }); segs = n; });
+      segs.forEach(([s0, s1]) => { if(s1 - s0 < .3) return; const n = Math.max(1, Math.ceil((s1 - s0) / 2.2));
+        for(let k = 0; k <= n; k++){ const u = s0 + (s1 - s0) * k / n; if(ori === 'h') box(u - .05, u + .05, y, y + 1.35, c - .05, c + .05, M.fence, {noEdge:MODEL.style === 'realistic'}); else box(c - .05, c + .05, y, y + 1.35, u - .05, u + .05, M.fence, {noEdge:MODEL.style === 'realistic'}); }
+        [.3, .62, .94].forEach(h => { if(ori === 'h') box(s0, s1, y + h, y + h + .16, c - .02, c + .02, M.fence, {noEdge:MODEL.style === 'realistic'}); else box(c - .02, c + .02, y + h, y + h + .16, s0, s1, M.fence, {noEdge:MODEL.style === 'realistic'}); }); });
+    });
+  }
   /* ---------- whole model ---------- */
   /* ---------- "Render": progressive path tracing of the same scene (global illumination, soft light, reflections) ---------- */
   let PT = null, ptOn = false, ptSaved = null, ptCb = null, ptGoal = 600, ptEnv = null;
-  function envData(){ if(ptEnv) return ptEnv;
-    const src = T('skyDay').map.image, w = 512, h = 256, c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d'); g.drawImage(src, 0, 0, w, h);
+  const ENV = {};
+  function envData(){ const kind = MODEL && MODEL.tod === 'evening' ? 'skyDusk' : 'skyDay'; if(ENV[kind]) return ENV[kind];
+    const src = T(kind).map.image, w = 512, h = 256, c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d'); g.drawImage(src, 0, 0, w, h);
     const px = g.getImageData(0, 0, w, h).data, f = new Float32Array(w * h * 4);
     for(let y = 0; y < h; y++) for(let x = 0; x < w; x++){ const i = (y * w + x) * 4, o = ((h - 1 - y) * w + x) * 4; for(let k = 0; k < 3; k++) f[o + k] = Math.pow(px[i + k] / 255, 2.2) * 1.15; f[o + 3] = 1; }
-    ptEnv = new THREE.DataTexture(f, w, h, THREE.RGBAFormat, THREE.FloatType); ptEnv.mapping = THREE.EquirectangularReflectionMapping; ptEnv.magFilter = THREE.LinearFilter; ptEnv.minFilter = THREE.LinearFilter; ptEnv.needsUpdate = true; return ptEnv; }
+    ptEnv = new THREE.DataTexture(f, w, h, THREE.RGBAFormat, THREE.FloatType); ptEnv.mapping = THREE.EquirectangularReflectionMapping; ptEnv.magFilter = THREE.LinearFilter; ptEnv.minFilter = THREE.LinearFilter; ptEnv.needsUpdate = true; ENV[kind] = ptEnv; return ptEnv; }
   /* path tracing starts by itself when the view is still (D5-style progressive refinement) and pauses while the user moves the camera */
   let buildId = 0, ptBuilt = -1, ptBusy = false, interacting = false, ptTimer = 0, ptFail = false;
   function canPT(){ return !ptFail && MODEL && MODEL.style === 'realistic' && renderer.capabilities.isWebGL2; }
@@ -411,6 +447,9 @@ export function create(canvas, ui){
     scene.environment = real ? envData() : null;
     hemi.intensity = real ? .7 : m.style === 'shaded' ? .55 : 0; amb.intensity = m.style === 'shaded' ? .55 : 0;
     sun.intensity = real ? 2.6 : m.style === 'shaded' ? 1.4 : 0; sun.castShadow = m.shadows && m.style !== 'hidden';
+    const eve = m.tod === 'evening';
+    hemi.color.set(eve ? '#8fa2cc' : '#e8eef5'); hemi.groundColor.set(eve ? '#262a33' : '#8d8f80'); sun.color.set(eve ? '#ffad78' : '#fff1df');
+    if(eve){ hemi.intensity *= .75; sun.intensity *= .5; amb.intensity *= .7; renderer.toneMappingExposure = real ? 1.45 : 1.1; }
 
     const solids = [];
     m.floors.forEach((f, i) => f.rooms.forEach(r => solids.push({r, i})));
@@ -432,7 +471,7 @@ export function create(canvas, ui){
     });
     m.floors.forEach((f, i) => {
       if(i > lastF) return;
-      const z0 = i * FH, cutHere = m.cut && i === m.cur, H = cutHere ? 1.3 : (i === top && pitched ? FH - .3 : FH);
+      const z0 = i * FH, cutHere = m.cut && i === m.cur, H = cutHere ? FH - .3 : (i === top && pitched ? FH - .3 : FH);
       f.rooms.forEach(r => {
         const solid = r.type !== 'balcony';
         if(i === 0) box(r.x, r.x + r.w, -PL, 0, r.y, r.y + r.h, M.plinth);
@@ -442,21 +481,25 @@ export function create(canvas, ui){
           box(r.x, r.x + r.w, z0 + FH - SL, z0 + FH, r.y, r.y + r.h, M.slab);
       });
       walls(f, i, H, cutHere);
+      if(cutHere){ const real2 = m.style === 'realistic';
+        furnish({box:(a, b2, c, d, e, g, mat, o) => box(a, b2, c, d, e, g, mat, {noEdge:real2, cast:true}), cyl:cylAt, sph:sphAt, F:M.Fu}, f.rooms, f.ops, z0, 11 + i);
+        if(m.tod === 'evening') f.rooms.filter(r => r.type !== 'balcony').slice(0, 10).forEach(r => { const L = new THREE.PointLight('#ffd6a0', real2 ? 5 : 2, Math.max(r.w, r.h) * 1.6, 2); L.position.set(r.x + r.w / 2, z0 + 2.3, r.y + r.h / 2); root.add(L); }); }
     });
     if(!m.cut && top >= 0) roof(m, top, top * FH + FH);
     if(m.porch) ENTRIES.forEach(e => porch(e, b, pad));
+    if(m.fence !== false) fence(b, pad);
     /* gravel drip strip around the ground floor */
     if(real) PERIM.forEach(e => prect(e.ori, e.a - .1, e.b + .1, e.c + e.out * .13, e.c + e.out * .8, -PL, -PL + .02, M.gravel, {cast:false, noEdge:true}));
     landscape(b, pad, m);
     /* eye-level surroundings: far lawn, forest, sky and haze */
     scene.background = null; scene.fog = null;
-    if(persp && real){ scene.background = envData(); scene.fog = new THREE.Fog('#dfe7ec', 28, 150);
+    if(persp && real){ scene.background = envData(); scene.fog = new THREE.Fog(m.tod === 'evening' ? '#3a4560' : '#dfe7ec', 28, 150);
       const gg = new THREE.PlaneGeometry(600, 600); gg.rotateX(-Math.PI / 2); const gm = new THREE.Mesh(gg, M.grass); gm.position.set((b[0] + b[2]) / 2, -PL, (b[1] + b[3]) / 2); wuv(gg, gm.position); gm.receiveShadow = true; root.add(gm);
       forest(b, pad); }
 
     /* camera and sun fit */
     const cx = (b[0] + b[2]) / 2, cz = (b[1] + b[3]) / 2, hgt = (top + 1) * FH + 2, diag = Math.hypot(b[2] - b[0] + 2 * pad, b[3] - b[1] + 2 * pad, hgt);
-    sun.position.set(cx - 22, 34, cz + 26); sun.target.position.set(cx, 0, cz);
+    if(m.tod === 'evening') sun.position.set(cx - 30, 13, cz + 20); else sun.position.set(cx - 22, 34, cz + 26); sun.target.position.set(cx, 0, cz);
     const sc = sun.shadow.camera, ss = diag * .75; sc.left = -ss; sc.right = ss; sc.top = ss; sc.bottom = -ss; sc.near = 1; sc.far = 140; sc.updateProjectionMatrix();
     const key = [b.map(v => Math.round(v)).join(','), top].join('|');
     memo.pd = Math.max(16, Math.hypot(b[2] - b[0], b[3] - b[1]) * 1.55 + 6);
@@ -511,14 +554,15 @@ export function create(canvas, ui){
 
   return {
     update(m){ build(m); },
-    view(name){ const D = {top:[0, 1, .0001], front:[0, 0, 1], back:[0, 0, -1], right:[1, 0, 0], left:[-1, 0, 0]}; if(name === 'home') return home(true); if(name === 'rear') return setDir(new THREE.Vector3(-Math.sin(.8), .55, -Math.cos(.8)), true); setDir(new THREE.Vector3(...D[name]), true); },
+    view(name){ const D = {top:[0, 1, .0001], front:[0, 0, 1], back:[0, 0, -1], right:[1, 0, 0], left:[-1, 0, 0]}; if(name === 'home') return home(true); if(name === 'inside') return setDir(new THREE.Vector3(Math.sin(.55), 1.7, Math.cos(.55)), true); if(name === 'rear') return setDir(new THREE.Vector3(-Math.sin(.8), .55, -Math.cos(.8)), true); setDir(new THREE.Vector3(...D[name]), true); },
     resize(){ size(); pauseRender(); req(); autoRender(); },
     rendering(){ return ptOn; },
     png(cb){
       if(!ptOn) renderer.render(scene, cam);
       const w = canvas.width, h = canvas.height, c = document.createElement('canvas'); c.width = w; c.height = h;
       const g = c.getContext('2d'), gr = g.createLinearGradient(0, 0, 0, h);
-      gr.addColorStop(0, '#9fb6cc'); gr.addColorStop(.6, '#e4eaee'); gr.addColorStop(1, '#d5d8cc');
+      if(MODEL && MODEL.tod === 'evening'){ gr.addColorStop(0, '#1b2540'); gr.addColorStop(.6, '#3d4a6b'); gr.addColorStop(1, '#2a2f3a'); }
+      else { gr.addColorStop(0, '#9fb6cc'); gr.addColorStop(.6, '#e4eaee'); gr.addColorStop(1, '#d5d8cc'); }
       g.fillStyle = gr; g.fillRect(0, 0, w, h); g.drawImage(canvas, 0, 0);
       g.font = '600 ' + Math.round(h * .03) + 'px Onest, Arial, sans-serif'; g.fillStyle = 'rgba(30,32,36,.8)'; g.fillText('Prime Spatial Plan', h * .03, h * .96);
       c.toBlob(cb);
