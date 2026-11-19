@@ -406,11 +406,10 @@ export function create(canvas, ui){
   }
   function shrubs(b, m, edges){
     /* shrubs along the front facade, clear of paths */
-    for(let x = b[0] + .7; x < b[2] - .5; x += 1.6){ const z = b[3] + .75;
+    for(let x = b[0] + .7; x < b[2] - .5; x += 1.6){ const z = b[3] + 1.25;
       if(PAVED.some(p => x > p[0] - .7 && x < p[1] + .7 && z > p[2] - .7 && z < p[3] + .7)) continue;
-      if(m.style === 'realistic'){ if(realTree(['Bush 1', 'Bush 2', 'Bush 3'][Math.floor(x * 7) % 3], 1.0 + (x * 13 % 1) * .3, x, z, x)) continue; sprite(crossGeo(1.25, 1, 1, [.06, .3, .94, .92]), M.leafy, x, z, 0, true); continue; }
       const g = paint(lumpy(new THREE.IcosahedronGeometry(.42 + (x * 7 % 1) * .12, 1), x * 3, .14), '#58763a', Math.floor(x * 100));
-      part(g, M.leaf, x, -PL + .3, z, edges); }
+      part(g, M.crown, x, -PL + .3, z, edges); }
 
   }
   function cylAt(x, y, z, r, h, mat, seg){ const g = new THREE.CylinderGeometry(r, r, h, seg || 12), m = new THREE.Mesh(g, mat); m.position.set(x, y + h / 2, z); m.castShadow = true; m.receiveShadow = true; root.add(m); return m; }
